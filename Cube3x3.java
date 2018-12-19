@@ -4,14 +4,38 @@ import java.util.ArrayList;
 public class Cube3x3 extends Cube {
     //Does not solve 2x2
     private Cube cube;
+    private ArrayList<EdgeCubie> edgeCubies;
+    private ArrayList<CornerCubie> cornerCubies;
+
 
     public Cube3x3() {
         super(3);
+        for(int i = 1; i < dim - 1; i++ ){
+            edgeCubies.add(new edgeCubie(this.getPosition(0, i, i), this.getPosition(1, 0, i)));
+            edgeCubies.add(new edgeCubie(this.getPosition(0, 0, i), this.getPosition(4, 0, this.getDimension() - 1 - i)));
+            edgeCubies.add(new edgeCubie(this.getPosition(0, i, this.getDimension() - 1), this.getPosition(3, 0, this.getDimension() - 1 - i)));
+            edgeCubies.add(new edgeCubie(this.getPosition(1, i, 0), this.getPosition(4, i, this.getDimension() - 1)));
+            edgeCubies.add(new edgeCubie(this.getPosition(1, this.getDimension() - 1, i), this.getPosition(5, this.getDimension() - 1 - i, 0)));
+            edgeCubies.add(new edgeCubie(this.getPosition(5, i, this.getDimension() - 1), this.getPosition(3, this.getDimension() - 1, i)));
+            edgeCubies.add(new edgeCubie(this.getPosition(5, this.getDimension() - 1, i), this.getPosition(4, this.getDimension() - 1, this.getDimension() - 1 -i)));
+            edgeCubies.add(new edgeCubie(this.getPosition(3, i, this.getDimension() - 1), this.getPosition(4, i, 0)));
+            edgeCubies.add(new edgeCubie(this.getPosition(1, i, this.getDimension() - 1), this.getPosition(2, i, 0)));
+            edgeCubies.add(new edgeCubie(this.getPosition(0, this.getDimension() - 1, i), this.getPosition(2, 0, i)));
+            edgeCubies.add(new edgeCubie(this.getPosition(2, this.getDimension() - 1, i), this.getPosition(5, 0, i)));
+            edgeCubies.add(new edgeCubie(this.getPosition(2, i, this.getDimension() - 1), this.getPosition(3, i, 0)));
+        }
+        
+        
+
     }
 
     //Begins the top cross, puts a 
     //I could make a seperate cubie class but that's a lot of extra that I don't really need
-    public void moveEdgePieceNo1
+    public void moveEdgePieceNo1(){
+
+
+
+    }
 
 
 
@@ -89,6 +113,13 @@ public class Cube3x3 extends Cube {
         return this.getFaces().indexOf(color) / 9;
     }
 
+    public int getCoorespondingEdgePiece(int color){
+
+    }
+
+    public int [] getCoorespondingCorners(int color){
+
+    }
 
     //Takes in a readable list of moves (classic rubik's cube notation U R T T' U' etc.) executes those moves
     public void moveSequence(ArrayList<String> moves) {
@@ -218,12 +249,7 @@ public class Cube3x3 extends Cube {
 
     public static void main(String[] args) {
         Cube3x3 myCube = new Cube3x3();
-        ArrayList<String> algorithm = new ArrayList<String>();
-        myCube.printCubeNums();
-        myCube.orientCube(2, 9);
-        myCube.printCubeNums();
-        //21 = 
-        System.out.print(myCube.getFaceOrientation(1));
+        System.out.println(myCube.edgeCubies);
 
 
     }

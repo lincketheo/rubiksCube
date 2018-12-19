@@ -45,7 +45,7 @@ public class Cube {
     return dimension * dimension * face + dimension * row + index;
   }
 
-  // Some sexy code that rotates a given face (does not change the cubies around
+  // rotates a given face (does not change the cubies around
   // it, only one face so this can't be used alone, it is a helper for the next
   // three)
   public void rotateFullFace(int direction, int face) {
@@ -59,10 +59,8 @@ public class Cube {
 
     for (int i = 0; i < temp1.length; i++) {
 
-      // This is a lot of math and to understand it it's best to write it out and
-      // examine it
-
-      // This is a computer scientist's version of "gotta get that booty"
+      //To anybody reading along, this line of code is a damn piece of art
+      //It rotates a "square" face. Some pretty cool math here
       temp2[(i % dimension) * dimension + (dimension - 1 - (i / (dimension)))] = temp1[i];
 
     }
@@ -379,7 +377,7 @@ public class Cube {
   //For debugging, I've included a few lines commented out that can help visualize the cube.
   
   public static void main(String[] args) {
-    Cube testCube3 = new Cube(4);
+    Cube testCube3 = new Cube(3);
     //Cube testCube4 = new Cube(4);
 
     //Doesn't really show well as a cube, but it works just fine
@@ -387,12 +385,21 @@ public class Cube {
 
     //Unless I haven't fixed it, I didn't care to translate to a 1 cube, so it throws an error. This is probably a small fix
     //Cube testCube1 = new Cube(1);
+    for(int i =0; i < testCube3.faces.size(); i++){
+      System.out.print(testCube3.faces.get(i) + " ");
+    }
+    System.out.println();
+    
+
+
     
     testCube3.printCube();
+    testCube3.printCubeNums();
     
     System.out.println();
-    testCube3.rotateFrontFace(1, 0);
+    testCube3.scrambleCube(1000000);
     testCube3.printCube();
+    testCube3.printCubeNums();
 
 
 

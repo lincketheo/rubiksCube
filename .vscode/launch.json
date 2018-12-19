@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Cube3x3",
+            "request": "launch",
+            "mainClass": "Cube3x3"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Cube",
+            "request": "launch",
+            "mainClass": "Cube"
+        }
+    ]
+}
