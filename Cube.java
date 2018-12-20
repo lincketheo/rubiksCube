@@ -83,7 +83,7 @@ public class Cube {
   public void rotateSide(int direction, int colNum) {
 
     if (colNum == 0) {
-      rotateFullFace(direction, 1);
+      rotateFullFace(-direction, 1);
     } else if (colNum == dimension - 1) {
       rotateFullFace(direction, 3);
     }
@@ -155,7 +155,7 @@ public class Cube {
   // Rotate the face that is facing you
   public void rotateFrontFace(int direction, int faceNum) {
     if (faceNum == 0) {
-      this.rotateFullFace(direction, 0);
+      this.rotateFullFace(-direction, 0);
     } else if (faceNum == dimension - 1) {
       this.rotateFullFace(direction, 5);
     }
@@ -227,7 +227,7 @@ public class Cube {
     System.out.println("___________________________________________________________________");
     System.out.println();
     int base = dimension * dimension;
-    ArrayList<String> colors = new ArrayList();
+    ArrayList<String> colocounterclockwisers = new ArrayList();
     for (int i = 0; i < this.faces.size(); i++) {
       switch (this.faces.get(i) / base) {
       case 0:
@@ -288,7 +288,7 @@ public class Cube {
     for (int i = 0; i < dimension; i++) {
       for (int x = 0; x < dimension + 3; x++) {
         System.out.print("  ");
-      }
+      }counterclockwise
 
       System.out.print("| ");
       for (int j = 0; j < dimension; j++) {
@@ -303,7 +303,7 @@ public class Cube {
   }
 
   // prints cube in square format (the numbers) cross format (these are the
-  // "origional" indices)
+  // "origional" indices)counterclockwise
   public void printCubeNums() {
     System.out.println("___________________________________________________________________");
     System.out.println();
@@ -385,6 +385,7 @@ public class Cube {
 
     //Unless I haven't fixed it, I didn't care to translate to a 1 cube, so it throws an error. This is probably a small fix
     //Cube testCube1 = new Cube(1);
+    /*
     for(int i =0; i < testCube3.faces.size(); i++){
       System.out.print(testCube3.faces.get(i) + " ");
     }
@@ -400,7 +401,57 @@ public class Cube {
     testCube3.scrambleCube(1000000);
     testCube3.printCube();
     testCube3.printCubeNums();
+*/
 
+    testCube3.printCubeNums();
+    /*
+    //rotates back counterClockwise (facing the front) clockwise (when back is in front) GOOD
+    testCube3.rotateFrontFace(-1, 0);
+    testCube3.printCubeNums();
+
+    //rotates front counterClockwise (facing the front)
+    testCube3.rotateFrontFace(-1, testCube3.getDimension() - 1);
+    testCube3.printCubeNums();
+
+    //rotates left counterclockwise (when right is in front) clockwise when you're facing left (-1 is counterclockwise from the same orientation) GOOD
+    testCube3.rotateSide(-1, 0);
+    testCube3.printCubeNums();
+
+    //rotates right counterclockwise (when right is in front) GOOD
+    testCube3.rotateSide(-1, testCube3.getDimension() - 1);
+    testCube3.printCubeNums();
+
+    //rotates top layer counterclockwise (looking down on cube) GOOD
+    testCube3.rotateLayer(-1, 0);
+    testCube3.printCubeNums();
+
+    //rotates bottom layer counterclockwise (looking down on cube) GOOD
+    testCube3.rotateLayer(-1, testCube3.getDimension() - 1);
+    testCube3.printCubeNums();
+    */
+    //rotates back layer clockwise (when front is in front)
+    testCube3.rotateFrontFace(1, 0);
+    testCube3.printCubeNums();
+
+    //rotates front face clockwise (when front is in front)
+    testCube3.rotateFrontFace(1, testCube3.getDimension() - 1);
+    testCube3.printCubeNums();
+
+    //rotates left side clockwise (when right is in front)
+    testCube3.rotateSide(1, 0);
+    testCube3.printCubeNums();
+
+    //rotates right side clockwise (when right is in front)
+    testCube3.rotateSide(1, testCube3.getDimension() - 1);
+    testCube3.printCubeNums();
+
+    //rotates top layer clockwise (when looking down on the cube)
+    testCube3.rotateLayer(1, 0);
+    testCube3.printCubeNums();
+
+    //rotates bottom layer clockwise (when looking down on the cube)
+    testCube3.rotateLayer(1, testCube3.getDimension() - 1);
+    testCube3.printCubeNums();
 
 
 
