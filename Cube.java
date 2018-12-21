@@ -402,8 +402,10 @@ public class Cube {
     testCube3.printCube();
     testCube3.printCubeNums();
 */
-
-    testCube3.printCubeNums();
+    System.out.println(testCube3.faces);
+    testCube3.printCube();
+    testCube3.scrambleCube(1000000);
+    testCube3.printCube();
     /*
     //rotates back counterClockwise (facing the front) clockwise (when back is in front) GOOD
     testCube3.rotateFrontFace(-1, 0);
