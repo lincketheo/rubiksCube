@@ -227,7 +227,7 @@ public class Cube {
     System.out.println("___________________________________________________________________");
     System.out.println();
     int base = dimension * dimension;
-    ArrayList<String> colocounterclockwisers = new ArrayList();
+    ArrayList<String> colors = new ArrayList();
     for (int i = 0; i < this.faces.size(); i++) {
       switch (this.faces.get(i) / base) {
       case 0:
@@ -288,7 +288,7 @@ public class Cube {
     for (int i = 0; i < dimension; i++) {
       for (int x = 0; x < dimension + 3; x++) {
         System.out.print("  ");
-      }counterclockwise
+      }
 
       System.out.print("| ");
       for (int j = 0; j < dimension; j++) {
