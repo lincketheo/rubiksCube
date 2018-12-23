@@ -3,104 +3,52 @@ import java.util.*;
 
 public class Cube3x3 extends Cube {
     // Does not solve 2x2
-    private ArrayList<EdgeCubie> edgeCubies;
-    private ArrayList<CornerCubie> cornerCubies;
+    public static ArrayList<String> algorithm;
 
-    public Cube3x3() {
-        super(3);
-        this.fillCornerCubies();
-        this.fillEdgeCubies();
+    public Cube3x3(int dimension) {
+        super(dimension);
     }
 
-    public void fillEdgeCubies() {
-        edgeCubies = new ArrayList<>();
+    public void scrambleCube(int moves) {
+        ArrayList<String> validMoves = new ArrayList<>();
+        validMoves.add("R");
+        validMoves.add("R'");
+        validMoves.add("L");
+        validMoves.add("L'");
+        validMoves.add("U");
+        validMoves.add("U'");
+        validMoves.add("D");
+        validMoves.add("D'");
+        validMoves.add("F");
+        validMoves.add("F'");
+        validMoves.add("B");
+        validMoves.add("B'");
+        validMoves.add("X");
+        validMoves.add("X'");
+        validMoves.add("Y");
+        validMoves.add("Y'");
+        ArrayList<String> scrambleAlgorithm = new ArrayList<>();
+        int randomInt;
 
-        for (int i = 1; i < this.getDimension() - 1; i++) {
-            edgeCubies.add(new EdgeCubie(this.getPosition(0, i, 0), this.getPosition(1, 0, i)));
-            edgeCubies
-                    .add(new EdgeCubie(this.getPosition(0, 0, i), this.getPosition(4, 0, this.getDimension() - 1 - i)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(0, i, this.getDimension() - 1),
-                    this.getPosition(3, 0, this.getDimension() - 1 - i)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(1, i, 0), this.getPosition(4, i, this.getDimension() - 1)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(1, this.getDimension() - 1, i),
-                    this.getPosition(5, this.getDimension() - 1 - i, 0)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(5, i, this.getDimension() - 1),
-                    this.getPosition(3, this.getDimension() - 1, i)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(5, this.getDimension() - 1, i),
-                    this.getPosition(4, this.getDimension() - 1, this.getDimension() - 1 - i)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(3, i, this.getDimension() - 1), this.getPosition(4, i, 0)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(1, i, this.getDimension() - 1), this.getPosition(2, i, 0)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(0, this.getDimension() - 1, i), this.getPosition(2, 0, i)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(2, this.getDimension() - 1, i), this.getPosition(5, 0, i)));
-            edgeCubies.add(new EdgeCubie(this.getPosition(2, i, this.getDimension() - 1), this.getPosition(3, i, 0)));
+        for (int i = 0; i < moves; i++) {
+            randomInt = (int) (Math.random() * 16);
+            scrambleAlgorithm.add(validMoves.get(randomInt));
         }
+        this.moveSequence(scrambleAlgorithm);
+        algorithm = scrambleAlgorithm;
     }
 
-    public void fillCornerCubies() {
-        cornerCubies = new ArrayList<>();
-        cornerCubies.add(new CornerCubie(this.getPosition(0, 0, 0), this.getPosition(1, 0, 0),
-                this.getPosition(4, 0, this.getDimension() - 1)));
-        cornerCubies.add(new CornerCubie(this.getPosition(0, 0, this.getDimension() - 1),
-                this.getPosition(3, 0, this.getDimension() - 1), this.getPosition(4, 0, 0)));
-        cornerCubies.add(new CornerCubie(this.getPosition(0, this.getDimension() - 1, 0),
-                this.getPosition(1, 0, this.getDimension() - 1), this.getPosition(2, 0, 0)));
-        cornerCubies.add(new CornerCubie(this.getPosition(0, this.getDimension() - 1, this.getDimension() - 1),
-                this.getPosition(2, 0, this.getDimension() - 1), this.getPosition(3, 0, 0)));
-        cornerCubies.add(new CornerCubie(this.getPosition(2, this.getDimension() - 1, 0),
-                this.getPosition(1, this.getDimension() - 1, this.getDimension() - 1), this.getPosition(5, 0, 0)));
-        cornerCubies.add(new CornerCubie(this.getPosition(2, this.getDimension() - 1, this.getDimension() - 1),
-                this.getPosition(3, this.getDimension() - 1, 0), this.getPosition(5, 0, this.getDimension() - 1)));
-        cornerCubies.add(new CornerCubie(this.getPosition(5, this.getDimension() - 1, 0),
-                this.getPosition(1, this.getDimension() - 1, 0),
-                this.getPosition(4, this.getDimension() - 1, this.getDimension() - 1)));
-        cornerCubies.add(new CornerCubie(this.getPosition(5, this.getDimension() - 1, this.getDimension() - 1),
-                this.getPosition(3, this.getDimension() - 1, this.getDimension() - 1),
-                this.getPosition(4, this.getDimension() - 1, 0)));
+    /************************************************************************************
+     * SOLVING METHODS
+     * **********************************************************************************
+     */
 
-    }
+    /************************************************************************************
+     * FIRST LAYER METHODS
+     * **********************************************************************************
+     */
 
-    public ArrayList<EdgeCubie> getEdgeCubie(int color1, int color2) {
-        int base = this.getDimension() * this.getDimension();
-        ArrayList<EdgeCubie> cubies = new ArrayList<>();
-        for (EdgeCubie cubie : edgeCubies) {
-            if ((cubie.index1 / base == color1 && cubie.index2 / base == color2)
-                    || (cubie.index1 / base == color2 && cubie.index2 / base == color1)) {
-                cubies.add(cubie);
-            }
-        }
-        return cubies;
-
-    }
-
-    public CornerCubie getCornerCubie(int color1, int color2, int color3) {
-        int base = this.getDimension() * this.getDimension();
-        ArrayList<Integer> colors;
-        ArrayList<Integer> testingColors = new ArrayList<>();
-        testingColors.add(color1);
-        testingColors.add(color2);
-        testingColors.add(color3);
-        Collections.sort(testingColors);
-
-        for (CornerCubie cubie : cornerCubies) {
-            colors = new ArrayList<>();
-            colors.add(cubie.index1 / base);
-            colors.add(cubie.index2 / base);
-            colors.add(cubie.index3 / base);
-            Collections.sort(colors);
-            boolean match = true;
-            for (int i = 0; i < 3; i++) {
-                if (colors.get(i) != testingColors.get(i)) {
-                    match = false;
-                    break;
-                }
-            }
-            if (match) {
-                return cubie;
-            }
-        }
-        return null;
-
-    }
+    // EDGES
 
     // Moves desired the edge piece that cooresponds to whatever color is on back
     // and top to right place without disrupting anything important
@@ -307,6 +255,10 @@ public class Cube3x3 extends Cube {
         }
     }
 
+    // CORNERS
+
+    // moves any corner piece to index 0,0,0 or 0,dim-1,0 then does the following
+    // two methods to put it in place
     public void solveTopBackRightCornerPiece() {
         int base = this.getDimension() * this.getDimension();
         int topFaceColor = this.getFaces().get(getPosition(2, 1, 1)) / base;
@@ -560,6 +512,9 @@ public class Cube3x3 extends Cube {
         }
     }
 
+    // FOLLOWING TWO ARE USED A LOT IN THE SOLVE CORNER METHOD
+    // if you're looking at the cube foldout, moves
+    // index 0,0,0 to 2,0,dim-1)
     public void backBottomLeftCornertoTopBackRightCorner() {
         this.rotateLayer(1, this.getDimension() - 1);
         this.rotateLayer(1, this.getDimension() - 1);
@@ -569,8 +524,8 @@ public class Cube3x3 extends Cube {
 
     }
 
-    // Don't have very creative names, (if you're looking at the cube foldout, moves
-    // index 0,0,0 to 2,0,dim-1)
+    // if you're looking at the cube foldout, moves
+    // index 0,dim-1,0 to 2,0,dim-1)
     public void backBottomRightCornertoTopBackRightCorner() {
         this.rotateLayer(-1, this.getDimension() - 1);
         this.rotateSide(1, this.getDimension() - 1);
@@ -579,6 +534,7 @@ public class Cube3x3 extends Cube {
 
     }
 
+    // Repeates solvetopbackrightcornerpiece four times
     public void solveCorners() {
         for (int i = 0; i < 4; i++) {
             this.solveTopBackRightCornerPiece();
@@ -587,6 +543,13 @@ public class Cube3x3 extends Cube {
         }
     }
 
+    /************************************************************************************
+     * SECOND LAYER METHODS
+     * **********************************************************************************
+     */
+
+    // moves top/front edge piece to the right/left edge spot THIS CAN DO
+    // EVERYTHING, YOU DON'T NEED MOVE TOP FRONT TO LEFT I'VE INCLUDED IT ANYWAYS
     public void moveTopFrontEdgePiecetoRight() {
         int base = this.getDimension() * this.getDimension();
         int colorRight = this.getFaces().get(this.getPosition(3, 1, 1)) / base;
@@ -758,6 +721,7 @@ public class Cube3x3 extends Cube {
 
     }
 
+    // does movetopfront... four times while rotating cube
     public void solveSecondLayer() {
         for (int i = 0; i < 4; i++) {
             this.moveTopFrontEdgePiecetoRight();
@@ -765,6 +729,7 @@ public class Cube3x3 extends Cube {
         }
     }
 
+    // DON'T NEED - TORIGHT DOES EVERYTHING
     public void moveTopFrontEdgePiecetoLeft() {
         int base = this.getDimension() * this.getDimension();
         int colorLeft = this.getFaces().get(this.getPosition(1, 1, 1)) / base;
@@ -931,25 +896,7 @@ public class Cube3x3 extends Cube {
 
     }
 
-    // Moves top front edge piece to either left / front or right / front edge place
-    // (the correct one)
-    public void moveTopFrontEdgePieceToSide() {
-        int base = this.getDimension() * this.getDimension();
-
-        int colorLeft = this.getFaces().get(this.getPosition(1, 1, 1)) / base;
-        int colorRight = this.getFaces().get(this.getPosition(3, 1, 1)) / base;
-        int colorFront = this.getFaces().get(this.getPosition(5, 1, 1)) / base;
-
-        EdgeCubie cubie = this.getEdgeCubie(colorLeft, colorFront);
-        int faceFrontCubie;
-        if (cubie.index1 / 9 == colorFront) {
-            faceFrontCubie = this.getFaceOrientation(cubie.index1);
-        } else {
-            faceFrontCubie = this.getFaceOrientation(cubie.index2);
-        }
-
-    }
-
+    // Algorithm for top front to right front edge
     public void rightEdgePieceLayerTwo() {
         // U R U' R' U' F' U F
         this.rotateLayer(1, 0);
@@ -962,6 +909,7 @@ public class Cube3x3 extends Cube {
         this.rotateFrontFace(1, this.getDimension() - 1);
     }
 
+    // Algorithm for top front to left front edge
     public void leftEdgePieceLayerTwo() {
         // U' L' U L U F U' F'
         this.rotateLayer(-1, 0);
@@ -974,6 +922,15 @@ public class Cube3x3 extends Cube {
         this.rotateFrontFace(-1, this.getDimension() - 1);
     }
 
+    /************************************************************************************
+     * THIRD LAYER METHODS
+     * **********************************************************************************
+     */
+
+    // Step one
+    // -----------------------------------------------------
+
+    // Solves the cross on top (doesn't alighn edge pieces to right place though)
     public void solveThirdLayerCross() {
         // how many top level squares are here, if theres one, do
         // algorithmthirdlayercross in any orientation and then do this method again
@@ -1020,6 +977,7 @@ public class Cube3x3 extends Cube {
         }
     }
 
+    // algorithm for the above
     public void alogirthmThirdLayerCross() {
         this.rotateFrontFace(1, this.getDimension() - 1);
         this.rotateSide(1, this.getDimension() - 1);
@@ -1030,6 +988,7 @@ public class Cube3x3 extends Cube {
 
     }
 
+    // Aligns the edge pieces
     public void alignThirdLayerCross() {
         // align so that front equals top
         // three cases:
@@ -1085,6 +1044,7 @@ public class Cube3x3 extends Cube {
 
     }
 
+    // Algorithm for above
     public void algorithmMatchEdgePiecesThirdLayer() {
         this.rotateSide(1, this.getDimension() - 1);
         this.rotateLayer(1, 0);
@@ -1095,7 +1055,13 @@ public class Cube3x3 extends Cube {
         this.rotateLayer(1, 0);
         this.rotateSide(-1, this.getDimension() - 1);
     }
+    // -----------------------------------------------------
 
+    // step two
+    // -----------------------------------------------------
+
+    // returns whether top front right corner piece is in right place (regardless of
+    // orientation)
     public boolean checkTopFrontRightCornerPiece() {
         int base = this.getDimension() * this.getDimension();
 
@@ -1110,13 +1076,16 @@ public class Cube3x3 extends Cube {
         Collections.sort(colorsTopRightFront);
 
         ArrayList<Integer> colorsTopRightFrontCompare = new ArrayList<>();
-        colorsTopRightFrontCompare.add(this.getFaces().get(this.getPosition(2, this.getDimension() - 1, this.getDimension() - 1)) / base);
+        colorsTopRightFrontCompare
+                .add(this.getFaces().get(this.getPosition(2, this.getDimension() - 1, this.getDimension() - 1)) / base);
         colorsTopRightFrontCompare.add(this.getFaces().get(this.getPosition(3, this.getDimension() - 1, 0)) / base);
         colorsTopRightFrontCompare.add(this.getFaces().get(this.getPosition(5, 0, this.getDimension() - 1)) / base);
         Collections.sort(colorsTopRightFrontCompare);
         return colorsTopRightFront.equals(colorsTopRightFrontCompare);
     }
 
+    // puts third layer coreners in correct spot (regardless of orientation of
+    // pieces)
     public void orientThirdLayerCorners() {
         int numMatches = 0;
         boolean matcher = this.checkTopFrontRightCornerPiece();
@@ -1137,18 +1106,19 @@ public class Cube3x3 extends Cube {
             this.orientThirdLayerCorners();
             return;
         } else {
-            while(!matcher){
+            while (!matcher) {
                 this.rotateCubeClockwise();
                 matcher = this.checkTopFrontRightCornerPiece();
             }
             this.thirdLayerCornerAlgorithm();
-            //sometimes need to do it again
+            // sometimes need to do it again
             this.orientThirdLayerCorners();
             return;
         }
 
     }
 
+    // algorithm for above
     public void thirdLayerCornerAlgorithm() {
         this.rotateLayer(1, 0);
         this.rotateSide(1, this.getDimension() - 1);
@@ -1159,36 +1129,42 @@ public class Cube3x3 extends Cube {
         this.rotateLayer(-1, 0);
         this.rotateSide(-1, 0);
     }
+    // -----------------------------------------------------
 
-
-    public void lastCornerAlignmentAlgorithm(){
-        this.rotateSide(-1, this.getDimension() - 1);
-        this.rotateLayer(1, this.getDimension() - 1);
-        this.rotateSide(1, this.getDimension() - 1);
-        this.rotateLayer(-1, this.getDimension() - 1);
-
-
-    }
-
-    public boolean thirdLayerColorAlignmentTest(){
+    // step three
+    // -----------------------------------------------------
+    // tests whether corneres are in right orientation
+    public boolean thirdLayerColorAlignmentTest() {
         int base = this.getDimension() * this.getDimension();
-        int bottomCorner = this.getFaces().get(this.getPosition(2, this.getDimension() - 1, this.getDimension() - 1)) / base;
+        int bottomCorner = this.getFaces().get(this.getPosition(2, this.getDimension() - 1, this.getDimension() - 1))
+                / base;
         int frontFace = this.getFaces().get(this.getPosition(2, 1, 1)) / base;
         return frontFace == bottomCorner;
     }
 
-    public void solveThirdLayerCorners(){
+    // Orients third layer corners
+    public void solveThirdLayerCorners() {
         boolean status = this.thirdLayerColorAlignmentTest();
-        for(int i = 0; i < 4; i++){
-            while(!status){
+        for (int i = 0; i < 4; i++) {
+            while (!status) {
                 this.lastCornerAlignmentAlgorithm();
                 status = this.thirdLayerColorAlignmentTest();
             }
             this.rotateLayer(1, 0);
             status = this.thirdLayerColorAlignmentTest();
         }
-        
+
     }
+
+    // algorithm for above
+    public void lastCornerAlignmentAlgorithm() {
+        this.rotateSide(-1, this.getDimension() - 1);
+        this.rotateLayer(1, this.getDimension() - 1);
+        this.rotateSide(1, this.getDimension() - 1);
+        this.rotateLayer(-1, this.getDimension() - 1);
+
+    }
+    // -----------------------------------------------------
 
     // ---------------------------------------------TOOLS----------------------------------------
     // Generally, I'm not using strings to represent colors unless debugging. The
@@ -1197,186 +1173,9 @@ public class Cube3x3 extends Cube {
 
     // takes in any cube on the desired face (doesn't matter what color the cube is,
     // returns what face that cube is on)
-    public int getFaceColor(int color) {
-        // find index of the element color
-        int valuesIndex = this.getFaces().indexOf(color);
-        // find the value of values index / base (dim ^ 2) this is the "sudoFace" the
-        // cube is on, but faces change a lot, so we need to compare what the face is
-        // compared to the center piece
-        int sudoFace = valuesIndex / (this.getDimension() * this.getDimension());
-        // (by center piece, I've just done dim + 2, any cube's (face, 1, 1) pos will be
-        // the color of the face if the center piece is solved
-        return this.getFaces().get(getPosition(sudoFace, 1, 1)) / (this.getDimension() * this.getDimension());
-    }
 
-    // wheareas getfacecolor represents the color (not face in getposition(face,
-    // row, col)) getfaceorientation returns whether the square is on top, bottom
-    // left etc by returning the magnitude of the face (the actual index / 9)
-    public int getFaceOrientation(int color) {
-        return this.getFaces().indexOf(color) / 9;
-    }
+    public void solve() {
 
-    public int getCoorespondingEdgePiece(int color) {
-        for (EdgeCubie cubie : edgeCubies) {
-            if (cubie.index1 == color)
-                return cubie.index2;
-            if (cubie.index2 == color)
-                return cubie.index1;
-        }
-        return -1;
-    }
-
-    public int[] getCoorespondingCorners(int color) {
-        for (CornerCubie cubie : cornerCubies) {
-            if (cubie.index1 == color) {
-                int[] result = { cubie.index2, cubie.index3 };
-                return result;
-            } else if (cubie.index2 == color) {
-                int[] result = { cubie.index1, cubie.index3 };
-                return result;
-            } else if (cubie.index3 == color) {
-                int[] result = { cubie.index1, cubie.index2 };
-                return result;
-            }
-
-        }
-        int[] falseArray = { -1, -1 };
-        return falseArray;
-    }
-
-    // Takes in a readable list of moves (classic rubik's cube notation U R T T' U'
-    // etc.) executes those moves
-    public void moveSequence(ArrayList<String> moves) {
-        for (String move : moves) {
-            if (move.equals("R")) {
-                this.rotateSide(1, this.getDimension() - 1);
-            } else if (move.equals("R'")) {
-                this.rotateSide(-1, this.getDimension() - 1);
-            } else if (move.equals("L")) {
-
-                // rotate Side rotates clockwise with respect to the right face, you have to
-                // switch 1 with -1 (see B)
-                this.rotateSide(-1, 0);
-            } else if (move.equals("L'")) {
-                this.rotateSide(1, 0);
-            } else if (move.equals("U")) {
-                this.rotateLayer(1, 0);
-            } else if (move.equals("U'")) {
-                this.rotateLayer(-1, 0);
-            } else if (move.equals("B")) {
-
-                // When rotating the back, rotate FrontFace assumes you are still looking at the
-                // cube
-                // All major cube algorithms turn back clockwise when you look at back,
-                // rotateFrontFace
-                // always turns clockwise if you're looking at it, this I switched 1 with -1
-                this.rotateFrontFace(-1, 0);
-            } else if (move.equals("B'")) {
-                this.rotateFrontFace(1, 0);
-            } else if (move.equals("F")) {
-                this.rotateFrontFace(1, this.getDimension() - 1);
-            } else if (move.equals("F'")) {
-                this.rotateFrontFace(-1, this.getDimension() - 1);
-            } else if (move.equals("D")) {
-                this.rotateLayer(1, this.getDimension() - 1);
-            } else if (move.equals("D'")) {
-                this.rotateLayer(-1, this.getDimension() - 1);
-            }
-        }
-    }
-
-    // The following rotate the entire cube (so that the cube orientation changes)
-    public void rotateCubeClockwise() {
-        for (int i = 0; i < this.getDimension(); i++) {
-            this.rotateLayer(1, i);
-        }
-    }
-
-    public void rotateCubeCounterClockwise() {
-        for (int i = 0; i < this.getDimension(); i++) {
-            this.rotateLayer(-1, i);
-        }
-    }
-
-    public void rotateCubeDown() {
-        for (int i = 0; i < this.getDimension(); i++) {
-            this.rotateSide(-1, i);
-        }
-    }
-
-    public void rotateCubeUp() {
-        for (int i = 0; i < this.getDimension(); i++) {
-            this.rotateSide(1, i);
-        }
-    }
-
-    // Puts the above together tangibly
-    // orients the cube just so that the colorfacefront is in front
-    public void orientCube(int colorFaceFront) {
-        // If desired face is on top, rotate whole cube down towards you
-        // if desired face is on bottom, rotate whole cube up towards you
-        // If desired face is on right rotate whole cube clockwise
-        // If desired face is on left rotate whole cube counterclockwise
-        // If desired face is on back rotate cube twice (clockwise in this case)
-        int face = this.getFaceOrientation(colorFaceFront);
-        switch (face) {
-        case 0:
-            this.rotateCubeDown();
-            this.rotateCubeDown();
-            break;
-        case 1:
-            this.rotateCubeCounterClockwise();
-            break;
-        case 2:
-            this.rotateCubeDown();
-            break;
-        case 3:
-            this.rotateCubeClockwise();
-            break;
-        case 4:
-            this.rotateCubeUp();
-        }
-
-    }
-
-    // Orients the cube so that facefront is the front face, face top is the top
-    // face and facebottom is the bottom face color
-    public void orientCube(int colorFaceFront, int colorFaceTop) {
-        // If impossible orientation, only puts color face top on top
-        // (ifnorescolorfacefront)
-        switch (this.getFaceOrientation(colorFaceTop)) {
-        case 0:
-            this.rotateCubeDown();
-        case 1:
-            this.rotateCubeCounterClockwise();
-            this.rotateCubeUp();
-        case 3:
-            this.rotateCubeClockwise();
-            this.rotateCubeUp();
-        case 4:
-            this.rotateCubeClockwise();
-            this.rotateCubeClockwise();
-        case 5:
-            this.rotateCubeUp();
-        }
-
-        switch (this.getFaceOrientation(colorFaceFront)) {
-        case 0:
-            this.rotateCubeClockwise();
-            this.rotateCubeClockwise();
-        case 1:
-            this.rotateCubeCounterClockwise();
-        case 3:
-            this.rotateCubeClockwise();
-        }
-
-    }
-
-
-
-
-    public void solve(){
-        
         this.solveCross();
         this.solveCorners();
         this.rotateCubeDown();
@@ -1388,25 +1187,36 @@ public class Cube3x3 extends Cube {
         this.solveThirdLayerCorners();
     }
 
-    public static void test(){
-        //shows the cube being sovled
 
-        Cube3x3 myCube3x3 = new Cube3x3();
-        //print the origional cube
+    //Run this to see a 3x3 cube being solved
+    //the idea is to be able to put any dimension in (scramble only moves 3x3 like faces)
+    //I wrote all of the code to be able to adapt to a high dimensional cube, however because I used recursion, I am getting a stack overflow error
+    //This will be fixed by the time I finish the project
+    public static void test() {
+        // shows the cube being sovled
+
+        Cube3x3 myCube3x3 = new Cube3x3(3);
+        // print the origional cube
         myCube3x3.printCube();
 
-        //scramble it 1000000 times
-        myCube3x3.scrambleCube(1000000);
+        // scramble it 1000000 times
+        myCube3x3.scrambleCube(100);
 
-        //print the scrambled cube
+        // print the scrambled cube
         myCube3x3.printCube();
-
-        //solve the scrambled cube
+        
+        // solve the scrambled cube
+        //Check the sequence of steps in the method solve
         myCube3x3.solve();
 
-        //print the solved cube
+        // print the solved cube
+       
         myCube3x3.printCube();
-    }
+        
+    }  
+
+
+
 
     public static void main(String[] args) {
         test();
