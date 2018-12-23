@@ -544,7 +544,7 @@ public class Cube3x3 extends Cube {
 
             // bottom left corner
             else {
-                
+
                 this.rotateLayer(-1, this.getDimension() - 1);
                 this.rotateFrontFace(1, 0);
                 this.rotateLayer(1, this.getDimension() - 1);
@@ -583,8 +583,611 @@ public class Cube3x3 extends Cube {
         for (int i = 0; i < 4; i++) {
             this.solveTopBackRightCornerPiece();
             this.rotateCubeClockwise();
-            
+
         }
+    }
+
+    public void moveTopFrontEdgePiecetoRight() {
+        int base = this.getDimension() * this.getDimension();
+        int colorRight = this.getFaces().get(this.getPosition(3, 1, 1)) / base;
+        int colorFront = this.getFaces().get(this.getPosition(5, 1, 1)) / base;
+        ArrayList<EdgeCubie> cubie = this.getEdgeCubie(colorRight, colorFront);
+        int faceFrontCubie;
+        int faceFrontCubieNo;
+        if (cubie.get(0).index1 / 9 == colorFront) {
+            faceFrontCubie = this.getFaceOrientation(cubie.get(0).index1);
+            faceFrontCubieNo = cubie.get(0).index1;
+        } else {
+            faceFrontCubie = this.getFaceOrientation(cubie.get(0).index2);
+            faceFrontCubieNo = cubie.get(0).index2;
+        }
+        // Move it to its place
+
+        // on back face somewhere
+        if (faceFrontCubie == 0) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubieNo) % this.getDimension() == 0) {
+                // Get the edge piece out of there
+                this.rotateCubeCounterClockwise();
+                this.rotateCubeCounterClockwise();
+                this.rightEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeClockwise();
+                this.rotateCubeClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoRight();
+            }
+            // if cubie is on the "right edge"
+            else if ((this.getFaces().indexOf(faceFrontCubieNo) + 1) % this.getDimension() == 0) {
+                // Get the edge piece out of there
+                this.rotateCubeCounterClockwise();
+                this.rotateCubeCounterClockwise();
+                this.leftEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeClockwise();
+                this.rotateCubeClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoRight();
+            } else {
+                this.rotateLayer(1, 0);
+                this.rotateLayer(1, 0);
+                this.rightEdgePieceLayerTwo();
+                // ENDS METHOD
+            }
+            // else, cubie is bordering top and middle
+            // this.printCubeNums();
+        }
+
+        else if (faceFrontCubie == 1) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubieNo) < 1 * base + this.getDimension()) {
+                // Get the edge piece out of there
+                this.rotateCubeCounterClockwise();
+                this.leftEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoRight();
+
+            }
+            // if cubie is on the "right edge"
+            else if ((this.getFaces().indexOf(faceFrontCubieNo) + 1) % this.getDimension() == 0) {
+                this.rotateLayer(-1, 0);
+                this.rightEdgePieceLayerTwo();
+                // ENDS METHOD
+
+            } else {
+                // Get the edge piece out of there
+                this.rotateCubeCounterClockwise();
+                this.rightEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoRight();
+            }
+            // else, cubie is bordering top and middle
+            // this.printCubeNums();
+        }
+
+        else if (faceFrontCubie == 2) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubieNo) < 2 * base + this.getDimension()) {
+
+                // Only exception is when face is on top, then we have to use the right
+                // algorithm
+                this.rotateLayer(1, 0);
+                this.rotateCubeClockwise();
+                this.leftEdgePieceLayerTwo();
+                this.rotateCubeCounterClockwise();
+            }
+            // if cubie is on the "right edge"
+            else if ((this.getFaces().indexOf(faceFrontCubieNo) + 1) % this.getDimension() == 0) {
+                this.rotateCubeClockwise();
+                this.leftEdgePieceLayerTwo();
+                this.rotateCubeCounterClockwise();
+            } else if (this.getFaces().indexOf(faceFrontCubieNo) % this.getDimension() == 0) {
+                this.rotateLayer(-1, 0);
+                this.rotateLayer(-1, 0);
+                this.rotateCubeClockwise();
+                this.leftEdgePieceLayerTwo();
+                this.rotateCubeCounterClockwise();
+            }
+
+            else {
+                this.rotateLayer(-1, 0);
+                this.rotateCubeClockwise();
+                this.leftEdgePieceLayerTwo();
+                this.rotateCubeCounterClockwise();
+            }
+        }
+
+        else if (faceFrontCubie == 3) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubieNo) < 3 * base + this.getDimension()) {
+                // Get the edge piece out of there
+                this.rotateCubeClockwise();
+                this.rightEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeCounterClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoRight();
+            }
+            // if cubie is on the "right edge"
+            else if (this.getFaces().indexOf(faceFrontCubieNo) % this.getDimension() == 0) {
+                this.rotateLayer(1, 0);
+                this.rightEdgePieceLayerTwo();
+                // ENDS METHOD
+
+            } else {
+                // Get the edge piece out of there
+                this.rotateCubeClockwise();
+                this.leftEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeCounterClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoRight();
+            }
+            // else, cubie is bordering top and middle
+            // this.printCubeNums();
+        }
+
+        else if (faceFrontCubie == 5) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubieNo) < 5 * base + this.getDimension()) {
+                this.rightEdgePieceLayerTwo();
+                // ENDS METHOD
+            }
+            // if cubie is on the "right edge"
+            else if (this.getFaces().indexOf(faceFrontCubieNo) % this.getDimension() == 0) {
+                this.leftEdgePieceLayerTwo();
+                this.moveTopFrontEdgePiecetoRight();
+            }
+        }
+
+    }
+
+    public void solveSecondLayer() {
+        for (int i = 0; i < 4; i++) {
+            this.moveTopFrontEdgePiecetoRight();
+            this.rotateCubeClockwise();
+        }
+    }
+
+    public void moveTopFrontEdgePiecetoLeft() {
+        int base = this.getDimension() * this.getDimension();
+        int colorLeft = this.getFaces().get(this.getPosition(1, 1, 1)) / base;
+        int colorFront = this.getFaces().get(this.getPosition(5, 1, 1)) / base;
+        EdgeCubie cubie = this.getEdgeCubie(colorLeft, colorFront);
+        int faceFrontCubie;
+        if (cubie.index1 / 9 == colorFront) {
+            faceFrontCubie = this.getFaceOrientation(cubie.index1);
+        } else {
+            faceFrontCubie = this.getFaceOrientation(cubie.index2);
+        }
+
+        // Move it to its place
+
+        // on back face somewhere
+        if (faceFrontCubie == 0) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubie) % this.getDimension() == 0) {
+                // Get the edge piece out of there
+                this.rotateCubeCounterClockwise();
+                this.rotateCubeCounterClockwise();
+                this.rightEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeClockwise();
+                this.rotateCubeClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoLeft();
+            }
+            // if cubie is on the "right edge"
+            else if ((this.getFaces().indexOf(faceFrontCubie) + 1) % this.getDimension() == 0) {
+                // Get the edge piece out of there
+                this.rotateCubeCounterClockwise();
+                this.rotateCubeCounterClockwise();
+                this.leftEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeClockwise();
+                this.rotateCubeClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoLeft();
+            } else {
+                this.rotateLayer(1, 0);
+                this.rotateLayer(1, 0);
+                this.leftEdgePieceLayerTwo();
+                // ENDS METHOD
+            }
+            // else, cubie is bordering top and middle
+            // this.printCubeNums();
+        }
+
+        else if (faceFrontCubie == 1) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubie) < 5 * base + this.getDimension()) {
+                // Get the edge piece out of there
+                this.rotateCubeCounterClockwise();
+                this.leftEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoLeft();
+
+            }
+            // if cubie is on the "right edge"
+            else if ((this.getFaces().indexOf(faceFrontCubie) + 1) % this.getDimension() == 0) {
+                this.rotateLayer(-1, 0);
+                this.leftEdgePieceLayerTwo();
+                // ENDS METHOD
+
+            } else {
+                // Get the edge piece out of there
+                this.rotateCubeCounterClockwise();
+                this.rightEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoLeft();
+            }
+            // else, cubie is bordering top and middle
+            // this.printCubeNums();
+        }
+
+        else if (faceFrontCubie == 2) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubie) < 2 * base + this.getDimension()) {
+
+                // Only exception is when face is on top, then we have to use the right
+                // algorithm
+                this.rotateLayer(-1, 0);
+                this.rotateCubeCounterClockwise();
+                this.rightEdgePieceLayerTwo();
+            }
+            // if cubie is on the "right edge"
+            else if (this.getFaces().indexOf(faceFrontCubie) % this.getDimension() == 0) {
+                this.rotateCubeCounterClockwise();
+                this.rightEdgePieceLayerTwo();
+            } else if ((this.getFaces().indexOf(faceFrontCubie) + 1) % this.getDimension() == 0) {
+                this.rotateLayer(-1, 0);
+                this.rotateLayer(-1, 0);
+                this.rotateCubeCounterClockwise();
+                this.rightEdgePieceLayerTwo();
+            }
+
+            else {
+                this.rotateLayer(1, 0);
+                this.rotateCubeCounterClockwise();
+                this.rightEdgePieceLayerTwo();
+            }
+        }
+
+        else if (faceFrontCubie == 3) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubie) < 3 * base + this.getDimension()) {
+                // Get the edge piece out of there
+                this.rotateCubeClockwise();
+                this.rightEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeCounterClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoLeft();
+
+            }
+            // if cubie is on the "right edge"
+            else if (this.getFaces().indexOf(faceFrontCubie) % this.getDimension() == 0) {
+                this.rotateLayer(1, 0);
+                this.leftEdgePieceLayerTwo();
+                // ENDS METHOD
+
+            } else {
+                // Get the edge piece out of there
+                this.rotateCubeClockwise();
+                this.leftEdgePieceLayerTwo();
+
+                // return to origional orientation
+                this.rotateCubeCounterClockwise();
+
+                // Do this method (now that it's out of its edge spot)
+                this.moveTopFrontEdgePiecetoLeft();
+            }
+            // else, cubie is bordering top and middle
+            // this.printCubeNums();
+        }
+
+        else if (faceFrontCubie == 5) {
+            // if cubie is on the "left" edge
+            if (this.getFaces().indexOf(faceFrontCubie) < 5 * base + this.getDimension()) {
+                this.leftEdgePieceLayerTwo();
+                // ENDS METHOD
+            }
+            // if cubie is on the "right edge"
+            else if ((this.getFaces().indexOf(faceFrontCubie) + 1) % this.getDimension() == 0) {
+                this.rightEdgePieceLayerTwo();
+                this.moveTopFrontEdgePiecetoLeft();
+            }
+        }
+
+    }
+
+    // Moves top front edge piece to either left / front or right / front edge place
+    // (the correct one)
+    public void moveTopFrontEdgePieceToSide() {
+        int base = this.getDimension() * this.getDimension();
+
+        int colorLeft = this.getFaces().get(this.getPosition(1, 1, 1)) / base;
+        int colorRight = this.getFaces().get(this.getPosition(3, 1, 1)) / base;
+        int colorFront = this.getFaces().get(this.getPosition(5, 1, 1)) / base;
+
+        EdgeCubie cubie = this.getEdgeCubie(colorLeft, colorFront);
+        int faceFrontCubie;
+        if (cubie.index1 / 9 == colorFront) {
+            faceFrontCubie = this.getFaceOrientation(cubie.index1);
+        } else {
+            faceFrontCubie = this.getFaceOrientation(cubie.index2);
+        }
+
+    }
+
+    public void rightEdgePieceLayerTwo() {
+        // U R U' R' U' F' U F
+        this.rotateLayer(1, 0);
+        this.rotateSide(1, this.getDimension() - 1);
+        this.rotateLayer(-1, 0);
+        this.rotateSide(-1, this.getDimension() - 1);
+        this.rotateLayer(-1, 0);
+        this.rotateFrontFace(-1, this.getDimension() - 1);
+        this.rotateLayer(1, 0);
+        this.rotateFrontFace(1, this.getDimension() - 1);
+    }
+
+    public void leftEdgePieceLayerTwo() {
+        // U' L' U L U F U' F'
+        this.rotateLayer(-1, 0);
+        this.rotateSide(1, 0);
+        this.rotateLayer(1, 0);
+        this.rotateSide(-1, 0);
+        this.rotateLayer(1, 0);
+        this.rotateFrontFace(1, this.getDimension() - 1);
+        this.rotateLayer(-1, 0);
+        this.rotateFrontFace(-1, this.getDimension() - 1);
+    }
+
+    public void solveThirdLayerCross() {
+        // how many top level squares are here, if theres one, do
+        // algorithmthirdlayercross in any orientation and then do this method again
+        int base = this.getDimension() * this.getDimension();
+
+        // 10 01 dim - 1 dim - 2 dim - 2 dim -1
+        int colorTopFace = this.getFaces().get(this.getPosition(2, 1, 1)) / base;
+        int colorLeftEdge = this.getFaces().get(this.getPosition(2, 1, 0)) / base;
+        int colorRightEdge = this.getFaces().get(this.getPosition(2, 1, this.getDimension() - 1)) / base;
+        int colorBottomEdge = this.getFaces().get(this.getPosition(2, this.getDimension() - 1, 1)) / base;
+        int colorTopEdge = this.getFaces().get(this.getPosition(2, 0, 1)) / base;
+
+        int noTopLayerFaces = ((colorTopFace == colorLeftEdge) ? 1 : 0) + ((colorTopFace == colorRightEdge) ? 1 : 0)
+                + ((colorTopFace == colorBottomEdge) ? 1 : 0) + ((colorTopFace == colorTopEdge) ? 1 : 0);
+
+        if (noTopLayerFaces < 2) {
+            this.alogirthmThirdLayerCross();
+            this.solveThirdLayerCross();
+            return;
+        } else if (noTopLayerFaces == 4) {
+            return;
+        }
+
+        // For both l orientation and line, the bottom is not the same color while the
+        // left piece is
+        boolean correctOrientation = (colorLeftEdge == colorTopFace) && (colorBottomEdge != colorTopFace);
+        while (!correctOrientation) {
+            this.rotateCubeClockwise();
+            colorLeftEdge = this.getFaces().get(this.getPosition(2, 1, 0)) / base;
+            colorRightEdge = this.getFaces().get(this.getPosition(2, 1, this.getDimension() - 1)) / base;
+            colorBottomEdge = this.getFaces().get(this.getPosition(2, this.getDimension() - 1, 1)) / base;
+            colorTopEdge = this.getFaces().get(this.getPosition(2, 0, 1)) / base;
+            correctOrientation = (colorLeftEdge == colorTopFace) && (colorBottomEdge != colorTopFace);
+        }
+        int noRepetitions;
+        if (colorLeftEdge == colorRightEdge) {
+            noRepetitions = 1;
+        } else {
+            noRepetitions = 2;
+        }
+
+        for (int i = 0; i < noRepetitions; i++) {
+            this.alogirthmThirdLayerCross();
+        }
+    }
+
+    public void alogirthmThirdLayerCross() {
+        this.rotateFrontFace(1, this.getDimension() - 1);
+        this.rotateSide(1, this.getDimension() - 1);
+        this.rotateLayer(1, 0);
+        this.rotateSide(-1, this.getDimension() - 1);
+        this.rotateLayer(-1, 0);
+        this.rotateFrontFace(-1, this.getDimension() - 1);
+
+    }
+
+    public void alignThirdLayerCross() {
+        // align so that front equals top
+        // three cases:
+        // all match: return
+        // cross match: do algorithm, do this again return
+        // touching faces match turn cube until front and top dont match do algorithm do
+        // this again return
+        // no match do the algorithm do this again return
+        int base = this.getDimension() * this.getDimension();
+        boolean leftMatch = (this.getFaces().get(this.getPosition(1, 1, 1))
+                / base) == (this.getFaces().get(this.getPosition(1, 1, this.getDimension() - 1)) / base);
+        boolean rightMatch = (this.getFaces().get(this.getPosition(3, 1, 1))
+                / base) == (this.getFaces().get(this.getPosition(3, 1, 0)) / base);
+        boolean frontMatch = (this.getFaces().get(this.getPosition(5, 1, 1))
+                / base) == (this.getFaces().get(this.getPosition(5, 0, 1)) / base);
+        boolean backMatch = (this.getFaces().get(this.getPosition(0, 1, 1))
+                / base) == (this.getFaces().get(this.getPosition(0, this.getDimension() - 1, 1)) / base);
+        int noMatching = ((leftMatch ? 1 : 0) + (rightMatch ? 1 : 0) + (frontMatch ? 1 : 0) + (backMatch ? 1 : 0));
+        int failSafe = 0;
+
+        while (failSafe < 4 && noMatching < 2) {
+            this.rotateLayer(1, 0);
+            leftMatch = (this.getFaces().get(this.getPosition(1, 1, 1))
+                    / base) == (this.getFaces().get(this.getPosition(1, 1, this.getDimension() - 1)) / base);
+            rightMatch = (this.getFaces().get(this.getPosition(3, 1, 1))
+                    / base) == (this.getFaces().get(this.getPosition(3, 1, 0)) / base);
+            frontMatch = (this.getFaces().get(this.getPosition(5, 1, 1))
+                    / base) == (this.getFaces().get(this.getPosition(5, 0, 1)) / base);
+            backMatch = (this.getFaces().get(this.getPosition(0, 1, 1))
+                    / base) == (this.getFaces().get(this.getPosition(0, this.getDimension() - 1, 1)) / base);
+            noMatching = ((leftMatch ? 1 : 0) + (rightMatch ? 1 : 0) + (frontMatch ? 1 : 0) + (backMatch ? 1 : 0));
+
+            failSafe++;
+        }
+
+        if (noMatching == 4) {
+            return;
+        } else if (frontMatch && backMatch || noMatching < 2 || (rightMatch && leftMatch)) {
+            this.algorithmMatchEdgePiecesThirdLayer();
+            this.alignThirdLayerCross();
+            return;
+        } else {
+            while (frontMatch || !rightMatch) {
+                this.rotateCubeCounterClockwise();
+                rightMatch = (this.getFaces().get(this.getPosition(3, 1, 1))
+                        / base) == (this.getFaces().get(this.getPosition(3, 1, 0)) / base);
+                frontMatch = (this.getFaces().get(this.getPosition(5, 1, 1))
+                        / base) == (this.getFaces().get(this.getPosition(5, 0, 1)) / base);
+            }
+            this.algorithmMatchEdgePiecesThirdLayer();
+            this.rotateLayer(1, 0);
+        }
+
+    }
+
+    public void algorithmMatchEdgePiecesThirdLayer() {
+        this.rotateSide(1, this.getDimension() - 1);
+        this.rotateLayer(1, 0);
+        this.rotateSide(-1, this.getDimension() - 1);
+        this.rotateLayer(1, 0);
+        this.rotateSide(1, this.getDimension() - 1);
+        this.rotateLayer(1, 0);
+        this.rotateLayer(1, 0);
+        this.rotateSide(-1, this.getDimension() - 1);
+    }
+
+    public boolean checkTopFrontRightCornerPiece() {
+        int base = this.getDimension() * this.getDimension();
+
+        int colorTop = this.getFaces().get(this.getPosition(2, 1, 1)) / base;
+        int colorFront = this.getFaces().get(this.getPosition(5, 1, 1)) / base;
+        int colorRight = this.getFaces().get(this.getPosition(3, 1, 1)) / base;
+
+        ArrayList<Integer> colorsTopRightFront = new ArrayList<>();
+        colorsTopRightFront.add(colorTop);
+        colorsTopRightFront.add(colorFront);
+        colorsTopRightFront.add(colorRight);
+        Collections.sort(colorsTopRightFront);
+
+        ArrayList<Integer> colorsTopRightFrontCompare = new ArrayList<>();
+        colorsTopRightFrontCompare.add(this.getFaces().get(this.getPosition(2, this.getDimension() - 1, this.getDimension() - 1)) / base);
+        colorsTopRightFrontCompare.add(this.getFaces().get(this.getPosition(3, this.getDimension() - 1, 0)) / base);
+        colorsTopRightFrontCompare.add(this.getFaces().get(this.getPosition(5, 0, this.getDimension() - 1)) / base);
+        Collections.sort(colorsTopRightFrontCompare);
+        return colorsTopRightFront.equals(colorsTopRightFrontCompare);
+    }
+
+    public void orientThirdLayerCorners() {
+        int numMatches = 0;
+        boolean matcher = this.checkTopFrontRightCornerPiece();
+
+        for (int i = 0; i < 4; i++) {
+            matcher = this.checkTopFrontRightCornerPiece();
+            if (matcher) {
+                numMatches++;
+            }
+            this.rotateCubeClockwise();
+
+        }
+
+        if (numMatches == 4) {
+            return;
+        } else if (numMatches == 0) {
+            this.thirdLayerCornerAlgorithm();
+            this.orientThirdLayerCorners();
+            return;
+        } else {
+            while(!matcher){
+                this.rotateCubeClockwise();
+                matcher = this.checkTopFrontRightCornerPiece();
+            }
+            this.thirdLayerCornerAlgorithm();
+            //sometimes need to do it again
+            this.orientThirdLayerCorners();
+            return;
+        }
+
+    }
+
+    public void thirdLayerCornerAlgorithm() {
+        this.rotateLayer(1, 0);
+        this.rotateSide(1, this.getDimension() - 1);
+        this.rotateLayer(-1, 0);
+        this.rotateSide(1, 0);
+        this.rotateLayer(1, 0);
+        this.rotateSide(-1, this.getDimension() - 1);
+        this.rotateLayer(-1, 0);
+        this.rotateSide(-1, 0);
+    }
+
+
+    public void lastCornerAlignmentAlgorithm(){
+        this.rotateSide(-1, this.getDimension() - 1);
+        this.rotateLayer(1, this.getDimension() - 1);
+        this.rotateSide(1, this.getDimension() - 1);
+        this.rotateLayer(-1, this.getDimension() - 1);
+
+
+    }
+
+    public boolean thirdLayerColorAlignmentTest(){
+        int base = this.getDimension() * this.getDimension();
+        int bottomCorner = this.getFaces().get(this.getPosition(2, this.getDimension() - 1, this.getDimension() - 1)) / base;
+        int frontFace = this.getFaces().get(this.getPosition(2, 1, 1)) / base;
+        return frontFace == bottomCorner;
+    }
+
+    public void solveThirdLayerCorners(){
+        boolean status = this.thirdLayerColorAlignmentTest();
+        for(int i = 0; i < 4; i++){
+            while(!status){
+                this.lastCornerAlignmentAlgorithm();
+                status = this.thirdLayerColorAlignmentTest();
+            }
+            this.rotateLayer(1, 0);
+            status = this.thirdLayerColorAlignmentTest();
+        }
+        
     }
 
     // ---------------------------------------------TOOLS----------------------------------------
@@ -769,16 +1372,44 @@ public class Cube3x3 extends Cube {
 
     }
 
-    public static void main(String[] args) {
+
+
+
+    public void solve(){
+        
+        this.solveCross();
+        this.solveCorners();
+        this.rotateCubeDown();
+        this.rotateCubeDown();
+        this.solveSecondLayer();
+        this.solveThirdLayerCross();
+        this.alignThirdLayerCross();
+        this.orientThirdLayerCorners();
+        this.solveThirdLayerCorners();
+    }
+
+    public static void test(){
+        //shows the cube being sovled
 
         Cube3x3 myCube3x3 = new Cube3x3();
-        myCube3x3.printCube();
-        myCube3x3.scrambleCube(100);
-        myCube3x3.solveCross();
-        myCube3x3.printCube();
-        myCube3x3.solveCorners();
+        //print the origional cube
         myCube3x3.printCube();
 
+        //scramble it 1000000 times
+        myCube3x3.scrambleCube(1000000);
+
+        //print the scrambled cube
+        myCube3x3.printCube();
+
+        //solve the scrambled cube
+        myCube3x3.solve();
+
+        //print the solved cube
+        myCube3x3.printCube();
+    }
+
+    public static void main(String[] args) {
+        test();
     }
 
 }
