@@ -1129,18 +1129,48 @@ public class Cube3x3 extends Cube {
         }
     }
 
-
+    private void solveFirstLayer(){
+        //solves first layer edge pieces
+        solveCross();
+        
+        //solves first layer corner pieces
+        solveCorners();
+    }
+    
+    private void solveThirdLayer(){
+         //solves the third layer cross
+        solveThirdLayerCross();
+        
+        //aligns the edge pieces on the third layer
+        alignThirdLayerCross();
+        
+        //aligns the corner pieces on the third layer
+        orientThirdLayerCorners();
+        
+        //flips the corner pieces to the correct orientation
+        solveThirdLayerCorners();   
+    }
+    
     private void solve() {
         algorithm3x3 = new ArrayList<>();
-        solveCross();
-        solveCorners();
+        //Technically, because Im using recursion in a lot of steps, if you skip or switch these, the code will enter an infinite recursive loop
+        //so you must solve first second then third
+        
+        
+        //solves first layer
+        solveFirstLayer();
+        
+        //flips the cube (not entirely necessary, could have solved bottom layer above, I did it exactly how I would solve it though)
         rotateCubeDown();
         rotateCubeDown();
+        
+        //solves the middle layer
         solveSecondLayer();
-        solveThirdLayerCross();
-        alignThirdLayerCross();
-        orientThirdLayerCorners();
-        solveThirdLayerCorners();
+        
+        //solves third layer
+        solveThirdLayer();
+        
+       
     }
 
     // Run this to see a n x n cube being solved (assuming front and edge faces are
