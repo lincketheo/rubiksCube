@@ -16,3 +16,5 @@ A representation of a dimension x dimension cube. This only contains the helper 
 This entire class assumes that the center pieces and the edge pieces are solved, or the cube is a 3x3 cube. It contains all the 3x3 methods to solve a "3x3 cube" where 3x3 only means the edges and center are solved.
 
 
+## A few errors
+In cube.java, you'll find I wrote this.getDimension and this.getFaces or this.getSomething. This means this method used to be in cube3x3. I will be going through and fixing this, but that is a second priority at the moment. There are some other strange choices and I will be fixing the code later on.
