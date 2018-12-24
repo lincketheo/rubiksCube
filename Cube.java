@@ -20,62 +20,58 @@ public class Cube {
   private ArrayList<Integer> faces;
   // a 3x3 cube has dimension 3
   private int dimension;
+  private ArrayList<Move> algorithm = new ArrayList<>();
+  public static ArrayList<String> algorithm3x3 = new ArrayList<>();
+
 
   // creates a new cube of _dimension
   public Cube(int _dimension) {
     dimension = _dimension;
     int base = dimension * dimension;
-    this.faces = new ArrayList<Integer>();
+    faces = new ArrayList<Integer>();
     for (int i = 0; i < 6 * base; i++) {
-      this.faces.add(i);
+      faces.add(i);
     }
-    this.fillCornerCubies();
-    this.fillEdgeCubies();
+    fillCornerCubies();
+    fillEdgeCubies();
   }
 
   public void fillEdgeCubies() {
     edgeCubies = new ArrayList<>();
 
-    for (int i = 1; i < this.getDimension() - 1; i++) {
-      edgeCubies.add(new EdgeCubie(this.getPosition(0, i, 0), this.getPosition(1, 0, i)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(0, 0, i), this.getPosition(4, 0, this.getDimension() - 1 - i)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(0, i, this.getDimension() - 1),
-          this.getPosition(3, 0, this.getDimension() - 1 - i)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(1, i, 0), this.getPosition(4, i, this.getDimension() - 1)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(1, this.getDimension() - 1, i),
-          this.getPosition(5, this.getDimension() - 1 - i, 0)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(5, i, this.getDimension() - 1),
-          this.getPosition(3, this.getDimension() - 1, i)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(5, this.getDimension() - 1, i),
-          this.getPosition(4, this.getDimension() - 1, this.getDimension() - 1 - i)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(3, i, this.getDimension() - 1), this.getPosition(4, i, 0)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(1, i, this.getDimension() - 1), this.getPosition(2, i, 0)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(0, this.getDimension() - 1, i), this.getPosition(2, 0, i)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(2, this.getDimension() - 1, i), this.getPosition(5, 0, i)));
-      edgeCubies.add(new EdgeCubie(this.getPosition(2, i, this.getDimension() - 1), this.getPosition(3, i, 0)));
+    for (int i = 1; i < dimension - 1; i++) {
+      edgeCubies.add(new EdgeCubie(getPosition(0, i, 0), getPosition(1, 0, i)));
+      edgeCubies.add(new EdgeCubie(getPosition(0, 0, i), getPosition(4, 0, dimension - 1 - i)));
+      edgeCubies.add(new EdgeCubie(getPosition(0, i, dimension - 1), getPosition(3, 0, dimension - 1 - i)));
+      edgeCubies.add(new EdgeCubie(getPosition(1, i, 0), getPosition(4, i, dimension - 1)));
+      edgeCubies.add(new EdgeCubie(getPosition(1, dimension - 1, i), getPosition(5, dimension - 1 - i, 0)));
+      edgeCubies.add(new EdgeCubie(getPosition(5, i, dimension - 1), getPosition(3, dimension - 1, i)));
+      edgeCubies.add(new EdgeCubie(getPosition(5, dimension - 1, i), getPosition(4, dimension - 1, dimension - 1 - i)));
+      edgeCubies.add(new EdgeCubie(getPosition(3, i, dimension - 1), getPosition(4, i, 0)));
+      edgeCubies.add(new EdgeCubie(getPosition(1, i, dimension - 1), getPosition(2, i, 0)));
+      edgeCubies.add(new EdgeCubie(getPosition(0, dimension - 1, i), getPosition(2, 0, i)));
+      edgeCubies.add(new EdgeCubie(getPosition(2, dimension - 1, i), getPosition(5, 0, i)));
+      edgeCubies.add(new EdgeCubie(getPosition(2, i, dimension - 1), getPosition(3, i, 0)));
     }
   }
 
   public void fillCornerCubies() {
     cornerCubies = new ArrayList<>();
-    cornerCubies.add(new CornerCubie(this.getPosition(0, 0, 0), this.getPosition(1, 0, 0),
-        this.getPosition(4, 0, this.getDimension() - 1)));
-    cornerCubies.add(new CornerCubie(this.getPosition(0, 0, this.getDimension() - 1),
-        this.getPosition(3, 0, this.getDimension() - 1), this.getPosition(4, 0, 0)));
-    cornerCubies.add(new CornerCubie(this.getPosition(0, this.getDimension() - 1, 0),
-        this.getPosition(1, 0, this.getDimension() - 1), this.getPosition(2, 0, 0)));
-    cornerCubies.add(new CornerCubie(this.getPosition(0, this.getDimension() - 1, this.getDimension() - 1),
-        this.getPosition(2, 0, this.getDimension() - 1), this.getPosition(3, 0, 0)));
-    cornerCubies.add(new CornerCubie(this.getPosition(2, this.getDimension() - 1, 0),
-        this.getPosition(1, this.getDimension() - 1, this.getDimension() - 1), this.getPosition(5, 0, 0)));
-    cornerCubies.add(new CornerCubie(this.getPosition(2, this.getDimension() - 1, this.getDimension() - 1),
-        this.getPosition(3, this.getDimension() - 1, 0), this.getPosition(5, 0, this.getDimension() - 1)));
-    cornerCubies.add(new CornerCubie(this.getPosition(5, this.getDimension() - 1, 0),
-        this.getPosition(1, this.getDimension() - 1, 0),
-        this.getPosition(4, this.getDimension() - 1, this.getDimension() - 1)));
-    cornerCubies.add(new CornerCubie(this.getPosition(5, this.getDimension() - 1, this.getDimension() - 1),
-        this.getPosition(3, this.getDimension() - 1, this.getDimension() - 1),
-        this.getPosition(4, this.getDimension() - 1, 0)));
+    cornerCubies.add(new CornerCubie(getPosition(0, 0, 0), getPosition(1, 0, 0), getPosition(4, 0, dimension - 1)));
+    cornerCubies
+        .add(new CornerCubie(getPosition(0, 0, dimension - 1), getPosition(3, 0, dimension - 1), getPosition(4, 0, 0)));
+    cornerCubies
+        .add(new CornerCubie(getPosition(0, dimension - 1, 0), getPosition(1, 0, dimension - 1), getPosition(2, 0, 0)));
+    cornerCubies.add(new CornerCubie(getPosition(0, dimension - 1, dimension - 1), getPosition(2, 0, dimension - 1),
+        getPosition(3, 0, 0)));
+    cornerCubies.add(new CornerCubie(getPosition(2, dimension - 1, 0), getPosition(1, dimension - 1, dimension - 1),
+        getPosition(5, 0, 0)));
+    cornerCubies.add(new CornerCubie(getPosition(2, dimension - 1, dimension - 1), getPosition(3, dimension - 1, 0),
+        getPosition(5, 0, dimension - 1)));
+    cornerCubies.add(new CornerCubie(getPosition(5, dimension - 1, 0), getPosition(1, dimension - 1, 0),
+        getPosition(4, dimension - 1, dimension - 1)));
+    cornerCubies.add(new CornerCubie(getPosition(5, dimension - 1, dimension - 1),
+        getPosition(3, dimension - 1, dimension - 1), getPosition(4, dimension - 1, 0)));
 
   }
 
@@ -85,7 +81,7 @@ public class Cube {
   }
 
   public ArrayList<EdgeCubie> getEdgeCubie(int color1, int color2) {
-    int base = this.getDimension() * this.getDimension();
+    int base = dimension * dimension;
     ArrayList<EdgeCubie> cubies = new ArrayList<>();
     for (EdgeCubie cubie : edgeCubies) {
       if ((cubie.index1 / base == color1 && cubie.index2 / base == color2)
@@ -98,7 +94,7 @@ public class Cube {
   }
 
   public CornerCubie getCornerCubie(int color1, int color2, int color3) {
-    int base = this.getDimension() * this.getDimension();
+    int base = dimension * dimension;
     ArrayList<Integer> colors;
     ArrayList<Integer> testingColors = new ArrayList<>();
     testingColors.add(color1);
@@ -129,7 +125,7 @@ public class Cube {
 
   // Returns dimension
   public int getDimension() {
-    return this.dimension;
+    return dimension;
   }
 
   // The general formula that returns the index in the 1d array that cooresponds
@@ -150,7 +146,7 @@ public class Cube {
     int starter = getPosition(face, 0, 0);
 
     for (int i = 0; i < dimension * dimension; i++) {
-      temp1[i] = this.faces.get(starter + i);
+      temp1[i] = faces.get(starter + i);
     }
 
     for (int i = 0; i < temp1.length; i++) {
@@ -161,12 +157,12 @@ public class Cube {
 
     if (direction == 1) {
       for (int i = 0; i < temp1.length; i++) {
-        this.faces.set(starter + i, temp2[i]);
+        faces.set(starter + i, temp2[i]);
       }
     } else {
       int counter = 0;
       for (int i = temp2.length - 1; i >= 0; i--) {
-        this.faces.set(starter + counter, temp2[i]);
+        faces.set(starter + counter, temp2[i]);
         counter++;
       }
     }
@@ -183,33 +179,38 @@ public class Cube {
 
     if (colNum == 0) {
       rotateFullFace(-direction, 1);
+      algorithm3x3.add("L" + ((direction == 1) ? "'" : ""));
     } else if (colNum == dimension - 1) {
       rotateFullFace(direction, 3);
+      algorithm3x3.add("L" + ((direction == -1) ? "'" : ""));
+
     }
 
     if (direction == 1) {
       for (int i = 0; i < dimension; i++) {
-        int temp0 = this.faces.get(getPosition(0, i, colNum));
-        int temp2 = this.faces.get(getPosition(2, i, colNum));
-        int temp4 = this.faces.get(getPosition(4, dimension - i - 1, dimension - colNum - 1));
-        int temp5 = this.faces.get(getPosition(5, i, colNum));
-        this.faces.set(getPosition(2, i, colNum), temp5);
-        this.faces.set(getPosition(0, i, colNum), temp2);
-        this.faces.set(getPosition(4, dimension - i - 1, dimension - colNum - 1), temp0);
-        this.faces.set(getPosition(5, i, colNum), temp4);
+        int temp0 = faces.get(getPosition(0, i, colNum));
+        int temp2 = faces.get(getPosition(2, i, colNum));
+        int temp4 = faces.get(getPosition(4, dimension - i - 1, dimension - colNum - 1));
+        int temp5 = faces.get(getPosition(5, i, colNum));
+        faces.set(getPosition(2, i, colNum), temp5);
+        faces.set(getPosition(0, i, colNum), temp2);
+        faces.set(getPosition(4, dimension - i - 1, dimension - colNum - 1), temp0);
+        faces.set(getPosition(5, i, colNum), temp4);
       }
-
+      algorithm.add(new Move("Y", colNum));
     } else {
       for (int i = 0; i < dimension; i++) {
-        int temp0 = this.faces.get(getPosition(0, i, colNum));
-        int temp2 = this.faces.get(getPosition(2, i, colNum));
-        int temp4 = this.faces.get(getPosition(4, dimension - i - 1, dimension - colNum - 1));
-        int temp5 = this.faces.get(getPosition(5, i, colNum));
-        this.faces.set(getPosition(5, i, colNum), temp2);
-        this.faces.set(getPosition(2, i, colNum), temp0);
-        this.faces.set(getPosition(0, i, colNum), temp4);
-        this.faces.set(getPosition(4, dimension - i - 1, dimension - colNum - 1), temp5);
+        int temp0 = faces.get(getPosition(0, i, colNum));
+        int temp2 = faces.get(getPosition(2, i, colNum));
+        int temp4 = faces.get(getPosition(4, dimension - i - 1, dimension - colNum - 1));
+        int temp5 = faces.get(getPosition(5, i, colNum));
+        faces.set(getPosition(5, i, colNum), temp2);
+        faces.set(getPosition(2, i, colNum), temp0);
+        faces.set(getPosition(0, i, colNum), temp4);
+        faces.set(getPosition(4, dimension - i - 1, dimension - colNum - 1), temp5);
       }
+      algorithm.add(new Move("Y'", colNum));
+
     }
   }
 
@@ -217,35 +218,39 @@ public class Cube {
   // Always rotates clockwise where top is facing you
   public void rotateLayer(int direction, int layerNum) {
     if (layerNum == 0) {
-      this.rotateFullFace(direction, 2);
+      rotateFullFace(direction, 2);
+      algorithm3x3.add("T" + ((direction == -1) ? "'" : ""));
     } else if (layerNum == dimension - 1) {
-      this.rotateFullFace(-direction, 4);
+      rotateFullFace(-direction, 4);
+      algorithm3x3.add("U" + ((direction == -1) ? "'" : ""));
     }
 
     if (direction == 1) {
       for (int i = 0; i < dimension; i++) {
-        int temp0 = this.faces.get(getPosition(0, dimension - layerNum - 1, i));
-        int temp3 = this.faces.get(getPosition(3, i, layerNum));
-        int temp5 = this.faces.get(getPosition(5, layerNum, dimension - i - 1));
-        int temp1 = this.faces.get(getPosition(1, dimension - i - 1, dimension - layerNum - 1));
+        int temp0 = faces.get(getPosition(0, dimension - layerNum - 1, i));
+        int temp3 = faces.get(getPosition(3, i, layerNum));
+        int temp5 = faces.get(getPosition(5, layerNum, dimension - i - 1));
+        int temp1 = faces.get(getPosition(1, dimension - i - 1, dimension - layerNum - 1));
 
-        this.faces.set(getPosition(3, i, layerNum), temp0);
-        this.faces.set(getPosition(5, layerNum, dimension - i - 1), temp3);
-        this.faces.set(getPosition(1, dimension - i - 1, dimension - layerNum - 1), temp5);
-        this.faces.set(getPosition(0, dimension - layerNum - 1, i), temp1);
+        faces.set(getPosition(3, i, layerNum), temp0);
+        faces.set(getPosition(5, layerNum, dimension - i - 1), temp3);
+        faces.set(getPosition(1, dimension - i - 1, dimension - layerNum - 1), temp5);
+        faces.set(getPosition(0, dimension - layerNum - 1, i), temp1);
       }
+      algorithm.add(new Move("X", layerNum));
     } else {
       for (int i = 0; i < dimension; i++) {
-        int temp0 = this.faces.get(getPosition(0, dimension - layerNum - 1, i));
-        int temp3 = this.faces.get(getPosition(3, i, layerNum));
-        int temp5 = this.faces.get(getPosition(5, layerNum, dimension - i - 1));
-        int temp1 = this.faces.get(getPosition(1, dimension - i - 1, dimension - layerNum - 1));
+        int temp0 = faces.get(getPosition(0, dimension - layerNum - 1, i));
+        int temp3 = faces.get(getPosition(3, i, layerNum));
+        int temp5 = faces.get(getPosition(5, layerNum, dimension - i - 1));
+        int temp1 = faces.get(getPosition(1, dimension - i - 1, dimension - layerNum - 1));
 
-        this.faces.set(getPosition(3, i, layerNum), temp5);
-        this.faces.set(getPosition(5, layerNum, dimension - i - 1), temp1);
-        this.faces.set(getPosition(1, dimension - i - 1, dimension - layerNum - 1), temp0);
-        this.faces.set(getPosition(0, dimension - layerNum - 1, i), temp3);
+        faces.set(getPosition(3, i, layerNum), temp5);
+        faces.set(getPosition(5, layerNum, dimension - i - 1), temp1);
+        faces.set(getPosition(1, dimension - i - 1, dimension - layerNum - 1), temp0);
+        faces.set(getPosition(0, dimension - layerNum - 1, i), temp3);
       }
+      algorithm.add(new Move("X'", layerNum));
 
     }
 
@@ -255,41 +260,45 @@ public class Cube {
   // always rotates face where front is facing you
   public void rotateFrontFace(int direction, int faceNum) {
     if (faceNum == 0) {
-      this.rotateFullFace(-direction, 0);
+      rotateFullFace(-direction, 0);
+      algorithm3x3.add("B" + ((direction == 1) ? "'" : ""));
     } else if (faceNum == dimension - 1) {
-      this.rotateFullFace(direction, 5);
+      rotateFullFace(direction, 5);
+      algorithm3x3.add("F" + ((direction == -1) ? "'" : ""));
     }
     int temp1;
     int temp2;
     int temp3;
     int temp4;
     if (direction == 1) {
-      temp1 = this.faces.get(getPosition(1, faceNum, 0));
+      temp1 = faces.get(getPosition(1, faceNum, 0));
       for (int x = 0; x < dimension; x++) {
-        temp1 = this.faces.get(getPosition(1, faceNum, x));
-        temp2 = this.faces.get(getPosition(2, faceNum, x));
-        temp3 = this.faces.get(getPosition(3, faceNum, x));
-        temp4 = this.faces.get(getPosition(4, faceNum, x));
+        temp1 = faces.get(getPosition(1, faceNum, x));
+        temp2 = faces.get(getPosition(2, faceNum, x));
+        temp3 = faces.get(getPosition(3, faceNum, x));
+        temp4 = faces.get(getPosition(4, faceNum, x));
 
-        this.faces.set(getPosition(1, faceNum, x), temp4);
-        this.faces.set(getPosition(2, faceNum, x), temp1);
-        this.faces.set(getPosition(3, faceNum, x), temp2);
-        this.faces.set(getPosition(4, faceNum, x), temp3);
+        faces.set(getPosition(1, faceNum, x), temp4);
+        faces.set(getPosition(2, faceNum, x), temp1);
+        faces.set(getPosition(3, faceNum, x), temp2);
+        faces.set(getPosition(4, faceNum, x), temp3);
 
       }
-
+      algorithm.add(new Move("Z", faceNum));
     } else {
       for (int x = 0; x < dimension; x++) {
-        temp1 = this.faces.get(getPosition(1, faceNum, x));
-        temp2 = this.faces.get(getPosition(2, faceNum, x));
-        temp3 = this.faces.get(getPosition(3, faceNum, x));
-        temp4 = this.faces.get(getPosition(4, faceNum, x));
+        temp1 = faces.get(getPosition(1, faceNum, x));
+        temp2 = faces.get(getPosition(2, faceNum, x));
+        temp3 = faces.get(getPosition(3, faceNum, x));
+        temp4 = faces.get(getPosition(4, faceNum, x));
 
-        this.faces.set(getPosition(4, faceNum, x), temp1);
-        this.faces.set(getPosition(1, faceNum, x), temp2);
-        this.faces.set(getPosition(2, faceNum, x), temp3);
-        this.faces.set(getPosition(3, faceNum, x), temp4);
+        faces.set(getPosition(4, faceNum, x), temp1);
+        faces.set(getPosition(1, faceNum, x), temp2);
+        faces.set(getPosition(2, faceNum, x), temp3);
+        faces.set(getPosition(3, faceNum, x), temp4);
       }
+      algorithm.add(new Move("Z'", faceNum));
+
     }
 
   }
@@ -300,26 +309,26 @@ public class Cube {
 
   // The following rotate the entire cube (so that the cube orientation changes)
   public void rotateCubeClockwise() {
-    for (int i = 0; i < this.getDimension(); i++) {
-      this.rotateLayer(1, i);
+    for (int i = 0; i < dimension; i++) {
+      rotateLayer(1, i);
     }
   }
 
   public void rotateCubeCounterClockwise() {
-    for (int i = 0; i < this.getDimension(); i++) {
-      this.rotateLayer(-1, i);
+    for (int i = 0; i < dimension; i++) {
+      rotateLayer(-1, i);
     }
   }
 
   public void rotateCubeDown() {
-    for (int i = 0; i < this.getDimension(); i++) {
-      this.rotateSide(-1, i);
+    for (int i = 0; i < dimension; i++) {
+      rotateSide(-1, i);
     }
   }
 
   public void rotateCubeUp() {
-    for (int i = 0; i < this.getDimension(); i++) {
-      this.rotateSide(1, i);
+    for (int i = 0; i < dimension; i++) {
+      rotateSide(1, i);
     }
   }
 
@@ -331,23 +340,23 @@ public class Cube {
     // If desired face is on right rotate whole cube clockwise
     // If desired face is on left rotate whole cube counterclockwise
     // If desired face is on back rotate cube twice (clockwise in this case)
-    int face = this.getFaceOrientation(colorFaceFront);
+    int face = getFaceOrientation(colorFaceFront);
     switch (face) {
     case 0:
-      this.rotateCubeDown();
-      this.rotateCubeDown();
+      rotateCubeDown();
+      rotateCubeDown();
       break;
     case 1:
-      this.rotateCubeCounterClockwise();
+      rotateCubeCounterClockwise();
       break;
     case 2:
-      this.rotateCubeDown();
+      rotateCubeDown();
       break;
     case 3:
-      this.rotateCubeClockwise();
+      rotateCubeClockwise();
       break;
     case 4:
-      this.rotateCubeUp();
+      rotateCubeUp();
     }
 
   }
@@ -357,30 +366,30 @@ public class Cube {
   public void orientCube(int colorFaceFront, int colorFaceTop) {
     // If impossible orientation, only puts color face top on top
     // (ifnorescolorfacefront)
-    switch (this.getFaceOrientation(colorFaceTop)) {
+    switch (getFaceOrientation(colorFaceTop)) {
     case 0:
-      this.rotateCubeDown();
+      rotateCubeDown();
     case 1:
-      this.rotateCubeCounterClockwise();
-      this.rotateCubeUp();
+      rotateCubeCounterClockwise();
+      rotateCubeUp();
     case 3:
-      this.rotateCubeClockwise();
-      this.rotateCubeUp();
+      rotateCubeClockwise();
+      rotateCubeUp();
     case 4:
-      this.rotateCubeClockwise();
-      this.rotateCubeClockwise();
+      rotateCubeClockwise();
+      rotateCubeClockwise();
     case 5:
-      this.rotateCubeUp();
+      rotateCubeUp();
     }
 
-    switch (this.getFaceOrientation(colorFaceFront)) {
+    switch (getFaceOrientation(colorFaceFront)) {
     case 0:
-      this.rotateCubeClockwise();
-      this.rotateCubeClockwise();
+      rotateCubeClockwise();
+      rotateCubeClockwise();
     case 1:
-      this.rotateCubeCounterClockwise();
+      rotateCubeCounterClockwise();
     case 3:
-      this.rotateCubeClockwise();
+      rotateCubeClockwise();
     }
 
   }
@@ -392,7 +401,8 @@ public class Cube {
   // takes in a specific value somewhere in the array and returns which face that
   // piece is on (0 - 5)
   public int getFaceOrientation(int color) {
-    return this.getFaces().indexOf(color) / 9;
+    int base = dimension * dimension;
+    return faces.indexOf(color) / base;
   }
 
   // Takes in a number as an edgepiece (a specific number in the array) returns
@@ -432,57 +442,40 @@ public class Cube {
    ****************************************************************/
   // Takes in a readable list of moves (classic rubik's cube notation U R T T' U'
   // etc.) executes those moves
-  public void moveSequence(ArrayList<String> moves) {
-    for (String move : moves) {
-      if (move.equals("R")) {
-        this.rotateSide(1, this.getDimension() - 1);
-      } else if (move.equals("R'")) {
-        this.rotateSide(-1, this.getDimension() - 1);
-      } else if (move.equals("L")) {
-        // rotate Side rotates clockwise with respect to the right face, you have to
-        // switch 1 with -1 (see B)
-        this.rotateSide(-1, 0);
-      } else if (move.equals("L'")) {
-        this.rotateSide(1, 0);
-      } else if (move.equals("U")) {
-        this.rotateLayer(1, 0);
-      } else if (move.equals("U'")) {
-        this.rotateLayer(-1, 0);
-      } else if (move.equals("B")) {
-
-        // When rotating the back, rotate FrontFace assumes you are still looking at the
-        // cube
-        // All major cube algorithms turn back clockwise when you look at back,
-        // rotateFrontFace
-        // always turns clockwise if you're looking at it, this I switched 1 with -1
-        this.rotateFrontFace(-1, 0);
-      } else if (move.equals("B'")) {
-        this.rotateFrontFace(1, 0);
-      } else if (move.equals("F")) {
-        this.rotateFrontFace(1, this.getDimension() - 1);
-      } else if (move.equals("F'")) {
-        this.rotateFrontFace(-1, this.getDimension() - 1);
-      } else if (move.equals("D")) {
-        this.rotateLayer(1, this.getDimension() - 1);
-      } else if (move.equals("D'")) {
-        this.rotateLayer(-1, this.getDimension() - 1);
-      } else if (move.equals("X")) {
-        this.rotateCubeUp();
-      } else if (move.equals("X'")) {
-        this.rotateCubeDown();
-      } else if (move.equals("Y")) {
-        this.rotateCubeCounterClockwise();
-      } else if (move.equals("Y'")) {
-        this.rotateCubeCounterClockwise();
-      } else if (move.equals("Z")) {
-        this.rotateCubeDown();
-        this.rotateCubeCounterClockwise();
-      } else if (move.equals("Z'")) {
-        this.rotateCubeUp();
-        this.rotateCubeClockwise();
-
+  private void moveSequence(ArrayList<Move> moves) {
+    for (Move move : moves) {
+      if (move.main.equals("X")) {
+        rotateLayer(1, move.layerNo);
+      }else if(move.main.equals("X'")){
+        rotateLayer(1, move.layerNo);
+      }else if(move.main.equals("Y")){
+        rotateSide(1, move.layerNo);
+      }else if(move.main.equals("Y'")){
+        rotateSide(-1, move.layerNo);
+      }else if(move.main.equals("Z")){
+        rotateFrontFace(1, move.layerNo);
+      }else if(move.main.equals("Z'")){
+        rotateFrontFace(-1, move.layerNo);
       }
     }
+  }
+
+  private void moveSequence(Move move) {
+
+      if (move.main.equals("X")) {
+        rotateLayer(1, move.layerNo);
+      }else if(move.main.equals("X'")){
+        rotateLayer(1, move.layerNo);
+      }else if(move.main.equals("Y")){
+        rotateSide(1, move.layerNo);
+      }else if(move.main.equals("Y'")){
+        rotateSide(-1, move.layerNo);
+      }else if(move.main.equals("Z")){
+        rotateFrontFace(1, move.layerNo);
+      }else if(move.main.equals("Z'")){
+        rotateFrontFace(-1, move.layerNo);
+      }
+    
   }
 
   /****************************************************************************
@@ -503,8 +496,8 @@ public class Cube {
     System.out.println();
     int base = dimension * dimension;
     ArrayList<String> colors = new ArrayList();
-    for (int i = 0; i < this.faces.size(); i++) {
-      switch (this.faces.get(i) / base) {
+    for (int i = 0; i < faces.size(); i++) {
+      switch (faces.get(i) / base) {
       case 0:
         colors.add("r");
         break;
@@ -591,7 +584,7 @@ public class Cube {
 
       System.out.print("| ");
       for (int j = 0; j < dimension; j++) {
-        int a = this.faces.get(count);
+        int a = faces.get(count);
         if (a < 10) {
           System.out.print("0" + a + " ");
         } else {
@@ -612,7 +605,7 @@ public class Cube {
 
         System.out.print(" | ");
         for (int x = 0; x < dimension; x++) {
-          int a = this.faces.get(count + x);
+          int a = faces.get(count + x);
           if (a < 10) {
             System.out.print("0" + a + " ");
           } else {
@@ -634,7 +627,7 @@ public class Cube {
 
       System.out.print("| ");
       for (int j = 0; j < dimension; j++) {
-        int a = this.faces.get(count);
+        int a = faces.get(count);
         if (a < 10) {
           System.out.print("0" + a + " ");
         } else {
