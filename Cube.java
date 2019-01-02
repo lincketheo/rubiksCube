@@ -14,6 +14,7 @@ public class Cube {
    * This is essentially a "tools" class
    */
 
+  private final char[] COLORFACES = { 'b', 'o', 'w', 'r', 'y', 'g' };
   private ArrayList<EdgeCubie> edgeCubies;
   private ArrayList<CornerCubie> cornerCubies;
   // Faces is a one dimentional array (Woah! a 3D cube is represented in 1D?)
@@ -22,7 +23,6 @@ public class Cube {
   private int dimension;
   private ArrayList<Move> algorithm = new ArrayList<>();
   public static ArrayList<String> algorithm3x3 = new ArrayList<>();
-
 
   // creates a new cube of _dimension
   public Cube(int _dimension) {
@@ -133,6 +133,17 @@ public class Cube {
   // the coordinate triplet (face, row, col)
   public int getPosition(int face, int row, int index) {
     return dimension * dimension * face + dimension * row + index;
+  }
+
+  // returns what row a cubie is on
+  public int getRow(int cubie) {
+    int base = dimension * dimension;
+    return (getFaces().indexOf(cubie) % base) / dimension;
+  }
+
+  // returns what col a cubie is on
+  public int getCol(int cubie) {
+    return getFaces().indexOf(cubie) % getDimension();
   }
 
   // rotates a given face (does not change the cubies around so this is not a
@@ -363,33 +374,50 @@ public class Cube {
 
   // Orients the cube so that facefront is the front face, face top is the top
   // face and facebottom is the bottom face color
+
   public void orientCube(int colorFaceFront, int colorFaceTop) {
     // If impossible orientation, only puts color face top on top
-    // (ifnorescolorfacefront)
-    switch (getFaceOrientation(colorFaceTop)) {
+    if(dimension % 2 == 0){
+      return;
+    }
+    
+    int cubieFaceTop = getCenterCubie(colorFaceTop);
+
+    switch (getFaceOrientation(cubieFaceTop)) {
     case 0:
       rotateCubeDown();
+      break;
     case 1:
       rotateCubeCounterClockwise();
       rotateCubeUp();
+      break;
     case 3:
       rotateCubeClockwise();
       rotateCubeUp();
+      break;
     case 4:
-      rotateCubeClockwise();
-      rotateCubeClockwise();
+      rotateCubeUp();
+      rotateCubeUp();
+      break;
     case 5:
       rotateCubeUp();
+      break;
     }
 
-    switch (getFaceOrientation(colorFaceFront)) {
+    int cubieFaceFront = getCenterCubie(colorFaceFront);
+
+
+    switch (getFaceOrientation(cubieFaceFront)) {
     case 0:
       rotateCubeClockwise();
       rotateCubeClockwise();
+      break;
     case 1:
       rotateCubeCounterClockwise();
+      break;
     case 3:
       rotateCubeClockwise();
+      break;
     }
 
   }
@@ -437,45 +465,57 @@ public class Cube {
     return falseArray;
   }
 
+  public int getCenterCubie(int color) {
+    if (color > 5 || color < 0 || getDimension() % 2 == 0) {
+      return -1;
+    }
+    int base = dimension * dimension;
+    for (int i = 0; i < 6; i++) {
+      if (faces.get(getPosition(i, getDimension() / 2, getDimension() / 2)) / base == color)
+        return faces.get(getPosition(i, getDimension() / 2, getDimension() / 2));
+    }
+    return -1;
+  }
+
   /****************************************************************************
    * PUTTING EVERYTHING TOGETHER - PRACTICAL
    ****************************************************************/
   // Takes in a readable list of moves (classic rubik's cube notation U R T T' U'
   // etc.) executes those moves
-  private void moveSequence(ArrayList<Move> moves) {
+  public void moveSequenceNxN(ArrayList<Move> moves) {
     for (Move move : moves) {
       if (move.main.equals("X")) {
         rotateLayer(1, move.layerNo);
-      }else if(move.main.equals("X'")){
+      } else if (move.main.equals("X'")) {
         rotateLayer(1, move.layerNo);
-      }else if(move.main.equals("Y")){
+      } else if (move.main.equals("Y")) {
         rotateSide(1, move.layerNo);
-      }else if(move.main.equals("Y'")){
+      } else if (move.main.equals("Y'")) {
         rotateSide(-1, move.layerNo);
-      }else if(move.main.equals("Z")){
+      } else if (move.main.equals("Z")) {
         rotateFrontFace(1, move.layerNo);
-      }else if(move.main.equals("Z'")){
+      } else if (move.main.equals("Z'")) {
         rotateFrontFace(-1, move.layerNo);
       }
     }
   }
 
-  private void moveSequence(Move move) {
+  public void moveSequenceNxN(Move move) {
 
-      if (move.main.equals("X")) {
-        rotateLayer(1, move.layerNo);
-      }else if(move.main.equals("X'")){
-        rotateLayer(1, move.layerNo);
-      }else if(move.main.equals("Y")){
-        rotateSide(1, move.layerNo);
-      }else if(move.main.equals("Y'")){
-        rotateSide(-1, move.layerNo);
-      }else if(move.main.equals("Z")){
-        rotateFrontFace(1, move.layerNo);
-      }else if(move.main.equals("Z'")){
-        rotateFrontFace(-1, move.layerNo);
-      }
-    
+    if (move.main.equals("X")) {
+      rotateLayer(1, move.layerNo);
+    } else if (move.main.equals("X'")) {
+      rotateLayer(1, move.layerNo);
+    } else if (move.main.equals("Y")) {
+      rotateSide(1, move.layerNo);
+    } else if (move.main.equals("Y'")) {
+      rotateSide(-1, move.layerNo);
+    } else if (move.main.equals("Z")) {
+      rotateFrontFace(1, move.layerNo);
+    } else if (move.main.equals("Z'")) {
+      rotateFrontFace(-1, move.layerNo);
+    }
+
   }
 
   /****************************************************************************
@@ -497,26 +537,8 @@ public class Cube {
     int base = dimension * dimension;
     ArrayList<String> colors = new ArrayList();
     for (int i = 0; i < faces.size(); i++) {
-      switch (faces.get(i) / base) {
-      case 0:
-        colors.add("r");
-        break;
-      case 1:
-        colors.add("g");
-        break;
-      case 2:
-        colors.add("b");
-        break;
-      case 3:
-        colors.add("w");
-        break;
-      case 4:
-        colors.add("y");
-        break;
-      case 5:
-        colors.add("o");
-        break;
-      }
+      colors.add(String.valueOf(COLORFACES[faces.get(i) / base]));
+
     }
 
     int count = 0;
@@ -693,6 +715,7 @@ public class Cube {
   }
 
   public static void main(String[] args) {
+
     testRotations();
     Cube myCube = new Cube(3);
   }

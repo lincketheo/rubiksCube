@@ -1,5 +1,8 @@
 # rubiksCube
 ## A rubiks cube representer and solver
+## State of code
+Will organize all code in a JAR file, keeping everything out for debugging purposes. Program can solve a 3 x 3 cube. Working on n x n cube. Can solve first for front center pieces. (A few bugs). Future: need to solve last two faces (simply algorithm) and edges (this will need to use parity algorithms, so new checker methods needed for cube.java.
+
 ## Goals:
 To be able to solve any n x n rubiks cube. I attempted this project with the mindset that I didn't want to look up any of the common computer methods to solve the cube. I wanted more of a spacial visualization exercise so I used the method that I know (the beginner cross method). This method requires a lot of intuition, so you'll notice that the code can be lengthy at times (a lot of if statements). The general strategy I am using is to solve the center and edge pieces of any n x n cube (turning it into a 3x3 cube) then solving the first second, then third layer of the sudo 3x3 cube. All the data is represented in a 1D array (faces) and all of the translations are done like the cube is 6 n x n faces.
 ## The cube

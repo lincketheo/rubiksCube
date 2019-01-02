@@ -1201,7 +1201,7 @@ public class Cube3x3 extends Cube {
         // Cube3x3, only moves the edges
         // I'm solving 50 cubes here
     
-        testnxn(5);
+        testnxn(3);
         
         
 

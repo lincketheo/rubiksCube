@@ -2,6 +2,12 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Cubenxn",
+            "request": "launch",
+            "mainClass": "Cubenxn"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Cube3x3",
             "request": "launch",
             "mainClass": "Cube3x3"
