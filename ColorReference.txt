@@ -1,0 +1,9 @@
+Colors:
+Blue == 0
+Orange == 1
+White == 2
+Red == 3
+Yellow == 4
+Green == 5
+
+For all cubes on the face, take the absolute value of the cube and divide by base (dimension * dimension) to get color. 

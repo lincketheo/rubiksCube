@@ -9,6 +9,12 @@ public class Cube3x3 extends Cube {
         super(dimension);
     }
 
+    public Cube3x3(Cubenxn cube){
+        super(cube);
+
+    }
+    
+
     private void scrambleCube(int moves) {
         ArrayList<String> validMoves = new ArrayList<>();
         validMoves.add("R");
@@ -36,7 +42,6 @@ public class Cube3x3 extends Cube {
             moveSequence(scrambleAlgorithm.get(scrambleAlgorithm.size() - 1));
 
         }
-        algorithm3x3 = scrambleAlgorithm;
     }
 
     /************************************************************************************
@@ -775,6 +780,20 @@ public class Cube3x3 extends Cube {
         int noTopLayerFaces = ((colorTopFace == colorLeftEdge) ? 1 : 0) + ((colorTopFace == colorRightEdge) ? 1 : 0)
                 + ((colorTopFace == colorBottomEdge) ? 1 : 0) + ((colorTopFace == colorTopEdge) ? 1 : 0);
 
+                /*
+        if(getDimension() % 2 == 0 && noTopLayerFaces == 1){
+            parityOLL();
+        }
+        */
+
+        if(getDimension() % 2 == 0 && noTopLayerFaces == 3){
+            boolean inPlace = colorBottomEdge == colorTopFace;
+            while(!inPlace){
+                rotateCubeClockwise();
+            }
+            parityOLL();
+
+        }
         if (noTopLayerFaces < 2) {
             alogirthmThirdLayerCross();
             solveThirdLayerCross();
@@ -794,9 +813,15 @@ public class Cube3x3 extends Cube {
             colorTopEdge = getFaces().get(getPosition(2, 0, 1)) / base;
             correctOrientation = (colorLeftEdge == colorTopFace) && (colorBottomEdge != colorTopFace);
         }
-        int noRepetitions;
+
+        int noRepetitions = 0;
         if (colorLeftEdge == colorRightEdge) {
-            noRepetitions = 1;
+            if(colorTopEdge != colorBottomEdge && getDimension() % 2 == 0){
+                parityOLL();
+                return;
+            }else{
+                noRepetitions = 1;
+            }
         } else {
             noRepetitions = 2;
         }
@@ -816,6 +841,104 @@ public class Cube3x3 extends Cube {
         rotateFrontFace(-1, getDimension() - 1);
 
     }
+
+
+    public void parityOLL(){
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(-1, getDimension() - 1 - i);
+        }
+
+        rotateLayer(1, 0);
+        rotateLayer(1, 0);
+
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(-1, i);
+        }
+
+        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, getDimension() - 1);
+
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(1, i);
+        }
+
+        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, getDimension() - 1);
+      
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(-1, getDimension() - 1 - i);
+            rotateSide(-1, getDimension() - 1 - i);
+        }
+
+        rotateLayer(1, 0);
+        rotateLayer(1, 0);
+
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(1, getDimension() - 1 - i);
+        }
+
+        rotateLayer(1, 0);
+        rotateLayer(1, 0);
+
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(-1, getDimension() - 1 - i);
+        }
+
+        rotateLayer(1, 0);
+        rotateLayer(1, 0);
+
+        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, getDimension() - 1);
+
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(1, getDimension() - 1 - i);
+            rotateSide(1, getDimension() - 1 - i);
+
+        }
+
+        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, getDimension() - 1);
+
+        
+
+    }  
+
+
+    public void parityPLL(){
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(1, getDimension() - 1 - i);
+            rotateSide(1, getDimension() - 1 - i);
+        }
+
+        rotateLayer(1, 0);
+        rotateLayer(1, 0);
+
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(1, getDimension() - 1 - i);
+            rotateSide(1, getDimension() - 1 - i);
+        }
+
+        for(int i = 0; i < getDimension() / 2; i++){
+            rotateLayer(1, i);
+            rotateLayer(1, i);         
+        }
+
+        for(int i = 1; i < getDimension() / 2; i++){
+            rotateSide(1, getDimension() - 1 - i);
+            rotateSide(1, getDimension() - 1 - i);
+        }
+
+        for(int i = 0; i < getDimension() / 2; i++){
+            rotateLayer(1, i);
+            rotateLayer(1, i);         
+        }
+
+
+
+
+
+    }
+
 
     // Aligns the edge pieces
     private void alignThirdLayerCross() {
@@ -854,6 +977,10 @@ public class Cube3x3 extends Cube {
         if (noMatching == 4) {
             return;
         } else if (frontMatch && backMatch || noMatching < 2 || (rightMatch && leftMatch)) {
+            printCube();
+            if(getDimension() % 2 == 0 && getFaces().get(getPosition(2, getDimension() - 1, 1)) / base != getFaces().get(getPosition(2, getDimension() - 2, 1)) / base){
+                parityPLL();
+            }
             algorithmMatchEdgePiecesThirdLayer();
             alignThirdLayerCross();
             return;
@@ -927,6 +1054,14 @@ public class Cube3x3 extends Cube {
 
         if (numMatches == 4) {
             return;
+        /*
+        }
+        
+        else if(numMatches == 2){
+            parityPLL();
+            orientThirdLayerCorners();
+            return;
+        */
         } else if (numMatches == 0) {
             thirdLayerCornerAlgorithm();
             orientThirdLayerCorners();
@@ -935,6 +1070,16 @@ public class Cube3x3 extends Cube {
             while (!matcher) {
                 rotateCubeClockwise();
                 matcher = checkTopFrontRightCornerPiece();
+            }
+            if(getDimension() % 2 == 0 && numMatches == 2){
+                while (matcher) {
+                    rotateCubeClockwise();
+                    matcher = checkTopFrontRightCornerPiece();
+                }   
+                parityPLL();
+                alignThirdLayerCross();
+                orientThirdLayerCorners();
+                return;
             }
             thirdLayerCornerAlgorithm();
             // sometimes need to do it again
@@ -1107,27 +1252,7 @@ public class Cube3x3 extends Cube {
         }
     }
 
-    private void algorithm3x3Filter(){
-        boolean notClean = true;
-        while(notClean){
-            notClean = false;
-            for(int i = 0; i < algorithm3x3.size() - 1; i++){
-                if(algorithm3x3.get(i).equals(algorithm3x3.get(i + 1) + "'")){
-                    algorithm3x3.remove(i);
-                    algorithm3x3.remove(i);
-                    i --;
-                    notClean = true;
-                }
-                if(i < algorithm3x3.size() - 3 && algorithm3x3.get(i).equals(algorithm3x3.get(i + 1)) && algorithm3x3.get(i).equals(algorithm3x3.get(i + 2))){
-                    algorithm3x3.remove(i);
-                    algorithm3x3.remove(i);
-                    algorithm3x3.set(i, algorithm3x3.get(i) + "'");
-                    i--;
-                    notClean = true;
-                }
-            }
-        }
-    }
+
 
     private void solveFirstLayer(){
         //solves first layer edge pieces
@@ -1151,8 +1276,7 @@ public class Cube3x3 extends Cube {
         solveThirdLayerCorners();   
     }
     
-    private void solve() {
-        algorithm3x3 = new ArrayList<>();
+    public void solve() {
         //Technically, because Im using recursion in a lot of steps, if you skip or switch these, the code will enter an infinite recursive loop
         //so you must solve first second then third
         
@@ -1169,6 +1293,8 @@ public class Cube3x3 extends Cube {
         
         //solves third layer
         solveThirdLayer();
+
+        testOLLParity();
         
        
     }
@@ -1216,22 +1342,42 @@ public class Cube3x3 extends Cube {
         System.out.println("Execution time of solve in nanoseconds  : " + timeElapsed);
 
         System.out.println("Execution time of solve in milliseconds : " + timeElapsed / 1000000);
-        System.out.println(algorithm3x3);
-        myCube3x3.algorithm3x3Filter();
-        System.out.println();
-        System.out.println(algorithm3x3);
 
     }
 
+    public void solveCubenxn(Cubenxn cube){
+        cube.reduceCubeto3x3();
+        if(!cube.reduced){
+            System.out.println("Cube is not reduced for some reason");
+            return;
+        }
 
+    }
 
+    public void testOLLParity(){
+        int base = getDimension() * getDimension();
+        if(getDimension() % 2 == 1){
+            return;
+        }
+        for(int i = 0; i < 4; i++){
+          if(getFaces().get(getPosition(2, getDimension() - 1, 1)) / base != getFaces().get(getPosition(2, getDimension() - 2, 1)) / base){
+              parityOLL();
+              return;
+          }
+        }
+      }
+    
 
     public static void main(String[] args) {
         // change 3 to any number you want. Scramblecube is a local method that, in
         // Cube3x3, only moves the edges
         // I'm solving 50 cubes here
     
-        testnxn(3);
+        //testnxn(3);
+        Cube3x3 myCube = new Cube3x3(4);
+        myCube.printCube();
+        myCube.parityOLL();
+        myCube.printCube();
         
         
 

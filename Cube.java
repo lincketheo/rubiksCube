@@ -14,15 +14,19 @@ public class Cube {
    * This is essentially a "tools" class
    */
 
-  private final char[] COLORFACES = { 'b', 'o', 'w', 'r', 'y', 'g' };
+  //private final char[] COLORFACES = { 'b', 'o', 'w', 'r', 'y', 'g' };
+  private final char[] COLORFACES = { '0', '1', '2', '3', '4', '5' };
+
   private ArrayList<EdgeCubie> edgeCubies;
   private ArrayList<CornerCubie> cornerCubies;
+
   // Faces is a one dimentional array (Woah! a 3D cube is represented in 1D?)
   private ArrayList<Integer> faces;
   // a 3x3 cube has dimension 3
   private int dimension;
-  private ArrayList<Move> algorithm = new ArrayList<>();
-  public static ArrayList<String> algorithm3x3 = new ArrayList<>();
+
+  public ArrayList<Move> scrambleAlgorithm = new ArrayList<>();
+  public ArrayList<Move> algorithm = new ArrayList<>();
 
   // creates a new cube of _dimension
   public Cube(int _dimension) {
@@ -34,6 +38,22 @@ public class Cube {
     }
     fillCornerCubies();
     fillEdgeCubies();
+  }
+
+  public Cube(Cubenxn cube){
+    dimension = cube.getDimension();
+    faces = cube.getFaces();
+    edgeCubies = cube.getEdgeCubies();
+    cornerCubies = cube.getCornerCubies();
+
+  }
+
+  public Cube(Cube3x3 cube){
+    dimension = cube.getDimension();
+    faces = cube.getFaces();
+    edgeCubies = cube.getEdgeCubies();
+    cornerCubies = cube.getCornerCubies();
+
   }
 
   public void fillEdgeCubies() {
@@ -80,6 +100,15 @@ public class Cube {
     return faces;
   }
 
+  public ArrayList<CornerCubie> getCornerCubies() {
+    return cornerCubies;
+  }
+
+  public ArrayList<EdgeCubie> getEdgeCubies() {
+    return edgeCubies;
+  }
+
+  // returns an array list of edgecubies that match color1 and color2
   public ArrayList<EdgeCubie> getEdgeCubie(int color1, int color2) {
     int base = dimension * dimension;
     ArrayList<EdgeCubie> cubies = new ArrayList<>();
@@ -190,10 +219,8 @@ public class Cube {
 
     if (colNum == 0) {
       rotateFullFace(-direction, 1);
-      algorithm3x3.add("L" + ((direction == 1) ? "'" : ""));
     } else if (colNum == dimension - 1) {
       rotateFullFace(direction, 3);
-      algorithm3x3.add("L" + ((direction == -1) ? "'" : ""));
 
     }
 
@@ -208,7 +235,7 @@ public class Cube {
         faces.set(getPosition(4, dimension - i - 1, dimension - colNum - 1), temp0);
         faces.set(getPosition(5, i, colNum), temp4);
       }
-      algorithm.add(new Move("Y", colNum));
+      algorithm.add(new Move("Y+", colNum));
     } else {
       for (int i = 0; i < dimension; i++) {
         int temp0 = faces.get(getPosition(0, i, colNum));
@@ -220,7 +247,7 @@ public class Cube {
         faces.set(getPosition(0, i, colNum), temp4);
         faces.set(getPosition(4, dimension - i - 1, dimension - colNum - 1), temp5);
       }
-      algorithm.add(new Move("Y'", colNum));
+      algorithm.add(new Move("Y-", colNum));
 
     }
   }
@@ -230,10 +257,8 @@ public class Cube {
   public void rotateLayer(int direction, int layerNum) {
     if (layerNum == 0) {
       rotateFullFace(direction, 2);
-      algorithm3x3.add("T" + ((direction == -1) ? "'" : ""));
     } else if (layerNum == dimension - 1) {
       rotateFullFace(-direction, 4);
-      algorithm3x3.add("U" + ((direction == -1) ? "'" : ""));
     }
 
     if (direction == 1) {
@@ -248,7 +273,7 @@ public class Cube {
         faces.set(getPosition(1, dimension - i - 1, dimension - layerNum - 1), temp5);
         faces.set(getPosition(0, dimension - layerNum - 1, i), temp1);
       }
-      algorithm.add(new Move("X", layerNum));
+      algorithm.add(new Move("X+", layerNum));
     } else {
       for (int i = 0; i < dimension; i++) {
         int temp0 = faces.get(getPosition(0, dimension - layerNum - 1, i));
@@ -261,7 +286,7 @@ public class Cube {
         faces.set(getPosition(1, dimension - i - 1, dimension - layerNum - 1), temp0);
         faces.set(getPosition(0, dimension - layerNum - 1, i), temp3);
       }
-      algorithm.add(new Move("X'", layerNum));
+      algorithm.add(new Move("X-", layerNum));
 
     }
 
@@ -272,10 +297,8 @@ public class Cube {
   public void rotateFrontFace(int direction, int faceNum) {
     if (faceNum == 0) {
       rotateFullFace(-direction, 0);
-      algorithm3x3.add("B" + ((direction == 1) ? "'" : ""));
     } else if (faceNum == dimension - 1) {
       rotateFullFace(direction, 5);
-      algorithm3x3.add("F" + ((direction == -1) ? "'" : ""));
     }
     int temp1;
     int temp2;
@@ -293,9 +316,8 @@ public class Cube {
         faces.set(getPosition(2, faceNum, x), temp1);
         faces.set(getPosition(3, faceNum, x), temp2);
         faces.set(getPosition(4, faceNum, x), temp3);
-
       }
-      algorithm.add(new Move("Z", faceNum));
+      algorithm.add(new Move("Z+", faceNum));
     } else {
       for (int x = 0; x < dimension; x++) {
         temp1 = faces.get(getPosition(1, faceNum, x));
@@ -308,7 +330,7 @@ public class Cube {
         faces.set(getPosition(2, faceNum, x), temp3);
         faces.set(getPosition(3, faceNum, x), temp4);
       }
-      algorithm.add(new Move("Z'", faceNum));
+      algorithm.add(new Move("Z-", faceNum));
 
     }
 
@@ -345,29 +367,50 @@ public class Cube {
 
   // Puts the above together tangibly
   // orients the cube just so that the colorfacefront is in front
-  public void orientCube(int colorFaceFront) {
-    // If desired face is on top, rotate whole cube down towards you
-    // if desired face is on bottom, rotate whole cube up towards you
-    // If desired face is on right rotate whole cube clockwise
-    // If desired face is on left rotate whole cube counterclockwise
-    // If desired face is on back rotate cube twice (clockwise in this case)
-    int face = getFaceOrientation(colorFaceFront);
-    switch (face) {
+
+  // orients the cube so that the current position of the desired faceleft / face
+  // front (they can be anywhere on the cube) become left and front
+  public void orientCubeFrontLeft(int faceLeft, int faceFront) {
+
+    // store a cubie so that we can find what face this cubie lands on after we
+    // execute the first translation (all translations will change the orientation
+    // of the second face)
+    int tempCubie = getFaces().get(getPosition(faceFront, 1, 1));
+
+    switch (faceLeft) {
     case 0:
-      rotateCubeDown();
-      rotateCubeDown();
-      break;
-    case 1:
       rotateCubeCounterClockwise();
       break;
     case 2:
       rotateCubeDown();
+      rotateCubeClockwise();
       break;
     case 3:
+      rotateCubeClockwise();
       rotateCubeClockwise();
       break;
     case 4:
       rotateCubeUp();
+      rotateCubeClockwise();
+      break;
+    case 5:
+      rotateCubeClockwise();
+      break;
+    }
+
+    faceFront = getFaceOrientation(tempCubie);
+
+    switch (faceFront) {
+    case 0:
+      rotateCubeUp();
+      rotateCubeUp();
+      break;
+    case 2:
+      rotateCubeDown();
+      break;
+    case 4:
+      rotateCubeUp();
+      break;
     }
 
   }
@@ -377,10 +420,10 @@ public class Cube {
 
   public void orientCube(int colorFaceFront, int colorFaceTop) {
     // If impossible orientation, only puts color face top on top
-    if(dimension % 2 == 0){
+    if (dimension % 2 == 0) {
       return;
     }
-    
+
     int cubieFaceTop = getCenterCubie(colorFaceTop);
 
     switch (getFaceOrientation(cubieFaceTop)) {
@@ -405,7 +448,6 @@ public class Cube {
     }
 
     int cubieFaceFront = getCenterCubie(colorFaceFront);
-
 
     switch (getFaceOrientation(cubieFaceFront)) {
     case 0:
@@ -477,6 +519,15 @@ public class Cube {
     return -1;
   }
 
+  // Only works on odd dimensions
+
+  public int getColor(int face) {
+    if (dimension % 2 == 0) {
+      return -1;
+    }
+    return faces.get(getPosition(face, dimension / 2, dimension / 2)) / (dimension * dimension);
+  }
+
   /****************************************************************************
    * PUTTING EVERYTHING TOGETHER - PRACTICAL
    ****************************************************************/
@@ -516,6 +567,36 @@ public class Cube {
       rotateFrontFace(-1, move.layerNo);
     }
 
+  }
+
+  public void generateScramble(int moves) {
+    int slice;
+    int major;
+    int direction;
+    String majorStr = "";
+    for (int i = 0; i < moves; i++) {
+      slice = (int) (Math.random() * dimension);
+      major = (int) (Math.random() * 3);
+      direction = (int) (Math.random() * 2);
+      switch (major) {
+      case 0:
+        majorStr = "X";
+        break;
+      case 1:
+        majorStr = "Y";
+        break;
+      case 2:
+        majorStr = "Z";
+        break;
+      }
+      if(direction == 1){
+        majorStr += "+";
+      }else{
+        majorStr += "-";
+      }
+      scrambleAlgorithm.add(new Move(majorStr, slice));
+    }
+    algorithm.clear();
   }
 
   /****************************************************************************
@@ -714,10 +795,35 @@ public class Cube {
 
   }
 
+
+
+
   public static void main(String[] args) {
 
-    testRotations();
-    Cube myCube = new Cube(3);
+    //testRotations();
+    Cubenxn myCube = new Cubenxn(8);
+    
+    
+    myCube.scrambleNxN(1000);
+    myCube.printCube();
+
+    myCube.reduceCubeto3x3();
+    myCube.printCube();
+    Cube3x3 myCube3x3 = new Cube3x3(myCube);
+    myCube3x3.printCube();
+    myCube3x3.solve();
+    myCube3x3.printCube();
+    /*
+    for(int i = 0; i < 30; i++){
+      myCube = new Cubenxn(8);
+      myCube.scrambleNxN(100);
+      myCube.reduceCubeto3x3();
+      myCube3x3 = new Cube3x3(myCube);
+      myCube3x3.solve();
+      myCube3x3.printCube();
+    }
+    */
+    
   }
 
 }
