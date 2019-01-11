@@ -801,7 +801,7 @@ public class Cube {
   public static void main(String[] args) {
 
     //testRotations();
-    Cubenxn myCube = new Cubenxn(8);
+    Cubenxn myCube = new Cubenxn(3);
     
     
     myCube.scrambleNxN(1000);
