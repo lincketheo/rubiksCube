@@ -13,7 +13,8 @@ public class Cube3x3 extends Cube {
 
     }
 
-    private void scrambleCube(int moves) {
+    //scrambles cube like a 3x3 (only moves outside edges)
+    private void scrambleCube3x3(int moves) {
         ArrayList<String> validMoves = new ArrayList<>();
         validMoves.add("R");
         validMoves.add("R'");
@@ -37,7 +38,7 @@ public class Cube3x3 extends Cube {
         for (int i = 0; i < moves; i++) {
             randomInt = (int) (Math.random() * 12);
             scrambleAlgorithm.add(validMoves.get(randomInt));
-            moveSequence(scrambleAlgorithm.get(scrambleAlgorithm.size() - 1));
+            moveSequence3x3(scrambleAlgorithm.get(scrambleAlgorithm.size() - 1));
 
         }
     }
@@ -52,16 +53,16 @@ public class Cube3x3 extends Cube {
      * **********************************************************************************
      */
 
-    // EDGES
+
 
     // Moves desired the edge piece that cooresponds to whatever color is on back
     // and top to right place without disrupting anything important
     private void solveTopBackEdgePiece() {
-        int base = getDimension() * getDimension();
-        int topFaceColor = getFaces().get(getPosition(2, 1, 1)) / base;
+        int base = dimension * dimension;
+        int topFaceColor = faces.get(getPosition(2, 1, 1)) / base;
         // Find what colors are surrounding
         // Assuming center is already solved
-        int backFaceColor = getFaces().get(getPosition(0, 1, 1)) / base;
+        int backFaceColor = faces.get(getPosition(0, 1, 1)) / base;
 
         ArrayList<EdgeCubie> edgeCubie = getEdgeCubie(topFaceColor, backFaceColor);
 
@@ -80,20 +81,20 @@ public class Cube3x3 extends Cube {
         // -------------------------------------------------------------
         if (cubieBackTopFace == 0) {
             // cubie is on bottom
-            if (getFaces().indexOf(colorTopEdgeCubie) < getDimension()) {
+            if (faces.indexOf(colorTopEdgeCubie) < dimension) {
                 rotateFrontFace(1, 0);
                 rotateLayer(-1, 0);
                 rotateSide(-1, 0);
                 rotateLayer(1, 0);
             }
             // if cubie is on the "left" edge
-            else if (getFaces().indexOf(colorTopEdgeCubie) % getDimension() == 0) {
+            else if (faces.indexOf(colorTopEdgeCubie) % dimension == 0) {
                 rotateLayer(-1, 0);
                 rotateSide(-1, 0);
                 rotateLayer(1, 0);
             }
             // if cubie is on the "right edge"
-            else if ((getFaces().indexOf(colorTopEdgeCubie) + 1) % getDimension() == 0) {
+            else if ((faces.indexOf(colorTopEdgeCubie) + 1) % dimension == 0) {
                 rotateFrontFace(1, 0);
                 rotateFrontFace(1, 0);
                 rotateLayer(-1, 0);
@@ -113,17 +114,17 @@ public class Cube3x3 extends Cube {
         // Cubie is on left face
         // -------------------------------------------------------------------------
         else if (cubieBackTopFace == 1) {
-            if (getFaces().indexOf(colorTopEdgeCubie) < base + getDimension()) {
+            if (faces.indexOf(colorTopEdgeCubie) < base + dimension) {
                 rotateFrontFace(1, 0);
             }
             // if cubie is on the "left" edge
-            else if (getFaces().indexOf(colorTopEdgeCubie) % getDimension() == 0) {
+            else if (faces.indexOf(colorTopEdgeCubie) % dimension == 0) {
                 rotateSide(-1, 0);
                 rotateFrontFace(1, 0);
                 rotateSide(1, 0);
             }
             // if cubie is on the "right edge"
-            else if ((getFaces().indexOf(colorTopEdgeCubie) + 1) % getDimension() == 0) {
+            else if ((faces.indexOf(colorTopEdgeCubie) + 1) % dimension == 0) {
                 rotateSide(1, 0);
                 rotateFrontFace(1, 0);
             } else {
@@ -140,32 +141,32 @@ public class Cube3x3 extends Cube {
         // Cubie is on front face
         // --------------------------------------------------------------------------
         else if (cubieBackTopFace == 5) {
-            if (getFaces().indexOf(colorTopEdgeCubie) < 5 * base + getDimension()) {
+            if (faces.indexOf(colorTopEdgeCubie) < 5 * base + dimension) {
                 rotateLayer(1, 0);
                 rotateLayer(1, 0);
                 rotateFrontFace(1, 0);
                 rotateLayer(-1, 0);
-                rotateSide(-1, getDimension() - 1);
+                rotateSide(-1, dimension - 1);
                 rotateLayer(-1, 0);
 
             }
             // if cubie is on the "left" edge
-            else if (getFaces().indexOf(colorTopEdgeCubie) % getDimension() == 0) {
+            else if (faces.indexOf(colorTopEdgeCubie) % dimension == 0) {
                 rotateLayer(-1, 0);
                 rotateSide(1, 0);
                 rotateLayer(1, 0);
             }
             // if cubie is on the "right edge"
-            else if ((getFaces().indexOf(colorTopEdgeCubie) + 1) % getDimension() == 0) {
+            else if ((faces.indexOf(colorTopEdgeCubie) + 1) % dimension == 0) {
                 rotateLayer(1, 0);
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
                 rotateLayer(-1, 0);
             } else {
-                rotateFrontFace(-1, getDimension() - 1);
+                rotateFrontFace(-1, dimension - 1);
                 rotateLayer(1, 0);
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
                 rotateLayer(-1, 0);
-                rotateFrontFace(1, getDimension() - 1);
+                rotateFrontFace(1, dimension - 1);
 
             }
             // printCubeNums();
@@ -173,23 +174,23 @@ public class Cube3x3 extends Cube {
         // Cubie is on right face
         // --------------------------------------------------------------------------
         else if (cubieBackTopFace == 3) {
-            if (getFaces().indexOf(colorTopEdgeCubie) < 3 * base + getDimension()) {
+            if (faces.indexOf(colorTopEdgeCubie) < 3 * base + dimension) {
                 rotateFrontFace(-1, 0);
             }
             // if cubie is on the "right" edge
-            else if ((getFaces().indexOf(colorTopEdgeCubie) + 1) % getDimension() == 0) {
-                rotateSide(-1, getDimension() - 1);
+            else if ((faces.indexOf(colorTopEdgeCubie) + 1) % dimension == 0) {
+                rotateSide(-1, dimension - 1);
                 rotateFrontFace(-1, 0);
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
             }
             // if cubie is on the "left edge"
-            else if (getFaces().indexOf(colorTopEdgeCubie) % getDimension() == 0) {
-                rotateSide(1, getDimension() - 1);
+            else if (faces.indexOf(colorTopEdgeCubie) % dimension == 0) {
+                rotateSide(1, dimension - 1);
                 rotateFrontFace(-1, 0);
             } else {
                 rotateLayer(-1, 0);
                 rotateLayer(-1, 0);
-                rotateFrontFace(-1, getDimension() - 1);
+                rotateFrontFace(-1, dimension - 1);
                 rotateLayer(-1, 0);
                 rotateLayer(-1, 0);
             }
@@ -200,20 +201,20 @@ public class Cube3x3 extends Cube {
         // ---------------------------------------------------------
         else if (cubieBackTopFace == 2) {
             // if cubie is on the "left" edge
-            if (getFaces().indexOf(colorTopEdgeCubie) % getDimension() == 0) {
+            if (faces.indexOf(colorTopEdgeCubie) % dimension == 0) {
                 rotateSide(1, 0);
                 rotateLayer(-1, 0);
                 rotateSide(-1, 0);
                 rotateLayer(1, 0);
             }
             // if cubie is on the "right edge"
-            else if ((getFaces().indexOf(colorTopEdgeCubie) + 1) % getDimension() == 0) {
-                rotateSide(1, getDimension() - 1);
+            else if ((faces.indexOf(colorTopEdgeCubie) + 1) % dimension == 0) {
+                rotateSide(1, dimension - 1);
                 rotateLayer(1, 0);
-                rotateSide(-1, getDimension() - 1);
+                rotateSide(-1, dimension - 1);
                 rotateLayer(-1, 0);
-            } else if (getFaces().indexOf(colorTopEdgeCubie) < 3 * base
-                    && getFaces().indexOf(colorTopEdgeCubie) > base * 2 + getDimension() * (getDimension() - 1)) {
+            } else if (faces.indexOf(colorTopEdgeCubie) < 3 * base
+                    && faces.indexOf(colorTopEdgeCubie) > base * 2 + dimension * (dimension - 1)) {
                 rotateLayer(-1, 0);
                 rotateLayer(-1, 0);
                 rotateFrontFace(1, 0);
@@ -226,24 +227,24 @@ public class Cube3x3 extends Cube {
         // cubie is on bottom
         // ------------------------------------------------------------------------------
         else if (cubieBackTopFace == 4) {
-            if (getFaces().indexOf(colorTopEdgeCubie) < 4 * base + getDimension()) {
+            if (faces.indexOf(colorTopEdgeCubie) < 4 * base + dimension) {
                 rotateFrontFace(1, 0);
                 rotateFrontFace(1, 0);
             }
             // if cubie is on the "left" edge
-            else if ((getFaces().indexOf(colorTopEdgeCubie) + 1) % getDimension() == 0) {
-                rotateLayer(1, getDimension() - 1);
+            else if ((faces.indexOf(colorTopEdgeCubie) + 1) % dimension == 0) {
+                rotateLayer(1, dimension - 1);
                 rotateFrontFace(1, 0);
                 rotateFrontFace(1, 0);
             }
             // if cubie is on the "right edge"
-            else if (getFaces().indexOf(colorTopEdgeCubie) % getDimension() == 0) {
-                rotateLayer(-1, getDimension() - 1);
+            else if (faces.indexOf(colorTopEdgeCubie) % dimension == 0) {
+                rotateLayer(-1, dimension - 1);
                 rotateFrontFace(1, 0);
                 rotateFrontFace(1, 0);
             } else {
-                rotateLayer(-1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
                 rotateFrontFace(1, 0);
                 rotateFrontFace(1, 0);
             }
@@ -264,12 +265,12 @@ public class Cube3x3 extends Cube {
     // moves any corner piece to index 0,0,0 or 0,dim-1,0 then does the following
     // two methods to put it in place
     private void solveTopBackRightCornerPiece() {
-        int base = getDimension() * getDimension();
-        int topFaceColor = getFaces().get(getPosition(2, 1, 1)) / base;
+        int base = dimension * dimension;
+        int topFaceColor = faces.get(getPosition(2, 1, 1)) / base;
         // Find what colors are surrounding
         // Assuming center is already solved
-        int backFaceColor = getFaces().get(getPosition(0, 1, 1)) / base;
-        int rightFaceColor = getFaces().get(getPosition(3, 1, 1)) / base;
+        int backFaceColor = faces.get(getPosition(0, 1, 1)) / base;
+        int rightFaceColor = faces.get(getPosition(3, 1, 1)) / base;
 
         CornerCubie cornerCubie = getCornerCubie(topFaceColor, backFaceColor, rightFaceColor);
 
@@ -291,20 +292,20 @@ public class Cube3x3 extends Cube {
         // -------------------------------------------------------------
         if (cubieBackTopFace == 0) {
             // Top left corner
-            if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
+            if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
                 backBottomLeftCornertoTopBackRightCorner();
             }
             // Top right corner
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (getDimension() - 1)) {
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (dimension - 1)) {
                 backBottomRightCornertoTopBackRightCorner();
             }
             // bottom right corner
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
                 // get piece to bottom left corner of back
                 rotateFrontFace(1, 0);
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
                 rotateFrontFace(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
 
                 // Now it is on the bottom right corner, but it is backwards, move it to left
                 // corner
@@ -318,9 +319,9 @@ public class Cube3x3 extends Cube {
 
                 // get piece to bottom right corner
                 rotateFrontFace(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 rotateFrontFace(1, 0);
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
 
                 // get piece to place
                 backBottomLeftCornertoTopBackRightCorner();
@@ -333,31 +334,31 @@ public class Cube3x3 extends Cube {
         // -------------------------------------------------------------------------
         else if (cubieBackTopFace == 1) {
             // Top left corner
-            if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
-                rotateLayer(1, getDimension() - 1);
+            if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
+                rotateLayer(1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
             }
             // Top right corner
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (getDimension() - 1)) {
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (dimension - 1)) {
                 rotateSide(1, 0);
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
                 rotateSide(-1, 0);
                 backBottomRightCornertoTopBackRightCorner();
             }
             // bottom right corner
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
                 rotateSide(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 rotateSide(1, 0);
-                rotateLayer(-1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomLeftCornertoTopBackRightCorner();
 
             }
 
             // bottom left corner
             else {
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
                 backBottomLeftCornertoTopBackRightCorner();
 
             }
@@ -368,27 +369,27 @@ public class Cube3x3 extends Cube {
         // Cubie is on right face
         // --------------------------------------------------------------------------
         else if (cubieBackTopFace == 3) {
-            if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
-                rotateSide(1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
-                rotateSide(-1, getDimension() - 1);
+            if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
+                rotateSide(1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
+                rotateSide(-1, dimension - 1);
                 backBottomLeftCornertoTopBackRightCorner();
             }
             // if cubie is on the "right" edge
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (getDimension() - 1)) {
-                rotateLayer(-1, getDimension() - 1);
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (dimension - 1)) {
+                rotateLayer(-1, dimension - 1);
                 backBottomLeftCornertoTopBackRightCorner();
             }
             // if cubie is on the "left edge"
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
-                rotateLayer(-1, getDimension() - 1);
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
+                rotateLayer(-1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
             } else {
-                rotateSide(-1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
-                rotateSide(1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
+                rotateSide(-1, dimension - 1);
+                rotateLayer(1, dimension - 1);
+                rotateSide(1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
 
             }
@@ -398,28 +399,28 @@ public class Cube3x3 extends Cube {
         // Cubie is on the desired face (top face)
         // ---------------------------------------------------------
         else if (cubieBackTopFace == 2) {
-            if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
+            if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
                 rotateSide(1, 0);
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
                 rotateSide(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomLeftCornertoTopBackRightCorner();
             }
 
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
-                rotateSide(-1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
-                rotateSide(1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
+                rotateSide(-1, dimension - 1);
+                rotateLayer(1, dimension - 1);
+                rotateSide(1, dimension - 1);
+                rotateLayer(1, dimension - 1);
                 backBottomLeftCornertoTopBackRightCorner();
             }
 
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * (base)
-                    + ((getDimension()) * (getDimension() - 1))) {
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * (base)
+                    + ((dimension) * (dimension - 1))) {
                 rotateSide(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 rotateSide(1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
 
             }
@@ -427,34 +428,34 @@ public class Cube3x3 extends Cube {
             // printCubeNums();
         } else if (cubieBackTopFace == 5) {
             // Top left corner
-            if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
+            if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
 
-                rotateFrontFace(-1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
-                rotateFrontFace(1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
+                rotateFrontFace(-1, dimension - 1);
+                rotateLayer(1, dimension - 1);
+                rotateFrontFace(1, dimension - 1);
+                rotateLayer(1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
             }
             // Top right corner
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (getDimension() - 1)) {
-                rotateFrontFace(1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
-                rotateFrontFace(-1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (dimension - 1)) {
+                rotateFrontFace(1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
+                rotateFrontFace(-1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomLeftCornertoTopBackRightCorner();
 
             }
             // bottom right corner
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
-                rotateLayer(-1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
+                rotateLayer(-1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomLeftCornertoTopBackRightCorner();
             }
 
             // bottom left corner
             else {
-                rotateLayer(-1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
             }
             // else, cubie is bordering top and middle
@@ -462,46 +463,46 @@ public class Cube3x3 extends Cube {
 
         } else if (cubieBackTopFace == 4) {
             // Top left corner
-            if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
+            if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base) {
                 rotateFrontFace(1, 0);
-                rotateLayer(1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
+                rotateLayer(1, dimension - 1);
                 rotateFrontFace(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
             }
             // Top right corner
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (getDimension() - 1)) {
-                rotateLayer(1, getDimension() - 1);
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (dimension - 1)) {
+                rotateLayer(1, dimension - 1);
                 rotateFrontFace(1, 0);
-                rotateLayer(1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
+                rotateLayer(1, dimension - 1);
                 rotateFrontFace(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
 
             }
             // bottom right corner
-            else if (getFaces().indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
-                rotateLayer(-1, getDimension() - 1);
-                rotateLayer(-1, getDimension() - 1);
+            else if (faces.indexOf(colorTopCornerCubie) == cubieBackTopFace * base + (base - 1)) {
+                rotateLayer(-1, dimension - 1);
+                rotateLayer(-1, dimension - 1);
                 rotateFrontFace(1, 0);
-                rotateLayer(1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
+                rotateLayer(1, dimension - 1);
                 rotateFrontFace(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
             }
 
             // bottom left corner
             else {
 
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 rotateFrontFace(1, 0);
-                rotateLayer(1, getDimension() - 1);
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
+                rotateLayer(1, dimension - 1);
                 rotateFrontFace(-1, 0);
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
                 backBottomRightCornertoTopBackRightCorner();
 
             }
@@ -515,10 +516,10 @@ public class Cube3x3 extends Cube {
     // if you're looking at the cube foldout, moves
     // index 0,0,0 to 2,0,dim-1)
     private void backBottomLeftCornertoTopBackRightCorner() {
-        rotateLayer(1, getDimension() - 1);
-        rotateLayer(1, getDimension() - 1);
+        rotateLayer(1, dimension - 1);
+        rotateLayer(1, dimension - 1);
         rotateFrontFace(1, 0);
-        rotateLayer(-1, getDimension() - 1);
+        rotateLayer(-1, dimension - 1);
         rotateFrontFace(-1, 0);
 
     }
@@ -526,10 +527,10 @@ public class Cube3x3 extends Cube {
     // if you're looking at the cube foldout, moves
     // index 0,dim-1,0 to 2,0,dim-1)
     private void backBottomRightCornertoTopBackRightCorner() {
-        rotateLayer(-1, getDimension() - 1);
-        rotateSide(1, getDimension() - 1);
-        rotateLayer(1, getDimension() - 1);
-        rotateSide(-2, getDimension() - 1);
+        rotateLayer(-1, dimension - 1);
+        rotateSide(1, dimension - 1);
+        rotateLayer(1, dimension - 1);
+        rotateSide(-2, dimension - 1);
 
     }
 
@@ -550,9 +551,9 @@ public class Cube3x3 extends Cube {
     // moves top/front edge piece to the right/left edge spot THIS CAN DO
     // EVERYTHING, YOU DON'T NEED MOVE TOP FRONT TO LEFT I'VE INCLUDED IT ANYWAYS
     private void moveTopFrontEdgePiecetoRight() {
-        int base = getDimension() * getDimension();
-        int colorRight = getFaces().get(getPosition(3, 1, 1)) / base;
-        int colorFront = getFaces().get(getPosition(5, 1, 1)) / base;
+        int base = dimension * dimension;
+        int colorRight = faces.get(getPosition(3, 1, 1)) / base;
+        int colorFront = faces.get(getPosition(5, 1, 1)) / base;
         ArrayList<EdgeCubie> cubie = getEdgeCubie(colorRight, colorFront);
         int faceFrontCubie;
         int faceFrontCubieNo;
@@ -568,7 +569,7 @@ public class Cube3x3 extends Cube {
         // on back face somewhere
         if (faceFrontCubie == 0) {
             // if cubie is on the "left" edge
-            if (getFaces().indexOf(faceFrontCubieNo) % getDimension() == 0) {
+            if (faces.indexOf(faceFrontCubieNo) % dimension == 0) {
                 // Get the edge piece out of there
                 rotateCubeCounterClockwise();
                 rotateCubeCounterClockwise();
@@ -582,7 +583,7 @@ public class Cube3x3 extends Cube {
                 moveTopFrontEdgePiecetoRight();
             }
             // if cubie is on the "right edge"
-            else if ((getFaces().indexOf(faceFrontCubieNo) + 1) % getDimension() == 0) {
+            else if ((faces.indexOf(faceFrontCubieNo) + 1) % dimension == 0) {
                 // Get the edge piece out of there
                 rotateCubeCounterClockwise();
                 rotateCubeCounterClockwise();
@@ -606,7 +607,7 @@ public class Cube3x3 extends Cube {
 
         else if (faceFrontCubie == 1) {
             // if cubie is on the "left" edge
-            if (getFaces().indexOf(faceFrontCubieNo) < 1 * base + getDimension()) {
+            if (faces.indexOf(faceFrontCubieNo) < 1 * base + dimension) {
                 // Get the edge piece out of there
                 rotateCubeCounterClockwise();
                 leftEdgePieceLayerTwo();
@@ -619,7 +620,7 @@ public class Cube3x3 extends Cube {
 
             }
             // if cubie is on the "right edge"
-            else if ((getFaces().indexOf(faceFrontCubieNo) + 1) % getDimension() == 0) {
+            else if ((faces.indexOf(faceFrontCubieNo) + 1) % dimension == 0) {
                 rotateLayer(-1, 0);
                 rightEdgePieceLayerTwo();
                 // ENDS METHOD
@@ -641,7 +642,7 @@ public class Cube3x3 extends Cube {
 
         else if (faceFrontCubie == 2) {
             // if cubie is on the "left" edge
-            if (getFaces().indexOf(faceFrontCubieNo) < 2 * base + getDimension()) {
+            if (faces.indexOf(faceFrontCubieNo) < 2 * base + dimension) {
 
                 // Only exception is when face is on top, then we have to use the right
                 // algorithm
@@ -651,11 +652,11 @@ public class Cube3x3 extends Cube {
                 rotateCubeCounterClockwise();
             }
             // if cubie is on the "right edge"
-            else if ((getFaces().indexOf(faceFrontCubieNo) + 1) % getDimension() == 0) {
+            else if ((faces.indexOf(faceFrontCubieNo) + 1) % dimension == 0) {
                 rotateCubeClockwise();
                 leftEdgePieceLayerTwo();
                 rotateCubeCounterClockwise();
-            } else if (getFaces().indexOf(faceFrontCubieNo) % getDimension() == 0) {
+            } else if (faces.indexOf(faceFrontCubieNo) % dimension == 0) {
                 rotateLayer(-1, 0);
                 rotateLayer(-1, 0);
                 rotateCubeClockwise();
@@ -673,7 +674,7 @@ public class Cube3x3 extends Cube {
 
         else if (faceFrontCubie == 3) {
             // if cubie is on the "left" edge
-            if (getFaces().indexOf(faceFrontCubieNo) < 3 * base + getDimension()) {
+            if (faces.indexOf(faceFrontCubieNo) < 3 * base + dimension) {
                 // Get the edge piece out of there
                 rotateCubeClockwise();
                 rightEdgePieceLayerTwo();
@@ -685,7 +686,7 @@ public class Cube3x3 extends Cube {
                 moveTopFrontEdgePiecetoRight();
             }
             // if cubie is on the "right edge"
-            else if (getFaces().indexOf(faceFrontCubieNo) % getDimension() == 0) {
+            else if (faces.indexOf(faceFrontCubieNo) % dimension == 0) {
                 rotateLayer(1, 0);
                 rightEdgePieceLayerTwo();
                 // ENDS METHOD
@@ -707,12 +708,12 @@ public class Cube3x3 extends Cube {
 
         else if (faceFrontCubie == 5) {
             // if cubie is on the "left" edge
-            if (getFaces().indexOf(faceFrontCubieNo) < 5 * base + getDimension()) {
+            if (faces.indexOf(faceFrontCubieNo) < 5 * base + dimension) {
                 rightEdgePieceLayerTwo();
                 // ENDS METHOD
             }
             // if cubie is on the "right edge"
-            else if (getFaces().indexOf(faceFrontCubieNo) % getDimension() == 0) {
+            else if (faces.indexOf(faceFrontCubieNo) % dimension == 0) {
                 leftEdgePieceLayerTwo();
                 moveTopFrontEdgePiecetoRight();
             }
@@ -732,13 +733,13 @@ public class Cube3x3 extends Cube {
     private void rightEdgePieceLayerTwo() {
         // U R U' R' U' F' U F
         rotateLayer(1, 0);
-        rotateSide(1, getDimension() - 1);
+        rotateSide(1, dimension - 1);
         rotateLayer(-1, 0);
-        rotateSide(-1, getDimension() - 1);
+        rotateSide(-1, dimension - 1);
         rotateLayer(-1, 0);
-        rotateFrontFace(-1, getDimension() - 1);
+        rotateFrontFace(-1, dimension - 1);
         rotateLayer(1, 0);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
     }
 
     // Algorithm for top front to left front edge
@@ -749,9 +750,9 @@ public class Cube3x3 extends Cube {
         rotateLayer(1, 0);
         rotateSide(-1, 0);
         rotateLayer(1, 0);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
         rotateLayer(-1, 0);
-        rotateFrontFace(-1, getDimension() - 1);
+        rotateFrontFace(-1, dimension - 1);
     }
 
     /************************************************************************************
@@ -766,30 +767,30 @@ public class Cube3x3 extends Cube {
     private void solveThirdLayerCross() {
         // how many top level squares are here, if theres one, do
         // algorithmthirdlayercross in any orientation and then do this method again
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
 
         // 10 01 dim - 1 dim - 2 dim - 2 dim -1
-        int colorTopFace = getFaces().get(getPosition(2, 1, 1)) / base;
-        int colorLeftEdge = getFaces().get(getPosition(2, 1, 0)) / base;
-        int colorRightEdge = getFaces().get(getPosition(2, 1, getDimension() - 1)) / base;
-        int colorBottomEdge = getFaces().get(getPosition(2, getDimension() - 1, 1)) / base;
-        int colorTopEdge = getFaces().get(getPosition(2, 0, 1)) / base;
+        int colorTopFace = faces.get(getPosition(2, 1, 1)) / base;
+        int colorLeftEdge = faces.get(getPosition(2, 1, 0)) / base;
+        int colorRightEdge = faces.get(getPosition(2, 1, dimension - 1)) / base;
+        int colorBottomEdge = faces.get(getPosition(2, dimension - 1, 1)) / base;
+        int colorTopEdge = faces.get(getPosition(2, 0, 1)) / base;
 
         int noTopLayerFaces = ((colorTopFace == colorLeftEdge) ? 1 : 0) + ((colorTopFace == colorRightEdge) ? 1 : 0)
                 + ((colorTopFace == colorBottomEdge) ? 1 : 0) + ((colorTopFace == colorTopEdge) ? 1 : 0);
 
         /*
-         * if(getDimension() % 2 == 0 && noTopLayerFaces == 1){ parityOLL(); }
+         * if(dimension % 2 == 0 && noTopLayerFaces == 1){ parityOLL(); }
          */
         /*
         printCube();
-        if (getDimension() % 2 == 0 && noTopLayerFaces == 1) {
+        if (dimension % 2 == 0 && noTopLayerFaces == 1) {
             alogirthmThirdLayerCross();
             printCube();
             boolean inPlace = colorBottomEdge == colorTopFace;
             while (!inPlace) {
                 rotateCubeClockwise();
-                colorBottomEdge = getFaces().get(getPosition(2, getDimension() - 1, 1)) / base;
+                colorBottomEdge = faces.get(getPosition(2, dimension - 1, 1)) / base;
                 inPlace = colorBottomEdge == colorTopFace;
             }
             parityPLL();
@@ -797,7 +798,6 @@ public class Cube3x3 extends Cube {
 
         }
         */
-        printCube();
         if(noTopLayerFaces == 0){
             alogirthmThirdLayerCross();
             solveThirdLayerCross();
@@ -820,18 +820,18 @@ public class Cube3x3 extends Cube {
         boolean correctOrientation = (colorLeftEdge == colorTopFace) && (colorBottomEdge != colorTopFace);
         while (!correctOrientation) {
             rotateCubeClockwise();
-            colorLeftEdge = getFaces().get(getPosition(2, 1, 0)) / base;
-            colorRightEdge = getFaces().get(getPosition(2, 1, getDimension() - 1)) / base;
-            colorBottomEdge = getFaces().get(getPosition(2, getDimension() - 1, 1)) / base;
-            colorTopEdge = getFaces().get(getPosition(2, 0, 1)) / base;
+            colorLeftEdge = faces.get(getPosition(2, 1, 0)) / base;
+            colorRightEdge = faces.get(getPosition(2, 1, dimension - 1)) / base;
+            colorBottomEdge = faces.get(getPosition(2, dimension - 1, 1)) / base;
+            colorTopEdge = faces.get(getPosition(2, 0, 1)) / base;
             correctOrientation = (colorLeftEdge == colorTopFace) && (colorBottomEdge != colorTopFace);
         }
 
         int noRepetitions = 0;
-        colorTopEdge = getFaces().get(getPosition(2, 0, 1)) / base;
+        colorTopEdge = faces.get(getPosition(2, 0, 1)) / base;
 
         if (colorLeftEdge == colorRightEdge) {
-            if (colorTopEdge == colorTopFace && getDimension() % 2 == 0) {
+            if (colorTopEdge == colorTopFace && dimension % 2 == 0) {
                 parityOLL();
                 return;
             } else {
@@ -848,98 +848,104 @@ public class Cube3x3 extends Cube {
 
     // algorithm for the above
     private void alogirthmThirdLayerCross() {
-        rotateFrontFace(1, getDimension() - 1);
-        rotateSide(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
+        rotateSide(1, dimension - 1);
         rotateLayer(1, 0);
-        rotateSide(-1, getDimension() - 1);
+        rotateSide(-1, dimension - 1);
         rotateLayer(-1, 0);
-        rotateFrontFace(-1, getDimension() - 1);
+        rotateFrontFace(-1, dimension - 1);
 
     }
 
+    //Parity algorithms
+    /**
+     *For even cubes, there's no way of knowing whether an edge piece is fully solved (unlike odd dimension cubes)
+     *sometimes (50% chance) we will unintentionally flip an edge piece when trying to solve it
+     *for that we need an algorithm that will flip the edge piece again which is actually very long
+     */
     public void parityOLL() {
-        for (int i = 1; i < getDimension() / 2; i++) {
-            rotateSide(-1, getDimension() - 1 - i);
+        for (int i = 1; i < dimension / 2; i++) {
+            rotateSide(-1, dimension - 1 - i);
         }
 
         rotateLayer(1, 0);
         rotateLayer(1, 0);
 
-        for (int i = 1; i < getDimension() / 2; i++) {
+        for (int i = 1; i < dimension / 2; i++) {
             rotateSide(-1, i);
         }
 
-        rotateFrontFace(1, getDimension() - 1);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
+        rotateFrontFace(1, dimension - 1);
 
-        for (int i = 1; i < getDimension() / 2; i++) {
+        for (int i = 1; i < dimension / 2; i++) {
             rotateSide(1, i);
         }
 
-        rotateFrontFace(1, getDimension() - 1);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
+        rotateFrontFace(1, dimension - 1);
 
-        for (int i = 1; i < getDimension() / 2; i++) {
-            rotateSide(-1, getDimension() - 1 - i);
-            rotateSide(-1, getDimension() - 1 - i);
+        for (int i = 1; i < dimension / 2; i++) {
+            rotateSide(-1, dimension - 1 - i);
+            rotateSide(-1, dimension - 1 - i);
         }
 
         rotateLayer(1, 0);
         rotateLayer(1, 0);
 
-        for (int i = 1; i < getDimension() / 2; i++) {
-            rotateSide(1, getDimension() - 1 - i);
+        for (int i = 1; i < dimension / 2; i++) {
+            rotateSide(1, dimension - 1 - i);
         }
 
         rotateLayer(1, 0);
         rotateLayer(1, 0);
 
-        for (int i = 1; i < getDimension() / 2; i++) {
-            rotateSide(-1, getDimension() - 1 - i);
+        for (int i = 1; i < dimension / 2; i++) {
+            rotateSide(-1, dimension - 1 - i);
         }
 
         rotateLayer(1, 0);
         rotateLayer(1, 0);
 
-        rotateFrontFace(1, getDimension() - 1);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
+        rotateFrontFace(1, dimension - 1);
 
-        for (int i = 1; i < getDimension() / 2; i++) {
-            rotateSide(1, getDimension() - 1 - i);
-            rotateSide(1, getDimension() - 1 - i);
+        for (int i = 1; i < dimension / 2; i++) {
+            rotateSide(1, dimension - 1 - i);
+            rotateSide(1, dimension - 1 - i);
 
         }
 
-        rotateFrontFace(1, getDimension() - 1);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
+        rotateFrontFace(1, dimension - 1);
 
     }
 
     public void parityPLL() {
-        for (int i = 1; i < getDimension() / 2; i++) {
-            rotateSide(1, getDimension() - 1 - i);
-            rotateSide(1, getDimension() - 1 - i);
+        for (int i = 1; i < dimension / 2; i++) {
+            rotateSide(1, dimension - 1 - i);
+            rotateSide(1, dimension - 1 - i);
         }
 
         rotateLayer(1, 0);
         rotateLayer(1, 0);
 
-        for (int i = 1; i < getDimension() / 2; i++) {
-            rotateSide(1, getDimension() - 1 - i);
-            rotateSide(1, getDimension() - 1 - i);
+        for (int i = 1; i < dimension / 2; i++) {
+            rotateSide(1, dimension - 1 - i);
+            rotateSide(1, dimension - 1 - i);
         }
 
-        for (int i = 0; i < getDimension() / 2; i++) {
+        for (int i = 0; i < dimension / 2; i++) {
             rotateLayer(1, i);
             rotateLayer(1, i);
         }
 
-        for (int i = 1; i < getDimension() / 2; i++) {
-            rotateSide(1, getDimension() - 1 - i);
-            rotateSide(1, getDimension() - 1 - i);
+        for (int i = 1; i < dimension / 2; i++) {
+            rotateSide(1, dimension - 1 - i);
+            rotateSide(1, dimension - 1 - i);
         }
 
-        for (int i = 0; i < getDimension() / 2; i++) {
+        for (int i = 0; i < dimension / 2; i++) {
             rotateLayer(1, i);
             rotateLayer(1, i);
         }
@@ -947,14 +953,14 @@ public class Cube3x3 extends Cube {
     }
 
     public void solveEvenViaOLL(){
-        if(getDimension() % 2 == 1){
+        if(dimension % 2 == 1){
             return;
         }
-        int base = getDimension() * getDimension();
-        int colorTop = getFaces().get(getPosition(2, 1, 1)) / base;
+        int base = dimension * dimension;
+        int colorTop = faces.get(getPosition(2, 1, 1)) / base;
         int currentColor;
         for(int i = 0; i < 4; i++){
-            currentColor = getFaces().get(getPosition(2, getDimension() - 1, 1)) / base;
+            currentColor = faces.get(getPosition(2, dimension - 1, 1)) / base;
             if(currentColor != colorTop){
                 parityOLL();
             }
@@ -972,40 +978,38 @@ public class Cube3x3 extends Cube {
         // touching faces match turn cube until front and top dont match do algorithm do
         // this again return
         // no match do the algorithm do this again return
-        printCube();
-        int base = getDimension() * getDimension();
-        boolean leftMatch = (getFaces().get(getPosition(1, 1, 1))
-                / base) == (getFaces().get(getPosition(1, 1, getDimension() - 1)) / base);
-        boolean rightMatch = (getFaces().get(getPosition(3, 1, 1)) / base) == (getFaces().get(getPosition(3, 1, 0))
+        int base = dimension * dimension;
+        boolean leftMatch = (faces.get(getPosition(1, 1, 1))
+                / base) == (faces.get(getPosition(1, 1, dimension - 1)) / base);
+        boolean rightMatch = (faces.get(getPosition(3, 1, 1)) / base) == (faces.get(getPosition(3, 1, 0))
                 / base);
-        boolean frontMatch = (getFaces().get(getPosition(5, 1, 1)) / base) == (getFaces().get(getPosition(5, 0, 1))
+        boolean frontMatch = (faces.get(getPosition(5, 1, 1)) / base) == (faces.get(getPosition(5, 0, 1))
                 / base);
-        boolean backMatch = (getFaces().get(getPosition(0, 1, 1))
-                / base) == (getFaces().get(getPosition(0, getDimension() - 1, 1)) / base);
+        boolean backMatch = (faces.get(getPosition(0, 1, 1))
+                / base) == (faces.get(getPosition(0, dimension - 1, 1)) / base);
         int noMatching = ((leftMatch ? 1 : 0) + (rightMatch ? 1 : 0) + (frontMatch ? 1 : 0) + (backMatch ? 1 : 0));
         int failSafe = 0;
 
         while (failSafe < 4 && noMatching < 2) {
             rotateLayer(1, 0);
-            leftMatch = (getFaces().get(getPosition(1, 1, 1))
-                    / base) == (getFaces().get(getPosition(1, 1, getDimension() - 1)) / base);
-            rightMatch = (getFaces().get(getPosition(3, 1, 1)) / base) == (getFaces().get(getPosition(3, 1, 0)) / base);
-            frontMatch = (getFaces().get(getPosition(5, 1, 1)) / base) == (getFaces().get(getPosition(5, 0, 1)) / base);
-            backMatch = (getFaces().get(getPosition(0, 1, 1))
-                    / base) == (getFaces().get(getPosition(0, getDimension() - 1, 1)) / base);
+            leftMatch = (faces.get(getPosition(1, 1, 1))
+                    / base) == (faces.get(getPosition(1, 1, dimension - 1)) / base);
+            rightMatch = (faces.get(getPosition(3, 1, 1)) / base) == (faces.get(getPosition(3, 1, 0)) / base);
+            frontMatch = (faces.get(getPosition(5, 1, 1)) / base) == (faces.get(getPosition(5, 0, 1)) / base);
+            backMatch = (faces.get(getPosition(0, 1, 1))
+                    / base) == (faces.get(getPosition(0, dimension - 1, 1)) / base);
             noMatching = ((leftMatch ? 1 : 0) + (rightMatch ? 1 : 0) + (frontMatch ? 1 : 0) + (backMatch ? 1 : 0));
 
             failSafe++;
         }
-        printCube();
 
         if (noMatching == 4) {
             return;
         } else if (frontMatch && backMatch || noMatching < 2 || (rightMatch && leftMatch)) {
             /*
             printCube();
-            if (getDimension() % 2 == 0 && getFaces().get(getPosition(2, getDimension() - 1, 1))
-                    / base != getFaces().get(getPosition(2, getDimension() - 2, 1)) / base) {
+            if (dimension % 2 == 0 && faces.get(getPosition(2, dimension - 1, 1))
+                    / base != faces.get(getPosition(2, dimension - 2, 1)) / base) {
                 parityPLL();
             }
             */
@@ -1015,13 +1019,13 @@ public class Cube3x3 extends Cube {
         } else {
             while (frontMatch || !rightMatch) {
                 rotateCubeCounterClockwise();
-                rightMatch = (getFaces().get(getPosition(3, 1, 1)) / base) == (getFaces().get(getPosition(3, 1, 0))
+                rightMatch = (faces.get(getPosition(3, 1, 1)) / base) == (faces.get(getPosition(3, 1, 0))
                         / base);
-                frontMatch = (getFaces().get(getPosition(5, 1, 1)) / base) == (getFaces().get(getPosition(5, 0, 1))
+                frontMatch = (faces.get(getPosition(5, 1, 1)) / base) == (faces.get(getPosition(5, 0, 1))
                         / base);
             }
-            backMatch = (getFaces().get(getPosition(0, 1, 1))
-                    / base) == (getFaces().get(getPosition(0, getDimension() - 1, 1)) / base);
+            backMatch = (faces.get(getPosition(0, 1, 1))
+                    / base) == (faces.get(getPosition(0, dimension - 1, 1)) / base);
             /*
                     if(!backMatch){
                 parityOLL();
@@ -1037,14 +1041,14 @@ public class Cube3x3 extends Cube {
 
     // Algorithm for above
     private void algorithmMatchEdgePiecesThirdLayer() {
-        rotateSide(1, getDimension() - 1);
+        rotateSide(1, dimension - 1);
         rotateLayer(1, 0);
-        rotateSide(-1, getDimension() - 1);
+        rotateSide(-1, dimension - 1);
         rotateLayer(1, 0);
-        rotateSide(1, getDimension() - 1);
+        rotateSide(1, dimension - 1);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
-        rotateSide(-1, getDimension() - 1);
+        rotateSide(-1, dimension - 1);
     }
     // -----------------------------------------------------
 
@@ -1054,11 +1058,11 @@ public class Cube3x3 extends Cube {
     // returns whether top front right corner piece is in right place (regardless of
     // orientation)
     private boolean checkTopFrontRightCornerPiece() {
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
 
-        int colorTop = getFaces().get(getPosition(2, 1, 1)) / base;
-        int colorFront = getFaces().get(getPosition(5, 1, 1)) / base;
-        int colorRight = getFaces().get(getPosition(3, 1, 1)) / base;
+        int colorTop = faces.get(getPosition(2, 1, 1)) / base;
+        int colorFront = faces.get(getPosition(5, 1, 1)) / base;
+        int colorRight = faces.get(getPosition(3, 1, 1)) / base;
 
         ArrayList<Integer> colorsTopRightFront = new ArrayList<>();
         colorsTopRightFront.add(colorTop);
@@ -1067,9 +1071,9 @@ public class Cube3x3 extends Cube {
         Collections.sort(colorsTopRightFront);
 
         ArrayList<Integer> colorsTopRightFrontCompare = new ArrayList<>();
-        colorsTopRightFrontCompare.add(getFaces().get(getPosition(2, getDimension() - 1, getDimension() - 1)) / base);
-        colorsTopRightFrontCompare.add(getFaces().get(getPosition(3, getDimension() - 1, 0)) / base);
-        colorsTopRightFrontCompare.add(getFaces().get(getPosition(5, 0, getDimension() - 1)) / base);
+        colorsTopRightFrontCompare.add(faces.get(getPosition(2, dimension - 1, dimension - 1)) / base);
+        colorsTopRightFrontCompare.add(faces.get(getPosition(3, dimension - 1, 0)) / base);
+        colorsTopRightFrontCompare.add(faces.get(getPosition(5, 0, dimension - 1)) / base);
         Collections.sort(colorsTopRightFrontCompare);
         return colorsTopRightFront.equals(colorsTopRightFrontCompare);
     }
@@ -1105,7 +1109,7 @@ public class Cube3x3 extends Cube {
                 rotateCubeClockwise();
                 matcher = checkTopFrontRightCornerPiece();
             }
-            if (getDimension() % 2 == 0 && numMatches == 2) {
+            if (dimension % 2 == 0 && numMatches == 2) {
                 while (matcher) {
                     rotateCubeClockwise();
                     matcher = checkTopFrontRightCornerPiece();
@@ -1126,11 +1130,11 @@ public class Cube3x3 extends Cube {
     // algorithm for above
     private void thirdLayerCornerAlgorithm() {
         rotateLayer(1, 0);
-        rotateSide(1, getDimension() - 1);
+        rotateSide(1, dimension - 1);
         rotateLayer(-1, 0);
         rotateSide(1, 0);
         rotateLayer(1, 0);
-        rotateSide(-1, getDimension() - 1);
+        rotateSide(-1, dimension - 1);
         rotateLayer(-1, 0);
         rotateSide(-1, 0);
     }
@@ -1140,9 +1144,9 @@ public class Cube3x3 extends Cube {
     // -----------------------------------------------------
     // tests whether corneres are in right orientation
     private boolean thirdLayerColorAlignmentTest() {
-        int base = getDimension() * getDimension();
-        int bottomCorner = getFaces().get(getPosition(2, getDimension() - 1, getDimension() - 1)) / base;
-        int frontFace = getFaces().get(getPosition(2, 1, 1)) / base;
+        int base = dimension * dimension;
+        int bottomCorner = faces.get(getPosition(2, dimension - 1, dimension - 1)) / base;
+        int frontFace = faces.get(getPosition(2, 1, 1)) / base;
         return frontFace == bottomCorner;
     }
 
@@ -1162,27 +1166,29 @@ public class Cube3x3 extends Cube {
 
     // algorithm for above
     private void lastCornerAlignmentAlgorithm() {
-        rotateSide(-1, getDimension() - 1);
-        rotateLayer(1, getDimension() - 1);
-        rotateSide(1, getDimension() - 1);
-        rotateLayer(-1, getDimension() - 1);
+        rotateSide(-1, dimension - 1);
+        rotateLayer(1, dimension - 1);
+        rotateSide(1, dimension - 1);
+        rotateLayer(-1, dimension - 1);
 
     }
     // -----------------------------------------------------
 
     // ---------------------------------------------TOOLS----------------------------------------
-    // Generally, I'm not using strings to represent colors unless debugging. The
-    // program knows that a color is returned from the number / base (as ints)
-    // To find a color, just integer divide the number by the (dimension ^ 2)
+
 
     // takes in any cube on the desired face (doesn't matter what color the cube is,
     // returns what face that cube is on)
-    private void moveSequence(ArrayList<String> moves) {
+    //THIS IS NOT THE MAIN MOVE SEQUENCE I'M USING, BUT IT CAN BE USED
+    //I included it just so that classic rubiks cube people can put in 3x3 algorithms
+
+    /*
+    private void moveSequence3x3(ArrayList<String> moves) {
         for (String move : moves) {
             if (move.equals("R")) {
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
             } else if (move.equals("R'")) {
-                rotateSide(-1, getDimension() - 1);
+                rotateSide(-1, dimension - 1);
             } else if (move.equals("L")) {
                 // rotate Side rotates clockwise with respect to the right face, you have to
                 // switch 1 with -1 (see B)
@@ -1190,9 +1196,9 @@ public class Cube3x3 extends Cube {
             } else if (move.equals("L'")) {
                 rotateSide(1, 0);
             } else if (move.equals("U")) {
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
             } else if (move.equals("U'")) {
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
             } else if (move.equals("T")) {
                 rotateLayer(1, 0);
             } else if (move.equals("U'")) {
@@ -1208,13 +1214,13 @@ public class Cube3x3 extends Cube {
             } else if (move.equals("B'")) {
                 rotateFrontFace(1, 0);
             } else if (move.equals("F")) {
-                rotateFrontFace(1, getDimension() - 1);
+                rotateFrontFace(1, dimension - 1);
             } else if (move.equals("F'")) {
-                rotateFrontFace(-1, getDimension() - 1);
+                rotateFrontFace(-1, dimension - 1);
             } else if (move.equals("D")) {
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
             } else if (move.equals("D'")) {
-                rotateLayer(-1, getDimension() - 1);
+                rotateLayer(-1, dimension - 1);
             } else if (move.equals("X")) {
                 rotateCubeUp();
             } else if (move.equals("X'")) {
@@ -1233,13 +1239,14 @@ public class Cube3x3 extends Cube {
             }
         }
     }
+    */
 
-    private void moveSequence(String move) {
+    private void moveSequence3x3(String move) {
 
         if (move.equals("R")) {
-            rotateSide(1, getDimension() - 1);
+            rotateSide(1, dimension - 1);
         } else if (move.equals("R'")) {
-            rotateSide(-1, getDimension() - 1);
+            rotateSide(-1, dimension - 1);
         } else if (move.equals("L")) {
             // rotate Side rotates clockwise with respect to the right face, you have to
             // switch 1 with -1 (see B)
@@ -1261,13 +1268,13 @@ public class Cube3x3 extends Cube {
         } else if (move.equals("B'")) {
             rotateFrontFace(1, 0);
         } else if (move.equals("F")) {
-            rotateFrontFace(1, getDimension() - 1);
+            rotateFrontFace(1, dimension - 1);
         } else if (move.equals("F'")) {
-            rotateFrontFace(-1, getDimension() - 1);
+            rotateFrontFace(-1, dimension - 1);
         } else if (move.equals("D")) {
-            rotateLayer(1, getDimension() - 1);
+            rotateLayer(1, dimension - 1);
         } else if (move.equals("D'")) {
-            rotateLayer(-1, getDimension() - 1);
+            rotateLayer(-1, dimension - 1);
         } else if (move.equals("X")) {
             rotateCubeUp();
         } else if (move.equals("X'")) {
@@ -1286,6 +1293,10 @@ public class Cube3x3 extends Cube {
         }
     }
 
+
+    /**
+     * Fuckin hey bruh, these methods solve the cube bruh
+     */
     private void solveFirstLayer() {
         // solves first layer edge pieces
         solveCross();
@@ -1337,6 +1348,7 @@ public class Cube3x3 extends Cube {
         // shows the cube being sovled while timing scramble and solve
         Cube3x3 myCube3x3 = new Cube3x3(n);
         // print the origional cube
+        System.out.println("Cube OG at dimension: " + n);
         myCube3x3.printCube();
 
         // Timing the scramble
@@ -1344,7 +1356,7 @@ public class Cube3x3 extends Cube {
 
         // scramble the cube 1000000 times (for large nxn cubes, you could remove Y and
         // X from scrambleCube)
-        myCube3x3.scrambleCube(1000000);
+        myCube3x3.scrambleCube3x3(1000000);
 
         long endTime = System.nanoTime();
 
@@ -1352,6 +1364,7 @@ public class Cube3x3 extends Cube {
         long timeElapsed = endTime - startTime;
 
         // print the scrambled cube
+        System.out.println("Scrambled Cube at 1000000 moves (only outside edges moved)");
         myCube3x3.printCube();
 
         System.out.println("Execution time of scramble in nanoseconds  : " + timeElapsed);
@@ -1369,6 +1382,7 @@ public class Cube3x3 extends Cube {
 
         // get difference of two nanoTime values
         timeElapsed = endTime - startTime;
+        System.out.println("solved 3x3");
         myCube3x3.printCube();
 
         System.out.println("Execution time of solve in nanoseconds  : " + timeElapsed);
@@ -1387,13 +1401,13 @@ public class Cube3x3 extends Cube {
     }
 
     public void testOLLParity() {
-        int base = getDimension() * getDimension();
-        if (getDimension() % 2 == 1) {
+        int base = dimension * dimension;
+        if (dimension % 2 == 1) {
             return;
         }
         for (int i = 0; i < 4; i++) {
-            if (getFaces().get(getPosition(2, getDimension() - 1, 1))
-                    / base != getFaces().get(getPosition(2, getDimension() - 2, 1)) / base) {
+            if (faces.get(getPosition(2, dimension - 1, 1))
+                    / base != faces.get(getPosition(2, dimension - 2, 1)) / base) {
                 parityOLL();
                 return;
             }
@@ -1401,16 +1415,8 @@ public class Cube3x3 extends Cube {
     }
 
     public static void main(String[] args) {
-        // change 3 to any number you want. Scramblecube is a local method that, in
-        // Cube3x3, only moves the edges
-        // I'm solving 50 cubes here
-
-        // testnxn(3);
-        Cube3x3 myCube = new Cube3x3(4);
-        myCube.printCube();
-        myCube.parityOLL();
-        myCube.printCube();
-
+        //scrambles like a 3x3
+        testnxn(13);
     }
 
 }

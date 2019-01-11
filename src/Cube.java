@@ -8,24 +8,30 @@ public class Cube {
    *
    * Description
    *
-   * This is a rubiks cube class A cube is a 1D array, so all opperations are done
+   * This is a rubiks cube class a cube is a 1D array, so all opperations are done
    * to the cube by switching array elements This class does not solve the cube,
    * it only turns faces and fixes the 1D array to coorespond with a certain move
    * This is essentially a "tools" class
    */
 
-  //private final char[] COLORFACES = { 'b', 'o', 'w', 'r', 'y', 'g' };
+  // Cube specific Vars
+  // For debugging, printCube() prints cube in color format shown below, I've
+  // commented out the color, but you can use either
+  // private final char[] COLORFACES = { 'b', 'o', 'w', 'r', 'y', 'g' };
   private final char[] COLORFACES = { '0', '1', '2', '3', '4', '5' };
 
+  // list of edge cubies and indexes and corner cubies
   private ArrayList<EdgeCubie> edgeCubies;
   private ArrayList<CornerCubie> cornerCubies;
 
   // Faces is a one dimentional array (Woah! a 3D cube is represented in 1D?)
-  private ArrayList<Integer> faces;
-  // a 3x3 cube has dimension 3
-  private int dimension;
+  public ArrayList<Integer> faces;
 
+  // a 3x3 cube has dimension 3
+  public int dimension;
+  // every cube state has a unique scramble algorithm
   public ArrayList<Move> scrambleAlgorithm = new ArrayList<>();
+  // every move that has been done on the cube. used in solver.java
   public ArrayList<Move> algorithm = new ArrayList<>();
 
   // creates a new cube of _dimension
@@ -40,23 +46,29 @@ public class Cube {
     fillEdgeCubies();
   }
 
-  public Cube(Cubenxn cube){
-    dimension = cube.getDimension();
-    faces = cube.getFaces();
+  // takes in a Cubenxn and creates a cube, used in transitioning from n x n to 3
+  // x 3
+  public Cube(Cubenxn cube) {
+    dimension = cube.dimension;
+    faces = cube.faces;
     edgeCubies = cube.getEdgeCubies();
     cornerCubies = cube.getCornerCubies();
+    algorithm = cube.algorithm;
+    scrambleAlgorithm = cube.scrambleAlgorithm;
+  }
+
+  public Cube(Cube3x3 cube) {
+    dimension = cube.dimension;
+    faces = cube.faces;
+    edgeCubies = cube.getEdgeCubies();
+    cornerCubies = cube.getCornerCubies();
+    algorithm = cube.algorithm;
+    scrambleAlgorithm = cube.scrambleAlgorithm;
 
   }
 
-  public Cube(Cube3x3 cube){
-    dimension = cube.getDimension();
-    faces = cube.getFaces();
-    edgeCubies = cube.getEdgeCubies();
-    cornerCubies = cube.getCornerCubies();
-
-  }
-
-  public void fillEdgeCubies() {
+  // fills all the edge indices
+  private void fillEdgeCubies() {
     edgeCubies = new ArrayList<>();
 
     for (int i = 1; i < dimension - 1; i++) {
@@ -75,7 +87,8 @@ public class Cube {
     }
   }
 
-  public void fillCornerCubies() {
+  // fills corner indicies
+  private void fillCornerCubies() {
     cornerCubies = new ArrayList<>();
     cornerCubies.add(new CornerCubie(getPosition(0, 0, 0), getPosition(1, 0, 0), getPosition(4, 0, dimension - 1)));
     cornerCubies
@@ -100,10 +113,12 @@ public class Cube {
     return faces;
   }
 
+  // returns corner cubies, rarely used so I made it private
   public ArrayList<CornerCubie> getCornerCubies() {
     return cornerCubies;
   }
 
+  // returns edge cubies
   public ArrayList<EdgeCubie> getEdgeCubies() {
     return edgeCubies;
   }
@@ -119,9 +134,9 @@ public class Cube {
       }
     }
     return cubies;
-
   }
 
+  // returns the corner cubie associated with color 1 2 and 3
   public CornerCubie getCornerCubie(int color1, int color2, int color3) {
     int base = dimension * dimension;
     ArrayList<Integer> colors;
@@ -157,6 +172,12 @@ public class Cube {
     return dimension;
   }
 
+  /**
+   * positioning methods in the cube printout (printCube()), face is the square
+   * the cubie is on and row is the row and col col note that on face 4, col is
+   * mirrored
+   */
+
   // The general formula that returns the index in the 1d array that cooresponds
   // to
   // the coordinate triplet (face, row, col)
@@ -175,6 +196,9 @@ public class Cube {
     return getFaces().indexOf(cubie) % getDimension();
   }
 
+  /******************************************************************************
+   * BASIC TOOLS - ROTATE FACES
+   ********************************************************************/
   // rotates a given face (does not change the cubies around so this is not a
   // valid move, it helps the other algorithms)
 
@@ -190,9 +214,8 @@ public class Cube {
     }
 
     for (int i = 0; i < temp1.length; i++) {
-
+      // sexy sexy piece of code right here
       temp2[(i % dimension) * dimension + (dimension - 1 - (i / (dimension)))] = temp1[i];
-
     }
 
     if (direction == 1) {
@@ -207,10 +230,6 @@ public class Cube {
       }
     }
   }
-
-  /******************************************************************************
-   * BASIC TOOLS - ROTATE FACES
-   ********************************************************************/
 
   // colNum 0 is left face colNum dimension - 1 is right face
   // always rotates clockwise where right face is in front (unlike the standard R
@@ -344,29 +363,42 @@ public class Cube {
   public void rotateCubeClockwise() {
     for (int i = 0; i < dimension; i++) {
       rotateLayer(1, i);
+      // I don't want translations represented as moves, so I'm creating my own
+      // translation move
+      algorithm.remove(algorithm.size() - 1);
     }
+    algorithm.add(new Move("XX", 1));
   }
 
   public void rotateCubeCounterClockwise() {
     for (int i = 0; i < dimension; i++) {
       rotateLayer(-1, i);
+      algorithm.remove(algorithm.size() - 1);
     }
+    algorithm.add(new Move("XX", -1));
   }
 
   public void rotateCubeDown() {
     for (int i = 0; i < dimension; i++) {
       rotateSide(-1, i);
+      algorithm.remove(algorithm.size() - 1);
     }
+    algorithm.add(new Move("YY", -1));
   }
 
   public void rotateCubeUp() {
     for (int i = 0; i < dimension; i++) {
       rotateSide(1, i);
+      algorithm.remove(algorithm.size() - 1);
     }
+    algorithm.add(new Move("YY", 1));
   }
 
-  // Puts the above together tangibly
-  // orients the cube just so that the colorfacefront is in front
+  /**
+   * 
+   * Puts the above together tangibly orients the cube just so that the
+   * colorfacefront is in front
+   */
 
   // orients the cube so that the current position of the desired faceleft / face
   // front (they can be anywhere on the cube) become left and front
@@ -535,41 +567,57 @@ public class Cube {
   // etc.) executes those moves
   public void moveSequenceNxN(ArrayList<Move> moves) {
     for (Move move : moves) {
-      if (move.main.equals("X")) {
+      if (move.main.equals("X+")) {
         rotateLayer(1, move.layerNo);
-      } else if (move.main.equals("X'")) {
-        rotateLayer(1, move.layerNo);
-      } else if (move.main.equals("Y")) {
+      } else if (move.main.equals("X-")) {
+        rotateLayer(-1, move.layerNo);
+      } else if (move.main.equals("Y+")) {
         rotateSide(1, move.layerNo);
-      } else if (move.main.equals("Y'")) {
+      } else if (move.main.equals("Y-")) {
         rotateSide(-1, move.layerNo);
-      } else if (move.main.equals("Z")) {
+      } else if (move.main.equals("Z+")) {
         rotateFrontFace(1, move.layerNo);
-      } else if (move.main.equals("Z'")) {
+      } else if (move.main.equals("Z-")) {
         rotateFrontFace(-1, move.layerNo);
+      } else if(move.main.equals("XX") && move.layerNo == 1){
+        rotateCubeClockwise();
+      } else if(move.main.equals("YY") && move.layerNo == 1){
+        rotateCubeUp();
+      } else if(move.main.equals("XX") && move.layerNo == -1){
+        rotateCubeCounterClockwise();
+      } else if(move.main.equals("YY") && move.layerNo == -1){
+        rotateCubeDown();
       }
     }
   }
 
   public void moveSequenceNxN(Move move) {
 
-    if (move.main.equals("X")) {
+    if (move.main.equals("X+")) {
       rotateLayer(1, move.layerNo);
-    } else if (move.main.equals("X'")) {
+    } else if (move.main.equals("X-")) {
       rotateLayer(1, move.layerNo);
-    } else if (move.main.equals("Y")) {
+    } else if (move.main.equals("Y+")) {
       rotateSide(1, move.layerNo);
-    } else if (move.main.equals("Y'")) {
+    } else if (move.main.equals("Y-")) {
       rotateSide(-1, move.layerNo);
-    } else if (move.main.equals("Z")) {
+    } else if (move.main.equals("Z+")) {
       rotateFrontFace(1, move.layerNo);
-    } else if (move.main.equals("Z'")) {
+    } else if (move.main.equals("Z-")) {
       rotateFrontFace(-1, move.layerNo);
+    } else if(move.main.equals("XX") && move.layerNo == 1){
+      rotateCubeClockwise();
+    } else if(move.main.equals("YY") && move.layerNo == 1){
+      rotateCubeUp();
+    } else if(move.main.equals("XX") && move.layerNo == -1){
+      rotateCubeCounterClockwise();
+    } else if(move.main.equals("YY") && move.layerNo == -1){
+      rotateCubeDown();
     }
 
   }
 
-  public void generateScramble(int moves) {
+  private void generateScramble(int moves) {
     int slice;
     int major;
     int direction;
@@ -589,14 +637,13 @@ public class Cube {
         majorStr = "Z";
         break;
       }
-      if(direction == 1){
+      if (direction == 1) {
         majorStr += "+";
-      }else{
+      } else {
         majorStr += "-";
       }
       scrambleAlgorithm.add(new Move(majorStr, slice));
     }
-    algorithm.clear();
   }
 
   /****************************************************************************
@@ -616,7 +663,7 @@ public class Cube {
     System.out.println("___________________________________________________________________");
     System.out.println();
     int base = dimension * dimension;
-    ArrayList<String> colors = new ArrayList();
+    ArrayList<String> colors = new ArrayList<>();
     for (int i = 0; i < faces.size(); i++) {
       colors.add(String.valueOf(COLORFACES[faces.get(i) / base]));
 
@@ -795,35 +842,87 @@ public class Cube {
 
   }
 
+  public Cube solveCube(Cubenxn cube) {
+    // TODO, SPECIAL CASES 2X2 1X1
+    cube.reduceCubeto3x3();
+    Cube3x3 cube3x3 = new Cube3x3(cube);
+    cube3x3.solve();
+    Cube solvedCube = new Cube(cube3x3);
+    return solvedCube;
+  }
+
+  // Run this to see everything work
+  public static void testSolve(int dimension) {
+    // shows the cube being sovled while timing scramble and solve
+    Cubenxn myCube = new Cubenxn(dimension);
+    // print the origional cube
+    System.out.println("Cube OG at dimension: " + dimension);
+    myCube.printCube();
+
+    // Timing the scramble
+    long startTime = System.nanoTime();
+
+    // scramble the cube 1000000 times (for large nxn cubes, you could remove Y and
+    // X from scrambleCube)
+    myCube.scrambleNxN(1000);
+
+    long endTime = System.nanoTime();
+
+    // get difference of two nanoTime values
+    long timeElapsed = endTime - startTime;
+
+    System.out.println("Scrambled cube at 1000 moves");
+    // print the scrambled cube
+    myCube.printCube();
+
+    System.out.println("Execution time of scramble in nanoseconds  : " + timeElapsed);
+
+    System.out.println("Execution time of scramble in milliseconds : " + timeElapsed / 1000000);
+
+    // Timing the scramble
+    startTime = System.nanoTime();
+
+    // solve the scrambled cube
+    // Check the sequence of steps in the method solve
+    Cube solvedCube = myCube.solveCube(myCube);
+
+    endTime = System.nanoTime();
+
+    // get difference of two nanoTime values
+    timeElapsed = endTime - startTime;
+    System.out.println("Solved cube");
+    solvedCube.printCube();
+
+    System.out.println("Execution time of reduction in nanoseconds  : " + timeElapsed);
+
+    System.out.println("Execution time of reduction in milliseconds : " + timeElapsed / 1000000);
+
+  }
 
 
+  //creates an arraylist of moves to scramble the cube
+  public static ArrayList<Move> generateScrambleAlgorithm(int moves, int _dimension) {
+    ArrayList<Move> scramble = new ArrayList<>();
+    String[] possibleMoves = { "X+", "Y+", "Z+", "X-", "Y-", "Z-" };
+    int randomLayer;
+    int randomChooser;
+    for (int i = 0; i < moves; i++) {
+      randomLayer = (int) (Math.random() * _dimension);
+      randomChooser = (int) (Math.random() * 6);
+      Move move = new Move(possibleMoves[randomChooser], randomLayer);
+      scramble.add(move);
+    }
+    return scramble;
+  }
+
+  
 
   public static void main(String[] args) {
 
-    //testRotations();
-    Cubenxn myCube = new Cubenxn(3);
-    
-    
-    myCube.scrambleNxN(1000);
-    myCube.printCube();
 
-    myCube.reduceCubeto3x3();
-    myCube.printCube();
-    Cube3x3 myCube3x3 = new Cube3x3(myCube);
-    myCube3x3.printCube();
-    myCube3x3.solve();
-    myCube3x3.printCube();
-    /*
-    for(int i = 0; i < 30; i++){
-      myCube = new Cubenxn(8);
-      myCube.scrambleNxN(100);
-      myCube.reduceCubeto3x3();
-      myCube3x3 = new Cube3x3(myCube);
-      myCube3x3.solve();
-      myCube3x3.printCube();
-    }
-    */
-    
-  }
+
+    testSolve(10);
+
+}
 
 }

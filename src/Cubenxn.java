@@ -10,18 +10,21 @@ public class Cubenxn extends Cube {
      * 3x3 then to acube while being sovled. These methods will never be used on a
      * 3x3 cube.
      * 
-     * @param dimension
      */
 
-    ArrayList<CubePiece> cubePieces = new ArrayList<>();
-    boolean reduced;
+    // local variable cubePieces used to identify when all pieces are in place to
+    // move on to a 3x3 cube
+    private ArrayList<CubePiece> cubePieces = new ArrayList<>();
+
+    // used for testing reduction of cube
+    public boolean reduced;
 
     public Cubenxn(int dimension) {
         super(dimension);
         for (int i = 0; i < dimension * dimension * 6; i++) {
             cubePieces.add(new CubePiece(i, false));
         }
-        reduced = true;
+        reduced = false;
     }
 
     // Solving methods
@@ -33,40 +36,34 @@ public class Cubenxn extends Cube {
 
     // Cube is facing you, find a piece that matechs the coordinate pair (row, col)
 
-    // returns the face color of a face of a scrambled cube (if dimension is odd,
-    // just get the center piece, otherwise, assume the cube is oriented with
-    // classic top bottom left right orientation)
-
     // finds all pieces on the cube that can fit in a given center spot (returns an
     // array of all the absolute indexes of the positions)
-    public ArrayList<Integer> findAvaliableCenterPieces(int row, int col, int color) {
+    private ArrayList<Integer> findAvaliableCenterPieces(int row, int col, int color) {
         // either 1, 2 or 4, the rest will be zero
         ArrayList<Integer> indexes = new ArrayList<>();
-        if (col <= 0 || col >= getDimension() - 1) {
+        if (col <= 0 || col >= dimension - 1) {
             return indexes;
         }
 
         // for each, check whether cubie can fit into the slot row col and that it is
         // not already in place (if in place, we don't really want to move it)
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
         for (int i = 0; i < 6; i++) {
-            if (!cubePieces.get(getFaces().get(getPosition(i, row, col))).inPlace
-                    && color == getFaces().get(getPosition(i, row, col)) / base) {
+            if (!cubePieces.get(faces.get(getPosition(i, row, col))).inPlace
+                    && color == faces.get(getPosition(i, row, col)) / base) {
                 indexes.add(getPosition(i, row, col));
             }
-            if (!cubePieces.get(getFaces().get(getPosition(i, col, getDimension() - 1 - row))).inPlace
-                    && color == getFaces().get(getPosition(i, col, getDimension() - 1 - row)) / base) {
-                indexes.add(getPosition(i, col, getDimension() - 1 - row));
+            if (!cubePieces.get(faces.get(getPosition(i, col, dimension - 1 - row))).inPlace
+                    && color == faces.get(getPosition(i, col, dimension - 1 - row)) / base) {
+                indexes.add(getPosition(i, col, dimension - 1 - row));
             }
-            if (!cubePieces.get(getFaces().get(getPosition(i, getDimension() - 1 - col, row))).inPlace
-                    && color == getFaces().get(getPosition(i, getDimension() - 1 - col, row)) / base) {
-                indexes.add(getPosition(i, getDimension() - 1 - col, row));
+            if (!cubePieces.get(faces.get(getPosition(i, dimension - 1 - col, row))).inPlace
+                    && color == faces.get(getPosition(i, dimension - 1 - col, row)) / base) {
+                indexes.add(getPosition(i, dimension - 1 - col, row));
             }
-            if (!cubePieces
-                    .get(getFaces().get(getPosition(i, getDimension() - 1 - row, getDimension() - 1 - col))).inPlace
-                    && color == getFaces().get(getPosition(i, getDimension() - 1 - row, getDimension() - 1 - col))
-                            / base) {
-                indexes.add(getPosition(i, getDimension() - 1 - row, getDimension() - 1 - col));
+            if (!cubePieces.get(faces.get(getPosition(i, dimension - 1 - row, dimension - 1 - col))).inPlace
+                    && color == faces.get(getPosition(i, dimension - 1 - row, dimension - 1 - col)) / base) {
+                indexes.add(getPosition(i, dimension - 1 - row, dimension - 1 - col));
             }
 
         }
@@ -83,10 +80,10 @@ public class Cubenxn extends Cube {
 
         // both rows and cols match
         boolean inPlace = (row == row2) && (col == col2);
-        int cubieNum = getFaces().get(getPosition(3, row2, col2));
+        int cubieNum = faces.get(getPosition(3, row2, col2));
         int failsafe = 0;
         while (failsafe < 4 && !inPlace) {
-            rotateSide(1, getDimension() - 1);
+            rotateSide(1, dimension - 1);
             row2 = getRow(cubieNum);
             // col of desired piece (now on the right face)
             col2 = getCol(cubieNum);
@@ -102,8 +99,8 @@ public class Cubenxn extends Cube {
         rotateFrontFace(-1, row);
         // printCubeNums();
 
-        boolean rotateDirection = (row < (getDimension() / 2) && col < (getDimension() / 2))
-                || (row >= (getDimension() / 2) && col >= (getDimension() / 2));
+        boolean rotateDirection = (row < (dimension / 2) && col < (dimension / 2))
+                || (row >= (dimension / 2) && col >= (dimension / 2));
 
         // if cubie is on top left or bottom right, rotate right face clockwise
         if (rotateDirection) {
@@ -128,24 +125,9 @@ public class Cubenxn extends Cube {
     }
 
     // Solve top middle col only used for odd dimensional cubes
-
-    /**
-     * 
-     * IMPORTATN FOR ALL ALIGN METHODS INSTEAD OF USING RECURSION JUST ORDER THE
-     * METHODS SO THAT IF THE CUBIE IS ON FACE 3 AND MOVES TO FACE 1, IT WILL
-     * EXECUTE THE ELSE IF CONDITION 1
-     * 
-     */
-
     public void solveTopMiddleColPos(int row) {
-        // Could take this out cause probably wont need it, but for now, only needs to
-        // be done with an odd dimensional
-        // Checks if the row is the center piece, if it is, its technically already
-        // solved so just return
-        // (never call center piece inplace even though we never check, could probably
-        // do that but really no need
-        if (row == getDimension() / 2 || getDimension() % 2 == 0) {
-            cubePieces.get(getFaces().get(getPosition(2, getDimension() / 2, getDimension() / 2))).inPlace = true;
+        if (row == dimension / 2 || dimension % 2 == 0) {
+            cubePieces.get(faces.get(getPosition(2, dimension / 2, dimension / 2))).inPlace = true;
             return;
         }
 
@@ -153,20 +135,24 @@ public class Cubenxn extends Cube {
 
         // These are the locations of all the possible cubes we could use (locations!
         // not actual cubes!)
-        ArrayList<Integer> possibleIndexes = findAvaliableCenterPieces(row, getDimension() / 2, color);
+        ArrayList<Integer> possibleIndexes = findAvaliableCenterPieces(row, dimension / 2, color);
 
         // All of them are in place, then just return, we don't need to do anything
         if (possibleIndexes.size() == 0) {
             return;
         }
-        int desiredCubie = getFaces().get(possibleIndexes.get(0));
-        // We'll pick the first cubie from the list, we could pick any, but we know the
-        // list is at least one now
-        // get one that is not on face 2, if only face 2, then use that one
+
+        int desiredCubie = faces.get(possibleIndexes.get(0));
+
+        // origionally I just picked the first, but on rare cases, everytime you
+        // transfer a cube from face 2 to face 5,
+        // a new cube is transfered to face 2, so it would cause infinite recursive
+        // loops (pretty rare, but it happens)
+        // so now, just pick the first one that isn't on face 2
         if (getFaceOrientation(desiredCubie) == 2) {
             for (int i = 0; i < possibleIndexes.size(); i++) {
-                if (getFaceOrientation(getFaces().get(possibleIndexes.get(i))) != 2) {
-                    desiredCubie = getFaces().get(possibleIndexes.get(i));
+                if (getFaceOrientation(faces.get(possibleIndexes.get(i))) != 2) {
+                    desiredCubie = faces.get(possibleIndexes.get(i));
                     break;
                 }
             }
@@ -185,7 +171,7 @@ public class Cubenxn extends Cube {
 
             // we will be rotating the back face until the desired cubie and the cubie slot
             // match
-            boolean backInPlace = rowDesiredCubie == getDimension() / 2 && colDesiredCubie == row;
+            boolean backInPlace = rowDesiredCubie == dimension / 2 && colDesiredCubie == row;
             while (!backInPlace) {
                 // rotate the back face clockwise
                 rotateFrontFace(1, 0);
@@ -193,7 +179,7 @@ public class Cubenxn extends Cube {
                 // Is the cubie in the correct spot to move on?
                 rowDesiredCubie = getRow(desiredCubie);
                 colDesiredCubie = getCol(desiredCubie);
-                backInPlace = rowDesiredCubie == getDimension() / 2 && colDesiredCubie == row;
+                backInPlace = rowDesiredCubie == dimension / 2 && colDesiredCubie == row;
             }
 
             // cubie's col now equals row, so rotate row index of side
@@ -209,14 +195,14 @@ public class Cubenxn extends Cube {
         // desired cubie is on the left face
         else if (faceDesiredCubie == 1) {
             // Ask if the cubie is in the right spot to move on (row == row col == col)
-            boolean backInPlace = rowDesiredCubie == row && colDesiredCubie == getDimension() / 2;
+            boolean backInPlace = rowDesiredCubie == row && colDesiredCubie == dimension / 2;
             while (!backInPlace) {
                 rotateSide(1, 0);
 
                 // Is the cubie in the correct spot to move on?
                 rowDesiredCubie = getRow(desiredCubie);
                 colDesiredCubie = getCol(desiredCubie);
-                backInPlace = rowDesiredCubie == row && colDesiredCubie == getDimension() / 2;
+                backInPlace = rowDesiredCubie == row && colDesiredCubie == dimension / 2;
 
             }
             rotateFrontFace(1, row);
@@ -234,7 +220,7 @@ public class Cubenxn extends Cube {
 
             // if cubie is on the col that can be solved (too complicated to just keep it
             // there, so we will move it to the front face)
-            if (colDesiredCubie == getDimension() / 2) {
+            if (colDesiredCubie == dimension / 2) {
 
                 colDesiredCubie = getCol(desiredCubie);
                 rotateLayer(-1, 0);
@@ -244,7 +230,7 @@ public class Cubenxn extends Cube {
                 rowDesiredCubie = getRow(desiredCubie);
                 colDesiredCubie = getCol(desiredCubie);
 
-                rotateFrontFace(1, getDimension() - 1);
+                rotateFrontFace(1, dimension - 1);
 
                 rotateSide(1, colDesiredCubie);
                 rotateLayer(1, 0);
@@ -257,12 +243,12 @@ public class Cubenxn extends Cube {
                 rotateSide(-1, colDesiredCubie);
                 rowDesiredCubie = getRow(desiredCubie);
                 colDesiredCubie = getCol(desiredCubie);
-                boolean quadrant = (rowDesiredCubie < getDimension() / 2 && colDesiredCubie < getDimension() / 2)
-                        || (rowDesiredCubie >= getDimension() / 2 && colDesiredCubie >= getDimension() / 2);
+                boolean quadrant = (rowDesiredCubie < dimension / 2 && colDesiredCubie < dimension / 2)
+                        || (rowDesiredCubie >= dimension / 2 && colDesiredCubie >= dimension / 2);
                 if (quadrant) {
-                    rotateFrontFace(1, getDimension() - 1);
+                    rotateFrontFace(1, dimension - 1);
                 } else {
-                    rotateFrontFace(-1, getDimension() - 1);
+                    rotateFrontFace(-1, dimension - 1);
                 }
                 rotateSide(1, colDesiredCubie);
 
@@ -276,14 +262,14 @@ public class Cubenxn extends Cube {
 
         // desired cubie is on the right face (same as part two of front face (*above))
         else if (faceDesiredCubie == 3) {
-            boolean backInPlace = rowDesiredCubie == row && colDesiredCubie == getDimension() / 2;
+            boolean backInPlace = rowDesiredCubie == row && colDesiredCubie == dimension / 2;
             while (!backInPlace) {
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
 
                 // Is the cubie in the correct spot to move on?
                 rowDesiredCubie = getRow(desiredCubie);
                 colDesiredCubie = getCol(desiredCubie);
-                backInPlace = rowDesiredCubie == row && colDesiredCubie == getDimension() / 2;
+                backInPlace = rowDesiredCubie == row && colDesiredCubie == dimension / 2;
 
             }
 
@@ -304,15 +290,15 @@ public class Cubenxn extends Cube {
 
             // we will be rotating the back face until the desired cubie and the cubie slot
             // match
-            boolean backInPlace = rowDesiredCubie == getDimension() / 2 && colDesiredCubie == getDimension() - 1 - row;
+            boolean backInPlace = rowDesiredCubie == dimension / 2 && colDesiredCubie == dimension - 1 - row;
             while (!backInPlace) {
                 // rotate the bottom face clockwise
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
 
                 // Is the cubie in the correct spot to move on?
                 rowDesiredCubie = getRow(desiredCubie);
                 colDesiredCubie = getCol(desiredCubie);
-                backInPlace = rowDesiredCubie == getDimension() / 2 && colDesiredCubie == getDimension() - 1 - row;
+                backInPlace = rowDesiredCubie == dimension / 2 && colDesiredCubie == dimension - 1 - row;
             }
 
             // cubie's col now equals row, so rotate row index of side
@@ -333,15 +319,15 @@ public class Cubenxn extends Cube {
 
             // we will be rotating the back face until the desired cubie and the cubie slot
             // match
-            boolean backInPlace = rowDesiredCubie == getDimension() / 2 && colDesiredCubie == row;
+            boolean backInPlace = rowDesiredCubie == dimension / 2 && colDesiredCubie == row;
             while (!backInPlace) {
                 // rotate the front face clockwise
-                rotateFrontFace(1, getDimension() - 1);
+                rotateFrontFace(1, dimension - 1);
 
                 // Is the cubie in the correct spot to move on?
                 rowDesiredCubie = getRow(desiredCubie);
                 colDesiredCubie = getCol(desiredCubie);
-                backInPlace = rowDesiredCubie == getDimension() / 2 && colDesiredCubie == row;
+                backInPlace = rowDesiredCubie == dimension / 2 && colDesiredCubie == row;
             }
 
             // cubie's col now equals row, so rotate row index of side
@@ -357,11 +343,11 @@ public class Cubenxn extends Cube {
     }
 
     public void solveTopMiddleCol() {
-        if (getDimension() % 2 == 0)
+        if (dimension % 2 == 0)
             return;
-        for (int i = 1; i < getDimension() - 1; i++) {
+        for (int i = 1; i < dimension - 1; i++) {
             solveTopMiddleColPos(i);
-            cubePieces.get(getFaces().get(getPosition(2, i, getDimension() / 2))).inPlace = true;
+            cubePieces.get(faces.get(getPosition(2, i, dimension / 2))).inPlace = true;
 
         }
     }
@@ -377,12 +363,12 @@ public class Cubenxn extends Cube {
         int col = getCol(desiredCubie);
         boolean inPlace;
 
-        int cubieTemp = getFaces().get(getPosition(5, desiredRow, desiredCol));
+        int cubieTemp = faces.get(getPosition(5, desiredRow, desiredCol));
 
         // cubie is on the "middle layer"
         if (face == 0) {
 
-            inPlace = getDimension() - 1 - row == desiredRow && getDimension() - 1 - col == desiredCol;
+            inPlace = dimension - 1 - row == desiredRow && dimension - 1 - col == desiredCol;
 
             // cubie will be slidden in horizontally so no need to change orientation of
             // frontface
@@ -391,39 +377,39 @@ public class Cubenxn extends Cube {
 
                 row = getRow(desiredCubie);
                 col = getCol(desiredCubie);
-                inPlace = getDimension() - 1 - row == desiredRow && getDimension() - 1 - col == desiredCol;
+                inPlace = dimension - 1 - row == desiredRow && dimension - 1 - col == desiredCol;
             }
         } else if (face == 3) {
-            inPlace = getDimension() - 1 - row == desiredCol && col == desiredRow;
+            inPlace = dimension - 1 - row == desiredCol && col == desiredRow;
 
             // cubie will be slidden in horizontally so no need to change orientation of
             // frontface
             while (!inPlace) {
 
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
 
                 row = getRow(desiredCubie);
                 col = getCol(desiredCubie);
-                inPlace = ((getDimension() - 1 - row) == desiredCol) && (col == desiredRow);
+                inPlace = ((dimension - 1 - row) == desiredCol) && (col == desiredRow);
             }
 
         }
 
         else if (face == 1) {
             // move piece to the right face, then do this again and return
-            rotateLayer(-1, getDimension() - 1 - col);
-            rotateLayer(-1, getDimension() - 1 - col);
+            rotateLayer(-1, dimension - 1 - col);
+            rotateLayer(-1, dimension - 1 - col);
 
             row = getRow(desiredCubie);
             col = getCol(desiredCubie);
 
-            boolean quadrant = (row < getDimension() / 2 && col < getDimension() / 2)
-                    || (row >= getDimension() / 2 && col >= getDimension() / 2);
+            boolean quadrant = (row < dimension / 2 && col < dimension / 2)
+                    || (row >= dimension / 2 && col >= dimension / 2);
 
             if (quadrant) {
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
             } else {
-                rotateSide(-1, getDimension() - 1);
+                rotateSide(-1, dimension - 1);
 
             }
 
@@ -457,13 +443,13 @@ public class Cubenxn extends Cube {
             row = getRow(desiredCubie);
             col = getCol(desiredCubie);
 
-            boolean quadrant = (row < getDimension() / 2 && col < getDimension() / 2)
-                    || (row >= getDimension() / 2 && col >= getDimension() / 2);
+            boolean quadrant = (row < dimension / 2 && col < dimension / 2)
+                    || (row >= dimension / 2 && col >= dimension / 2);
 
             if (quadrant) {
-                rotateSide(-1, getDimension() - 1);
+                rotateSide(-1, dimension - 1);
             } else {
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
             }
 
             rotateFrontFace(-1, row);
@@ -477,23 +463,23 @@ public class Cubenxn extends Cube {
 
             // to insert cubie into face, col we're solving for on front face must be
             // horizontal
-            rotateFrontFace(1, getDimension() - 1);
+            rotateFrontFace(1, dimension - 1);
             // THIS IS REVERED IN insertcubie
 
             desiredCol = getCol(cubieTemp);
             desiredRow = getRow(cubieTemp);
             // if we're find it at the bottom, then we are on the first step so just align
             // the row to equal row, only difference is bottom is mirror image
-            inPlace = getDimension() - 1 - row == desiredRow && getDimension() - 1 - col == desiredCol;
+            inPlace = dimension - 1 - row == desiredRow && dimension - 1 - col == desiredCol;
 
             // cubie will be slidden in horizontally so no need to change orientation of
             // frontface
             while (!inPlace) {
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
 
                 row = getRow(desiredCubie);
                 col = getCol(desiredCubie);
-                inPlace = getDimension() - 1 - row == desiredRow && getDimension() - 1 - col == desiredCol;
+                inPlace = dimension - 1 - row == desiredRow && dimension - 1 - col == desiredCol;
             }
 
         } else if (face == 5) {
@@ -509,13 +495,13 @@ public class Cubenxn extends Cube {
                 row = getRow(desiredCubie);
                 col = getCol(desiredCubie);
 
-                boolean quadrant = (row < getDimension() / 2 && col < getDimension() / 2)
-                        || (row >= getDimension() / 2 && col >= getDimension() / 2);
+                boolean quadrant = (row < dimension / 2 && col < dimension / 2)
+                        || (row >= dimension / 2 && col >= dimension / 2);
 
                 if (quadrant) {
-                    rotateSide(1, getDimension() - 1);
+                    rotateSide(1, dimension - 1);
                 } else {
-                    rotateSide(-1, getDimension() - 1);
+                    rotateSide(-1, dimension - 1);
 
                 }
 
@@ -526,19 +512,19 @@ public class Cubenxn extends Cube {
                 alignCubies(desiredCubie, desiredRow, desiredCol);
                 return;
             } else {
-                rotateFrontFace(1, getDimension() - 1);
+                rotateFrontFace(1, dimension - 1);
                 rotateLayer(-1, col);
 
                 row = getRow(desiredCubie);
                 col = getCol(desiredCubie);
 
-                boolean quadrant = (row < getDimension() / 2 && col < getDimension() / 2)
-                        || (row >= getDimension() / 2 && col >= getDimension() / 2);
+                boolean quadrant = (row < dimension / 2 && col < dimension / 2)
+                        || (row >= dimension / 2 && col >= dimension / 2);
 
                 if (quadrant) {
-                    rotateSide(1, getDimension() - 1);
+                    rotateSide(1, dimension - 1);
                 } else {
-                    rotateSide(-1, getDimension() - 1);
+                    rotateSide(-1, dimension - 1);
 
                 }
 
@@ -546,7 +532,7 @@ public class Cubenxn extends Cube {
                 // place
                 rotateLayer(1, col);
                 // now cubie is on the right face so do this again
-                rotateFrontFace(-1, getDimension() - 1);
+                rotateFrontFace(-1, dimension - 1);
                 alignCubies(desiredCubie, desiredRow, desiredCol);
                 return;
             }
@@ -562,14 +548,14 @@ public class Cubenxn extends Cube {
         int row = getRow(desiredCubie);
         int col = getCol(desiredCubie);
         if (face == 0) {
-            rotateLayer(1, getDimension() - 1 - row);
-            rotateLayer(1, getDimension() - 1 - row);
+            rotateLayer(1, dimension - 1 - row);
+            rotateLayer(1, dimension - 1 - row);
 
             row = getRow(desiredCubie);
             col = getCol(desiredCubie);
 
-            boolean quadrant = (row < getDimension() / 2 && col < getDimension() / 2)
-                    || (row >= getDimension() / 2 && col >= getDimension() / 2);
+            boolean quadrant = (row < dimension / 2 && col < dimension / 2)
+                    || (row >= dimension / 2 && col >= dimension / 2);
 
             int direction;
 
@@ -579,18 +565,18 @@ public class Cubenxn extends Cube {
                 direction = 1;
             }
 
-            rotateFrontFace(direction, getDimension() - 1);
+            rotateFrontFace(direction, dimension - 1);
             rotateLayer(1, row);
             rotateLayer(1, row);
-            rotateFrontFace(-direction, getDimension() - 1);
+            rotateFrontFace(-direction, dimension - 1);
 
         } else if (face == 3) {
             rotateLayer(1, col);
             row = getRow(desiredCubie);
             col = getCol(desiredCubie);
 
-            boolean quadrant = (row < getDimension() / 2 && col < getDimension() / 2)
-                    || (row >= getDimension() / 2 && col >= getDimension() / 2);
+            boolean quadrant = (row < dimension / 2 && col < dimension / 2)
+                    || (row >= dimension / 2 && col >= dimension / 2);
 
             int direction;
 
@@ -600,26 +586,26 @@ public class Cubenxn extends Cube {
                 direction = 1;
             }
 
-            rotateFrontFace(direction, getDimension() - 1);
+            rotateFrontFace(direction, dimension - 1);
             rotateLayer(-1, row);
-            rotateFrontFace(-direction, getDimension() - 1);
+            rotateFrontFace(-direction, dimension - 1);
         } else if (face == 4) {
 
-            rotateSide(1, getDimension() - 1 - col);
+            rotateSide(1, dimension - 1 - col);
 
             row = getRow(desiredCubie);
             col = getCol(desiredCubie);
 
-            boolean quadrant = (row < getDimension() / 2 && col < getDimension() / 2)
-                    || (row >= getDimension() / 2 && col >= getDimension() / 2);
+            boolean quadrant = (row < dimension / 2 && col < dimension / 2)
+                    || (row >= dimension / 2 && col >= dimension / 2);
 
             if (quadrant) {
-                rotateFrontFace(1, getDimension() - 1);
+                rotateFrontFace(1, dimension - 1);
                 rotateSide(-1, col);
-                rotateFrontFace(-1, getDimension() - 1);
-                rotateFrontFace(-1, getDimension() - 1);
+                rotateFrontFace(-1, dimension - 1);
+                rotateFrontFace(-1, dimension - 1);
             } else {
-                rotateFrontFace(-1, getDimension() - 1);
+                rotateFrontFace(-1, dimension - 1);
                 rotateSide(-1, col);
             }
             // remember front face is in the wrong orientation so MAKE IT RIGHT
@@ -631,14 +617,14 @@ public class Cubenxn extends Cube {
     // moves the correct colored cubie to the position row col on the front face
     // assuming we are making a col of cubies
     public void solveCubieFrontFaceRowCol(int row, int col, int color) {
-        if (row < 1 || row > getDimension() - 2 || col < 1 || col > getDimension() - 2) {
+        if (row < 1 || row > dimension - 2 || col < 1 || col > dimension - 2) {
             System.out.println("Error: tried to move an edge piece to the center. Line no "
                     + Thread.currentThread().getStackTrace()[1].getLineNumber());
             return;
-        } else if ((getFaces().get(getPosition(5, row, col)) / (getDimension() * getDimension())) == color) {
-            cubePieces.get(getFaces().get(getPosition(5, row, col))).inPlace = true;
+        } else if ((faces.get(getPosition(5, row, col)) / (dimension * dimension)) == color) {
+            cubePieces.get(faces.get(getPosition(5, row, col))).inPlace = true;
             return;
-        } else if (getDimension() % 2 == 1 && col == getDimension() / 2) {
+        } else if (dimension % 2 == 1 && col == dimension / 2) {
             System.out.println("Error: you can't execute alignCubie on a center col piece line no "
                     + Thread.currentThread().getStackTrace()[1].getLineNumber());
             return;
@@ -651,7 +637,7 @@ public class Cubenxn extends Cube {
         if (possibleIndexes.size() == 0) {
             return;
         }
-        int desiredCubie = getFaces().get(possibleIndexes.get(0));
+        int desiredCubie = faces.get(possibleIndexes.get(0));
         alignCubies(desiredCubie, row, col);
         insertCubie(desiredCubie);
 
@@ -661,7 +647,7 @@ public class Cubenxn extends Cube {
     }
 
     public void solveColFrontFace(int col, int color) {
-        for (int i = 1; i < getDimension() - 1; i++) {
+        for (int i = 1; i < dimension - 1; i++) {
 
             solveCubieFrontFaceRowCol(i, col, color);
         }
@@ -681,13 +667,13 @@ public class Cubenxn extends Cube {
             rotateLayer(1, 0);
             rotateSide(-1, col);
         } else if (desiredFace == 1) {
-            rotateFrontFace(-1, getDimension() - 1);
+            rotateFrontFace(-1, dimension - 1);
             rotateSide(1, 0);
             rotateSide(1, 0);
-            rotateLayer(1, getDimension() - 1 - col);
+            rotateLayer(1, dimension - 1 - col);
             rotateSide(1, 0);
             rotateSide(1, 0);
-            rotateLayer(-1, getDimension() - 1 - col);
+            rotateLayer(-1, dimension - 1 - col);
         }
 
     }
@@ -701,41 +687,25 @@ public class Cubenxn extends Cube {
             orientCube(frontOrder[i], colorSolveOrder[i]);
             solveTopMiddleCol();
             orientCube(frontOrder[i], topOrder[i]);
-            for (int j = 1; j < getDimension() - 1; j++) {
+            for (int j = 1; j < dimension - 1; j++) {
                 solveColFrontFace(j, colorSolveOrder[i]);
                 insertColFrontFace(i, getFaceOrientation(getCenterCubie(colorSolveOrder[i])));
             }
         }
     }
 
-    public void scrambleNxN(int moves) {
-        reduced = false;
-        String[] possibleMoves = { "X", "Y", "Z", "X'", "Y'", "Z'" };
-        int randomLayer;
-        int randomChooser;
-        for (int i = 0; i < moves; i++) {
-            randomLayer = (int) (Math.random() * getDimension());
-            randomChooser = (int) (Math.random() * 6);
-            Move move = new Move(possibleMoves[randomChooser], randomLayer);
-            moveSequenceNxN(move);
-        }
-        cubePieces = new ArrayList<>();
-        for (int i = 0; i < getDimension() * getDimension() * 6; i++) {
-            cubePieces.add(new CubePiece(i, false));
-        }
-    }
 
-    public ArrayList<Integer> printAllIndecesInPlace() {
+    // DEBUGGING
+    /*
+     * private ArrayList<Integer> printAllIndecesInPlace() {
+     * 
+     * ArrayList<Integer> cubepieces = new ArrayList<>();
+     * 
+     * for (CubePiece cube : cubePieces) { if (cube.inPlace) {
+     * cubepieces.add(cube.cubeVal); } } return cubepieces; }
+     */
 
-        ArrayList<Integer> cubepieces = new ArrayList<>();
 
-        for (CubePiece cube : cubePieces) {
-            if (cube.inPlace) {
-                cubepieces.add(cube.cubeVal);
-            }
-        }
-        return cubepieces;
-    }
 
     public void solveLeftFaceCenter(int color) {
 
@@ -750,13 +720,13 @@ public class Cubenxn extends Cube {
         rotateCubeDown();
         rotateCubeClockwise();
 
-        for (int i = 1; i < getDimension() / 2; i++) {
+        for (int i = 1; i < dimension / 2; i++) {
 
             solveColFrontFace(i, color);
             insertColFrontFace(i, 1);
         }
 
-        for (int i = (getDimension() / 2) - 1; i > 0; i--) {
+        for (int i = (dimension / 2) - 1; i > 0; i--) {
 
             solveColFrontFace(i, color);
             insertColFrontFace(i, 1);
@@ -768,13 +738,13 @@ public class Cubenxn extends Cube {
 
         solveTopMiddleCol();
 
-        for (int i = 1; i < getDimension() / 2; i++) {
+        for (int i = 1; i < dimension / 2; i++) {
 
             solveColFrontFace(i, color);
             insertColFrontFace(i, 2);
         }
 
-        for (int i = (getDimension() / 2) - 1; i > 0; i--) {
+        for (int i = (dimension / 2) - 1; i > 0; i--) {
 
             solveColFrontFace(i, color);
             insertColFrontFace(i, 2);
@@ -783,70 +753,31 @@ public class Cubenxn extends Cube {
 
     }
 
-    public void solveCenters() {
-        orientCube(5, 2);
-        //System.out.println("oriented 5 front 2 top");
-        //printCube();
-        solveTopFaceCenter(2);
-        //System.out.println("2 center col solved");
-        //printCube();
-        rotateCubeUp();
-        rotateCubeUp();
-        //System.out.println("oriented for bottom face");
-        //printCube();
-        solveTopFaceCenter(4);
-        //System.out.println("first two faces are solved");
-        //printCube();
-        rotateCubeUp();
-        rotateCubeUp();
-        solveLeftFaceCenter(1);
-        //System.out.println("left face is solved");
-        //printCube();
-        rotateCubeClockwise();
-        solveLeftFaceCenter(5);
-        //System.out.println("first 4 faces solved");
-        //printCube();
-        rotateCubeUp();
-        rotateCubeClockwise();
-        //System.out.println("oriented for last step");
-        // solveLastCenterCol();
-        //printCube();
-        solveLastTwoFaces(0, 3);
-        //System.out.println("all faces solved");
-        //printCube();
-        boolean solved = checkCenters();
-        if(!solved){
-            //really lazy coding but I want this project fucking done
-            //so the deal is, about 1 in 100 center solves just dont work so I'm just starting over and solving again
-            //really really lazy I know but I cant find why this is so I'm just giving up and redoing it
-            scrambleNxN(10);
-            solveCenters();
-            return;
-        }
-    }
-
+ 
+     //uses a special algorithm to move center piece to desired face without disrupting any other faces
+     //its a long algorithm so thats why I didn't use this for all faces (I could)
     public void solveLastCenterColPos(int row) {
         int color = getColor(2);
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
 
-        if (getFaces().get(getPosition(2, row, getDimension() / 2)) / base == color) {
+        if (faces.get(getPosition(2, row, dimension / 2)) / base == color) {
 
             // maybe call cubiePlaces true, its not necessary but it would be consistant
             return;
-        } else if (row >= getDimension() - 1 || row <= 0 || row == getDimension() / 2) {
+        } else if (row >= dimension - 1 || row <= 0 || row == dimension / 2) {
             return;
         }
 
         int desiredCubie;
 
-        if (getFaces().get(getPosition(5, row, getDimension() / 2)) / base == color) {
-            desiredCubie = getFaces().get(getPosition(5, row, getDimension() / 2));
-        } else if (getFaces().get(getPosition(5, getDimension() / 2, row)) / base == color) {
-            desiredCubie = getFaces().get(getPosition(5, getDimension() / 2, row));
-        } else if (getFaces().get(getPosition(5, getDimension() - 1 - row, getDimension() / 2)) / base == color) {
-            desiredCubie = getFaces().get(getPosition(5, getDimension() - 1 - row, getDimension() / 2));
-        } else if (getFaces().get(getPosition(5, getDimension() / 2, getDimension() - 1 - row)) / base == color) {
-            desiredCubie = getFaces().get(getPosition(5, getDimension() / 2, getDimension() - 1 - row));
+        if (faces.get(getPosition(5, row, dimension / 2)) / base == color) {
+            desiredCubie = faces.get(getPosition(5, row, dimension / 2));
+        } else if (faces.get(getPosition(5, dimension / 2, row)) / base == color) {
+            desiredCubie = faces.get(getPosition(5, dimension / 2, row));
+        } else if (faces.get(getPosition(5, dimension - 1 - row, dimension / 2)) / base == color) {
+            desiredCubie = faces.get(getPosition(5, dimension - 1 - row, dimension / 2));
+        } else if (faces.get(getPosition(5, dimension / 2, dimension - 1 - row)) / base == color) {
+            desiredCubie = faces.get(getPosition(5, dimension / 2, dimension - 1 - row));
         } else {
             // not neccessary, will help debugging
             return;
@@ -859,13 +790,13 @@ public class Cubenxn extends Cube {
         rotateLayer(-1, 0);
 
         int col = row;
-        row = getDimension() / 2;
+        row = dimension / 2;
 
         boolean inPlace = desiredCubieCol == col && desiredCubieRow == row;
         int failsafe = 0;
 
         while (failsafe < 4 && !inPlace) {
-            rotateFrontFace(1, getDimension() - 1);
+            rotateFrontFace(1, dimension - 1);
             desiredCubieRow = getRow(desiredCubie);
             desiredCubieCol = getCol(desiredCubie);
             inPlace = desiredCubieCol == col && desiredCubieRow == row;
@@ -882,17 +813,17 @@ public class Cubenxn extends Cube {
     }
 
     public void solveLastCenterCol() {
-        for (int i = 1; i < getDimension() - 1; i++) {
+        for (int i = 1; i < dimension - 1; i++) {
             solveLastCenterColPos(i);
-            cubePieces.get(getFaces().get(getPosition(2, i, getDimension() / 2))).inPlace = true;
+            cubePieces.get(faces.get(getPosition(2, i, dimension / 2))).inPlace = true;
         }
     }
 
     public void alignTopCubieWithFrontCubie(int desiredRow, int desiredCol) {
 
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
 
-        int desiredCubiePos = getFaces().get(getPosition(5, desiredRow, desiredCol));
+        int desiredCubiePos = faces.get(getPosition(5, desiredRow, desiredCol));
         // place we want to insert the cubie
         // last two colors will be 1 and 3
 
@@ -912,8 +843,8 @@ public class Cubenxn extends Cube {
         int desiredCubie = -1;
 
         for (int n : possibleIndexes) {
-            if (getFaceOrientation(getFaces().get(n)) == 2) {
-                desiredCubie = getFaces().get(n);
+            if (getFaceOrientation(faces.get(n)) == 2) {
+                desiredCubie = faces.get(n);
                 break;
             }
 
@@ -940,15 +871,15 @@ public class Cubenxn extends Cube {
         // if edge cubies, assuming they are on the sides and not on top or bottom
 
         // this is the cubie that wants to be on the front face but is not
-        int desiredCubie = getFaces().get(getPosition(2, row, col));
+        int desiredCubie = faces.get(getPosition(2, row, col));
 
         rotateSide(-1, col);
 
         int rowDesiredCubie = getRow(desiredCubie);
         int colDesiredCubie = getCol(desiredCubie);
 
-        boolean quadrant = (rowDesiredCubie < getDimension() / 2 && colDesiredCubie < getDimension() / 2)
-                || (rowDesiredCubie >= getDimension() / 2 && colDesiredCubie >= getDimension() / 2);
+        boolean quadrant = (rowDesiredCubie < dimension / 2 && colDesiredCubie < dimension / 2)
+                || (rowDesiredCubie >= dimension / 2 && colDesiredCubie >= dimension / 2);
 
         int direction;
 
@@ -958,32 +889,32 @@ public class Cubenxn extends Cube {
             direction = -1;
         }
 
-        rotateFrontFace(direction, getDimension() - 1);
+        rotateFrontFace(direction, dimension - 1);
 
         colDesiredCubie = getCol(desiredCubie);
 
         rotateSide(-1, colDesiredCubie);
 
-        rotateFrontFace(-direction, getDimension() - 1);
+        rotateFrontFace(-direction, dimension - 1);
 
         rotateSide(1, col);
 
-        rotateFrontFace(direction, getDimension() - 1);
+        rotateFrontFace(direction, dimension - 1);
 
         rotateSide(1, colDesiredCubie);
 
-        rotateFrontFace(-direction, getDimension() - 1);
+        rotateFrontFace(-direction, dimension - 1);
 
     }
 
     public void solveLastTwoFaces(int colorFront, int colorTop) {
 
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
         int tempCubie;
 
-        for (int i = 1; i < getDimension() - 1; i++) {
-            for (int x = 1; x < getDimension() - 1; x++) {
-                tempCubie = getFaces().get(getPosition(5, i, x));
+        for (int i = 1; i < dimension - 1; i++) {
+            for (int x = 1; x < dimension - 1; x++) {
+                tempCubie = faces.get(getPosition(5, i, x));
                 if (tempCubie / base != colorFront) {
                     alignTopCubieWithFrontCubie(i, x);
                     switchTopCubieWithFrontCubie(i, x);
@@ -993,20 +924,66 @@ public class Cubenxn extends Cube {
         }
     }
 
-    // returns aedgePieces that are not in place
 
-    public ArrayList<EdgeCubie> findUnsolvedEdgePieces() {
-        ArrayList<EdgeCubie> result = new ArrayList<>();
-        for (EdgeCubie cubie : getEdgeCubies()) {
-            if (!cubePieces.get(cubie.index1).inPlace) {
-                result.add(new EdgeCubie(cubie.index1, cubie.index2));
-            }
+    //puts everything together from above
+    public void solveCenters() {
+        orientCube(5, 2);
+        // System.out.println("oriented 5 front 2 top");
+        // printCube();
+        solveTopFaceCenter(2);
+        // System.out.println("2 center col solved");
+        // printCube();
+        rotateCubeUp();
+        rotateCubeUp();
+        // System.out.println("oriented for bottom face");
+        // printCube();
+        solveTopFaceCenter(4);
+        // System.out.println("first two faces are solved");
+        // printCube();
+        rotateCubeUp();
+        rotateCubeUp();
+        solveLeftFaceCenter(1);
+        // System.out.println("left face is solved");
+        // printCube();
+        rotateCubeClockwise();
+        solveLeftFaceCenter(5);
+        // System.out.println("first 4 faces solved");
+        // printCube();
+        rotateCubeUp();
+        rotateCubeClockwise();
+        // System.out.println("oriented for last step");
+        // solveLastCenterCol();
+        // printCube();
+        solveLastTwoFaces(0, 3);
+        // System.out.println("all faces solved");
+        // printCube();
+        boolean solved = checkCenters();
+        if (!solved) {
+            // really lazy coding but I want this project fucking done
+            // so the deal is, about 1 in 100 center solves just dont work so I'm just
+            // starting over and solving again
+            // really really lazy I know but I cant find why this is so I'm just giving up
+            // and redoing it
+            scrambleNxN(10);
+            solveCenters();
+            return;
         }
-
-        return result;
-
     }
+    
 
+
+    /**
+     * Edge solver methods
+     * solves all 10 edges then does parity and swapping algorithms to solve last two edges
+     * 
+     * general method moves an unsolved piece to the left front edge (this is the piece we're solving for)
+     * it solves for whatever color is on top
+     * It then moves an unsolved piece to the top left edge, which is used once we insert a cubie into place, we replace
+     * front left with top left temporarily so that the only edge we break is an unsolved one
+     * moves desired insertion piece to front right edge
+     */
+
+     //only moves an unsolved edge piece (no inserting or anything)
     // we don't have to worry about dirupting any edge pieces on this step
     public void moveUnsolvedEdgePieceToLeftFrontEdge() {
 
@@ -1014,7 +991,7 @@ public class Cubenxn extends Cube {
         // unsolved at this step, we can just keep the left edge where it is if it is
         // unsolved already
 
-        if (!cubePieces.get(getFaces().get(getPosition(5, 1, 0))).inPlace) {
+        if (!cubePieces.get(faces.get(getPosition(5, 1, 0))).inPlace) {
             return;
         }
 
@@ -1038,10 +1015,10 @@ public class Cubenxn extends Cube {
 
     }
 
-    // moves an unsolved piece without disrupting the front left or right edges
+    // moves an unsolved piece without disrupting the front left or right edges to top left edge (for replacing desired solved edge)
     public void moveUnsolvedEdgePiecetoTopLeftEdge() {
 
-        if (!cubePieces.get(getFaces().get(getPosition(2, 1, 0))).inPlace) {
+        if (!cubePieces.get(faces.get(getPosition(2, 1, 0))).inPlace) {
             return;
         }
 
@@ -1099,7 +1076,7 @@ public class Cubenxn extends Cube {
         } else if (face1 == 4 || face2 == 4) {
             top = (face1 == 4 && face2 == 0) || (face1 == 0 && face2 == 4);
             while (failsafe < 4 && !top) {
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
                 face1 = getFaceOrientation(desiredCubie.index1);
                 face2 = getFaceOrientation(desiredCubie.index2);
                 top = (face1 == 4 && face2 == 0) || (face1 == 0 && face2 == 4);
@@ -1130,19 +1107,19 @@ public class Cubenxn extends Cube {
     // in this method, we only need to worry about dirupting the left edgepiece
     public void alignEdgeCubie(int row) {
 
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
 
         // always judging color off of top left edge piece
-        int colorFront = getFaces().get(getPosition(5, 1, 0)) / base;
-        int colorLeft = getFaces().get(getPosition(1, getDimension() - 1, getDimension() - 2)) / base;
+        int colorFront = faces.get(getPosition(5, 1, 0)) / base;
+        int colorLeft = faces.get(getPosition(1, dimension - 1, dimension - 2)) / base;
 
-        if (row <= 0 || row >= getDimension() - 1) {
+        if (row <= 0 || row >= dimension - 1) {
             return;
         }
 
-        if (getFaces().get(getPosition(5, 1, 0)) / base == getFaces().get(getPosition(5, row, 0)) / base
-                && getFaces().get(getPosition(1, getDimension() - 1, getDimension() - 2))
-                        / base == getFaces().get(getPosition(1, getDimension() - 1, getDimension() - 1 - row)) / base) {
+        if (faces.get(getPosition(5, 1, 0)) / base == faces.get(getPosition(5, row, 0)) / base
+                && faces.get(getPosition(1, dimension - 1, dimension - 2))
+                        / base == faces.get(getPosition(1, dimension - 1, dimension - 1 - row)) / base) {
             return;
         }
 
@@ -1170,24 +1147,24 @@ public class Cubenxn extends Cube {
                 inPlace = faceLeftCubie == 0;
 
                 while (!inPlace) {
-                    rotateLayer(1, getDimension() - 1);
+                    rotateLayer(1, dimension - 1);
                     faceLeftCubie = getFaceOrientation(leftFaceCubie);
                     inPlace = faceLeftCubie == 0;
                 }
 
                 rotateFrontFace(-1, 0);
-                rotateSide(1, getDimension() - 1);
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
+                rotateSide(1, dimension - 1);
 
             } else {
                 inPlace = faceFrontCubie == 3;
                 while (!inPlace) {
-                    rotateLayer(1, getDimension() - 1);
+                    rotateLayer(1, dimension - 1);
                     faceFrontCubie = getFaceOrientation(frontFaceCubie);
                     inPlace = faceFrontCubie == 3;
                 }
 
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
             }
 
         }
@@ -1203,8 +1180,8 @@ public class Cubenxn extends Cube {
                 }
 
                 rotateFrontFace(1, 0);
-                rotateSide(1, getDimension() - 1);
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
+                rotateSide(1, dimension - 1);
 
             } else {
                 inPlace = faceFrontCubie == 3;
@@ -1215,7 +1192,7 @@ public class Cubenxn extends Cube {
                     inPlace = faceFrontCubie == 3;
                 }
 
-                rotateSide(-1, getDimension() - 1);
+                rotateSide(-1, dimension - 1);
             }
 
         }
@@ -1232,13 +1209,13 @@ public class Cubenxn extends Cube {
                     moveUnsolvedEdgePiecetoTopLeftEdge();
                     rotateLayer(1, 0);
                     rotateLayer(1, 0);
-                    rotateSide(-1, getDimension() - 1);
+                    rotateSide(-1, dimension - 1);
                     moveUnsolvedEdgePiecetoTopLeftEdge();
                     rotateLayer(-1, tempRow);
-                    rotateSide(1, getDimension() - 1);
+                    rotateSide(1, dimension - 1);
                     rotateLayer(1, 0);
                     rotateLayer(1, 0);
-                    rotateSide(-1, getDimension() - 1);
+                    rotateSide(-1, dimension - 1);
                     rotateLayer(1, tempRow);
                     alignEdgeCubie(row);
 
@@ -1246,11 +1223,11 @@ public class Cubenxn extends Cube {
                 } else if (faceFrontCubie == 3) {
                     return;
                 } else {
-                    rotateSide(1, getDimension() - 1);
+                    rotateSide(1, dimension - 1);
                     rotateLayer(-1, 0);
                     rotateFrontFace(1, 0);
-                    rotateSide(1, getDimension() - 1);
-                    rotateSide(1, getDimension() - 1);
+                    rotateSide(1, dimension - 1);
+                    rotateSide(1, dimension - 1);
 
                 }
             }
@@ -1258,24 +1235,56 @@ public class Cubenxn extends Cube {
 
     }
 
-    public void insertEdgeCubie(int row) {
-        int base = getDimension() * getDimension();
 
-        if (getFaces().get(getPosition(5, 1, 0)) / base == getFaces().get(getPosition(5, row, 0)) / base
-                && getFaces().get(getPosition(1, getDimension() - 1, getDimension() - 2))
-                        / base == getFaces().get(getPosition(1, getDimension() - 1, getDimension() - 1 - row)) / base) {
+    //inserts the edge cubie that is on the right front edge to the left front while only disturbing unsolved edges
+    public void insertEdgeCubie(int row) {
+        int base = dimension * dimension;
+
+        if (faces.get(getPosition(5, 1, 0)) / base == faces.get(getPosition(5, row, 0)) / base
+                && faces.get(getPosition(1, dimension - 1, dimension - 2))
+                        / base == faces.get(getPosition(1, dimension - 1, dimension - 1 - row)) / base) {
             return;
         }
 
         rotateLayer(1, row);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
         rotateLayer(-1, 0);
-        rotateFrontFace(-1, getDimension() - 1);
+        rotateFrontFace(-1, dimension - 1);
         rotateLayer(-1, row);
         rotateLayer(1, 0);
-        rotateFrontFace(-1, getDimension() - 1);
+        rotateFrontFace(-1, dimension - 1);
     }
 
+    //solves entire left edge for the color on top
+    public void solveLeftEdge() {
+        moveUnsolvedEdgePieceToLeftFrontEdge();
+        cubePieces.get(faces.get(getPosition(5, 1, 0))).inPlace = true;
+        cubePieces.get(faces.get(getPosition(1, dimension - 1, dimension - 2))).inPlace = true;
+
+        for (int i = 2; i < dimension - 1; i++) {
+            alignEdgeCubie(i);
+            moveUnsolvedEdgePiecetoTopLeftEdge();
+            insertEdgeCubie(i);
+            cubePieces.get(faces.get(getPosition(5, i, 0))).inPlace = true;
+            cubePieces.get(faces.get(getPosition(1, dimension - 1, dimension - 1 - i))).inPlace = true;
+
+        }
+
+    }
+
+    //solves first ten edges (no shit sherlock)
+    public void solveFirstTenEdges() {
+        for (int i = 0; i < 10; i++) {
+            solveLeftEdge();
+        }
+        moveUnsolvedEdgePieceToLeftFrontEdge();
+        orientCubeForLastStep();
+        rotateCubeUp();
+        rotateCubeClockwise();
+
+    }
+
+    //orients so that last two unsolved edge pieces are on top/front and top/back
     public void orientCubeForLastStep() {
         ArrayList<EdgeCubie> cubies = findUnsolvedEdgePieces();
 
@@ -1305,22 +1314,22 @@ public class Cubenxn extends Cube {
                 inPlace = face1 == 3 || face2 == 3;
 
             }
-            rotateSide(-1, getDimension() - 1);
+            rotateSide(-1, dimension - 1);
         } else if (face1 == 4 || face2 == 4) {
             inPlace = face1 == 3 || face2 == 3;
             while (!inPlace) {
-                rotateLayer(1, getDimension() - 1);
+                rotateLayer(1, dimension - 1);
                 face1 = getFaceOrientation(desiredCubie1);
                 face2 = getFaceOrientation(desiredCubie2);
                 inPlace = face1 == 3 || face2 == 3;
 
             }
-            rotateSide(1, getDimension() - 1);
+            rotateSide(1, dimension - 1);
 
         } else if (face1 == 3 || face2 == 3) {
             inPlace = face1 == 5 || face2 == 5;
             while (!inPlace) {
-                rotateSide(1, getDimension() - 1);
+                rotateSide(1, dimension - 1);
                 face1 = getFaceOrientation(desiredCubie1);
                 face2 = getFaceOrientation(desiredCubie2);
                 inPlace = face1 == 5 || face2 == 5;
@@ -1334,25 +1343,24 @@ public class Cubenxn extends Cube {
 
     }
 
-    // change
-    // swaps collum index cubies
+    // algorithm to swap cubies on top face
     public void swapCubiesTopFace(int i) {
-        int index = getDimension() - 1 - i;
+        int index = dimension - 1 - i;
         rotateSide(1, index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
         rotateSide(1, index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
-        rotateFrontFace(1, getDimension() - 1);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
+        rotateFrontFace(1, dimension - 1);
         rotateSide(1, index);
-        rotateFrontFace(1, getDimension() - 1);
-        rotateFrontFace(1, getDimension() - 1);
-        rotateSide(1, getDimension() - 1 - index);
+        rotateFrontFace(1, dimension - 1);
+        rotateFrontFace(1, dimension - 1);
+        rotateSide(1, dimension - 1 - index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
-        rotateSide(-1, getDimension() - 1 - index);
+        rotateSide(-1, dimension - 1 - index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
         rotateSide(1, index);
@@ -1360,35 +1368,36 @@ public class Cubenxn extends Cube {
 
     }
 
-    // parity index is always less than half the dimension because it flips both
-    // cooresponding edge pieces
+    // algorithm to flip parity edges (if edge is in wrong orientation compared to center / desired color)
+    //note that parity can only affect mirror cubies, so this is done to only half the cube, when I flip col index,
+    //col dimension - 1 - index is also changed
     public void flipEdges(int index) {
-        rotateSide(1, getDimension() - 1 - index);
-        rotateSide(1, getDimension() - 1 - index);
+        rotateSide(1, dimension - 1 - index);
+        rotateSide(1, dimension - 1 - index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
-        rotateSide(1, getDimension() - 1 - index);
-        rotateSide(1, getDimension() - 1 - index);
+        rotateSide(1, dimension - 1 - index);
+        rotateSide(1, dimension - 1 - index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
-        rotateSide(1, getDimension() - 1 - index);
+        rotateSide(1, dimension - 1 - index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
-        rotateSide(1, getDimension() - 1 - index);
+        rotateSide(1, dimension - 1 - index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
-        rotateSide(-1, getDimension() - 1 - index);
+        rotateSide(-1, dimension - 1 - index);
         rotateLayer(1, 0);
         rotateLayer(1, 0);
         rotateFrontFace(1, 0);
         rotateFrontFace(1, 0);
         rotateLayer(-1, 0);
-        rotateSide(-1, getDimension() - 1 - index);
+        rotateSide(-1, dimension - 1 - index);
         rotateLayer(1, 0);
         rotateFrontFace(1, 0);
         rotateFrontFace(1, 0);
         rotateLayer(-1, 0);
-        rotateSide(1, getDimension() - 1 - index);
+        rotateSide(1, dimension - 1 - index);
         rotateLayer(-1, 0);
 
     }
@@ -1398,15 +1407,18 @@ public class Cubenxn extends Cube {
         rotateLayer(1, 0);
         rotateSide(-1, 0);
         rotateLayer(-1, 0);
-        rotateFrontFace(1, getDimension() - 1);
+        rotateFrontFace(1, dimension - 1);
         rotateLayer(-1, 0);
-        rotateFrontFace(-1, getDimension() - 1);
+        rotateFrontFace(-1, dimension - 1);
         rotateLayer(1, 0);
     }
 
+    //puts above algorithms together to solve parity (for now)
+    //even cubes have OLL and PLL parity that is solved in cube 3x3, but rn, we can't 
+    //tell if OLL or PLL parity exists or not
     public void solveLastTwoEdges() {
 
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
         int colorFront = 0;
         int colorFront_top = 0;
         int colorBack = 0;
@@ -1418,17 +1430,17 @@ public class Cubenxn extends Cube {
         // assign colors, these are permanent and will be the desired orientation of the
         // cube in the end
         boolean match;
-        if (getDimension() % 2 == 1) {
-            colorFront = getFaces().get(getPosition(5, 0, getDimension() / 2)) / base;
-            colorFront_top = getFaces().get(getPosition(2, getDimension() - 1, getDimension() / 2)) / base;
-            colorBack = getFaces().get(getPosition(0, getDimension() - 1, getDimension() / 2)) / base;
-            colorBack_top = getFaces().get(getPosition(2, 0, getDimension() / 2)) / base;
+        if (dimension % 2 == 1) {
+            colorFront = faces.get(getPosition(5, 0, dimension / 2)) / base;
+            colorFront_top = faces.get(getPosition(2, dimension - 1, dimension / 2)) / base;
+            colorBack = faces.get(getPosition(0, dimension - 1, dimension / 2)) / base;
+            colorBack_top = faces.get(getPosition(2, 0, dimension / 2)) / base;
         } else {
-            colorFront = getFaces().get(getPosition(5, 0, 1)) / base;
-            colorFront_top = getFaces().get(getPosition(2, getDimension() - 1, 1)) / base;
-            for (int i = 1; i < getDimension() - 1; i++) {
-                colorBack = getFaces().get(getPosition(0, getDimension() - 1, i)) / base;
-                colorBack_top = getFaces().get(getPosition(2, 0, i)) / base;
+            colorFront = faces.get(getPosition(5, 0, 1)) / base;
+            colorFront_top = faces.get(getPosition(2, dimension - 1, 1)) / base;
+            for (int i = 1; i < dimension - 1; i++) {
+                colorBack = faces.get(getPosition(0, dimension - 1, i)) / base;
+                colorBack_top = faces.get(getPosition(2, 0, i)) / base;
                 // do they match?
                 match = (colorFront == colorBack && colorFront_top == colorBack_top)
                         || (colorFront == colorBack_top && colorFront_top == colorBack);
@@ -1439,12 +1451,12 @@ public class Cubenxn extends Cube {
         }
         // firstly, we need to get all the edge cubies on the right side, then we'll
         // deal with parity
-        for (int i = 1; i < getDimension() - 1; i++) {
+        for (int i = 1; i < dimension - 1; i++) {
             // check if the color is in the right spot
-            colorFrontTemp = getFaces().get(getPosition(5, 0, i)) / base;
-            colorFront_topTemp = getFaces().get(getPosition(2, getDimension() - 1, i)) / base;
-            colorBackTemp = getFaces().get(getPosition(0, getDimension() - 1, i)) / base;
-            colorBack_topTemp = getFaces().get(getPosition(2, 0, i)) / base;
+            colorFrontTemp = faces.get(getPosition(5, 0, i)) / base;
+            colorFront_topTemp = faces.get(getPosition(2, dimension - 1, i)) / base;
+            colorBackTemp = faces.get(getPosition(0, dimension - 1, i)) / base;
+            colorBack_topTemp = faces.get(getPosition(2, 0, i)) / base;
             match = (colorFrontTemp == colorFront && colorFront_topTemp == colorFront_top)
                     || (colorFrontTemp == colorFront_top && colorFront_topTemp == colorFront);
             // if piece doesn't belong there, we need to swap it for a piece on the other
@@ -1462,18 +1474,18 @@ public class Cubenxn extends Cube {
             }
         }
 
-        colorFront = getFaces().get(getPosition(5, 0, getDimension() / 2)) / base;
-        colorBack_top = getFaces().get(getPosition(2, 0, getDimension() / 2)) / base;
+        colorFront = faces.get(getPosition(5, 0, dimension / 2)) / base;
+        colorBack_top = faces.get(getPosition(2, 0, dimension / 2)) / base;
 
-        for (int i = 1; i < getDimension() / 2; i++) {
-            colorFrontTemp = getFaces().get(getPosition(5, 0, i)) / base;
+        for (int i = 1; i < dimension / 2; i++) {
+            colorFrontTemp = faces.get(getPosition(5, 0, i)) / base;
             if (colorFrontTemp != colorFront) {
                 flipEdges(i);
             }
         }
         rotateCubeDown();
-        for (int i = 1; i < getDimension() / 2; i++) {
-            colorBack_topTemp = getFaces().get(getPosition(5, 0, i)) / base;
+        for (int i = 1; i < dimension / 2; i++) {
+            colorBack_topTemp = faces.get(getPosition(5, 0, i)) / base;
             if (colorBack_topTemp != colorBack_top) {
                 flipEdges(i);
             }
@@ -1481,16 +1493,12 @@ public class Cubenxn extends Cube {
 
     }
 
-    // given the desired two colors of the edge cubie and the row that it wants to
-    // be in, returns an arraylist of indexes of cubies that could fit in the given
-    // slot that match the colors
 
     // due to parity rules, there is only one edge cubie that will fit in a desired
     // row
-
     public boolean edgeCubieChecker(EdgeCubie cubie, int row, int colorBack, int colorFront) {
         // colors match
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
         boolean colorsMatch = (colorBack == cubie.index1 / base && colorFront == cubie.index2 / base)
                 || (colorBack == cubie.index2 / base && colorFront == cubie.index1 / base);
         if (!colorsMatch) {
@@ -1509,11 +1517,11 @@ public class Cubenxn extends Cube {
         int desiredCubieCol = getCol(colorFrontFace);
 
         boolean quad1 = desiredCubieCol == 0 && desiredCubieRow == row;
-        boolean quad2 = desiredCubieCol == getDimension() - 1 - row && desiredCubieRow == 0;
+        boolean quad2 = desiredCubieCol == dimension - 1 - row && desiredCubieRow == 0;
 
-        boolean quad3 = desiredCubieCol == row && getDimension() - 1 == desiredCubieRow;
+        boolean quad3 = desiredCubieCol == row && dimension - 1 == desiredCubieRow;
 
-        boolean quad4 = desiredCubieCol == getDimension() - 1 && desiredCubieRow == getDimension() - 1 - row;
+        boolean quad4 = desiredCubieCol == dimension - 1 && desiredCubieRow == dimension - 1 - row;
         return quad1 || quad2 || quad3 || quad4;
 
     }
@@ -1531,22 +1539,67 @@ public class Cubenxn extends Cube {
         return null;
     }
 
+    //HELPER METHODS FOR ABOVE
+    
     // there always needs to be two open edges, one that we can use to replace and
     // one that we can use as the solving edge piece
     // takes the color on the top of the left edge as the left edge cubie
 
+
+
+    /**
+     * Final methods, solving the cube and overal checkers
+     */
+
+    public void reduceCubeto3x3() {
+        if (reduced) {
+            return;
+        }
+        solveCenters();
+        solveFirstTenEdges();
+        solveLastTwoEdges();
+
+        // will take this out
+        boolean cubeGood = edgeMatches();
+        // has never happened yet, where edges don't solve, but there are a fuckload of
+        // combos for a cube
+        // I might have missed something (I've tested it 1000 times on repeat in debug
+        // and it hasn't not solved, so if this is called, it is rediculously rare)
+        if (!cubeGood) {
+            scrambleNxN(10);
+            reduceCubeto3x3();
+            return;
+        }
+        reduced = true;
+    }
+
+    //checks if centers are solved
+    public boolean checkCenters() {
+        int base = dimension * dimension;
+        for (int x = 0; x < 6; x++) {
+            int color = faces.get(getPosition(x, 1, 1)) / base;
+            for (int i = 1; i < dimension - 1; i++) {
+                for (int j = 1; j < dimension - 2; j++) {
+                    if (faces.get(getPosition(x, i, j)) / base != color) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    //checks if edges are solved
     public boolean edgeMatches() {
         boolean value = true;
-        int base = getDimension() * getDimension();
+        int base = dimension * dimension;
         for (int j = 0; j < 6; j++) {
-            for (int i = 1; i < getDimension() - 2; i++) {
-                value = getFaces().get(getPosition(j, 0, i)) / base == getFaces().get(getPosition(j, 0, i + 1)) / base
-                        && getFaces().get(getPosition(j, getDimension() - 1, i))
-                                / base == getFaces().get(getPosition(j, getDimension() - 1, i + 1)) / base
-                        && getFaces().get(getPosition(j, i, getDimension() - 1))
-                                / base == getFaces().get(getPosition(j, i + 1, getDimension() - 1)) / base
-                        && getFaces().get(getPosition(j, i, 0)) / base == getFaces().get(getPosition(j, i + 1, 0))
-                                / base;
+            for (int i = 1; i < dimension - 2; i++) {
+                value = faces.get(getPosition(j, 0, i)) / base == faces.get(getPosition(j, 0, i + 1)) / base
+                        && faces.get(getPosition(j, dimension - 1, i))
+                                / base == faces.get(getPosition(j, dimension - 1, i + 1)) / base
+                        && faces.get(getPosition(j, i, dimension - 1))
+                                / base == faces.get(getPosition(j, i + 1, dimension - 1)) / base
+                        && faces.get(getPosition(j, i, 0)) / base == faces.get(getPosition(j, i + 1, 0)) / base;
                 if (!value) {
                     return value;
                 }
@@ -1556,99 +1609,88 @@ public class Cubenxn extends Cube {
         return value;
     }
 
-    public void solveLeftEdge() {
-        moveUnsolvedEdgePieceToLeftFrontEdge();
-        cubePieces.get(getFaces().get(getPosition(5, 1, 0))).inPlace = true;
-        cubePieces.get(getFaces().get(getPosition(1, getDimension() - 1, getDimension() - 2))).inPlace = true;
-
-        for (int i = 2; i < getDimension() - 1; i++) {
-            alignEdgeCubie(i);
-            moveUnsolvedEdgePiecetoTopLeftEdge();
-            insertEdgeCubie(i);
-            cubePieces.get(getFaces().get(getPosition(5, i, 0))).inPlace = true;
-            cubePieces.get(getFaces().get(getPosition(1, getDimension() - 1, getDimension() - 1 - i))).inPlace = true;
-
+    public void scrambleNxN(int moves) {
+        reduced = false;
+        String[] possibleMoves = { "X+", "Y+", "Z+", "X-", "Y-", "Z-" };
+        int randomLayer;
+        int randomChooser;
+        for (int i = 0; i < moves; i++) {
+            randomLayer = (int) (Math.random() * dimension);
+            randomChooser = (int) (Math.random() * 6);
+            Move move = new Move(possibleMoves[randomChooser], randomLayer);
+            moveSequenceNxN(move);
+            scrambleAlgorithm.add(move);
         }
-
+        cubePieces = new ArrayList<>();
+        for (int i = 0; i < dimension * dimension * 6; i++) {
+            cubePieces.add(new CubePiece(i, false));
+        }
     }
 
-    public void solveLeftEdgePiece(int colorFront, int colorLeft) {
 
-    }
 
-    public void solveFirstTenEdges() {
-        for (int i = 0; i < 10; i++) {
-            solveLeftEdge();
-        }
-        moveUnsolvedEdgePieceToLeftFrontEdge();
-        orientCubeForLastStep();
-        rotateCubeUp();
-        rotateCubeClockwise();
-
-    }
-
-    public void reduceCubeto3x3() {
-        algorithm.clear();
-        if (reduced) {
-            return;
-        }
-        solveCenters();
-        solveFirstTenEdges();
-        solveLastTwoEdges();
-        
-
-        // will take this out
-        boolean cubeGood = edgeMatches();
-        //has never happened yet, where edges don't solve, but there are a fuckload of combos for a cube
-        //I might have missed something (I've tested it 1000 times on repeat in debug and it hasn't not solved, so if this is called, it is rediculously rare)
-        if (!cubeGood) {
-            scrambleNxN(10);
-            reduceCubeto3x3();
-            return;
-        }
-        reduced = true;
-    }
-
-    public boolean checkCenters() {
-        int base = getDimension() * getDimension();
-        for (int x = 0; x < 6; x++) {
-            int color = getFaces().get(getPosition(x, 1, 1)) / base;
-            for (int i = 1; i < getDimension() - 1; i++) {
-                for (int j = 1; j < getDimension() - 2; j++) {
-                    if(getFaces().get(getPosition(x, i, j)) / base != color){
-                        return false;
-                    }
-                }
+    //finds unsolved edge pieces (duh)
+    public ArrayList<EdgeCubie> findUnsolvedEdgePieces() {
+        ArrayList<EdgeCubie> result = new ArrayList<>();
+        for (EdgeCubie cubie : getEdgeCubies()) {
+            if (!cubePieces.get(cubie.index1).inPlace) {
+                result.add(new EdgeCubie(cubie.index1, cubie.index2));
             }
         }
-        return true;
+
+        return result;
+
+    }
+
+    private static void testnxn(int dimension){
+        // shows the cube being sovled while timing scramble and solve
+        Cubenxn myCube = new Cubenxn(dimension);
+        // print the origional cube
+        System.out.println("Cube OG at dimension: " + dimension);
+        myCube.printCube();
+
+        // Timing the scramble
+        long startTime = System.nanoTime();
+
+        // scramble the cube 1000000 times (for large nxn cubes, you could remove Y and
+        // X from scrambleCube)
+        myCube.scrambleNxN(1000);
+
+        long endTime = System.nanoTime();
+
+        // get difference of two nanoTime values
+        long timeElapsed = endTime - startTime;
+
+        System.out.println("Scrambled cube at 1000 moves");
+        // print the scrambled cube
+        myCube.printCube();
+
+        System.out.println("Execution time of scramble in nanoseconds  : " + timeElapsed);
+
+        System.out.println("Execution time of scramble in milliseconds : " + timeElapsed / 1000000);
+
+        // Timing the scramble
+        startTime = System.nanoTime();
+
+        // solve the scrambled cube
+        // Check the sequence of steps in the method solve
+        myCube.reduceCubeto3x3();
+
+        endTime = System.nanoTime();
+
+        // get difference of two nanoTime values
+        timeElapsed = endTime - startTime;
+        System.out.println("reduced cube");
+        myCube.printCube();
+
+        System.out.println("Execution time of reduction in nanoseconds  : " + timeElapsed);
+
+        System.out.println("Execution time of reduction in milliseconds : " + timeElapsed / 1000000);
+
     }
 
     public static void main(String[] args) {
-
-        Cubenxn myCube = new Cubenxn(5);
-        myCube.scrambleNxN(100);
-        /*
-         * myCube.printCubeNums(); myCube.scrambleNxN(100); myCube.solveCenters();
-         * myCube.printCube();
-         * 
-         * // putting this shit on hold
-         * 
-         * myCube.solveFirstTenEdges(); myCube.printCube(); myCube.solveLastTwoEdges();
-         * myCube.printCube();
-         */
-        myCube.solveCenters();
-        System.out.println(myCube.checkCenters());
-        
-        for(int i = 0; i < 30; i++){
-            myCube = new Cubenxn(8);
-            myCube.scrambleNxN(100);
-            myCube.reduceCubeto3x3();
-            System.out.println(myCube.checkCenters());
-            System.out.println(myCube.edgeMatches());
-        }
-        
-
+        testnxn(11);
     }
 
 }
