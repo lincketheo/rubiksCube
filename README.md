@@ -1,6 +1,10 @@
 # rubiksCube
 ## A rubiks cube representer and solver
 ## State of code
+All algorithms are done. Main interface is solver.java, but each class has something in their main console that demonstrates what the class does. TODO: finish 2x2 and 1x1 exceptions, export algorithms to JSON for javascript program to read
+
+
+
 Will organize all code in a JAR file, keeping everything out for debugging purposes. Program can solve a 3 x 3 cube. Working on n x n cube. Can solve first for front center pieces. (A few bugs). Future: need to solve last two faces (simply algorithm) and edges (this will need to use parity algorithms, so new checker methods needed for cube.java.
 
 ## Goals:
