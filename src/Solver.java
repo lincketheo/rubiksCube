@@ -138,18 +138,10 @@ public class Solver {
 
     public static void main(String[] args) {
 
-	int maxDimension = 30;
-        for(int i = 3; i < maxDimension + 1; i++){
-            runJSObject(i, 01);
-        }
-        
+    int maxDimension = 100;
+    runJSObject(maxDimension, 01);
         System.out.println();
-        System.out.print("var cubeArray = [");
-        for(int i = 3; i < maxDimension + 1; i++){
-            System.out.print("cube" + i + "" + 01 + " , ");
-        }
 
-        System.out.print("];");
         
 
     }
