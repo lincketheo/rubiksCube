@@ -1,0 +1,32 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Cube",
+            "request": "launch",
+            "mainClass": "Cube",
+            "projectName": "src_80999afd"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Cube3x3",
+            "request": "launch",
+            "mainClass": "Cube3x3",
+            "projectName": "src_80999afd"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Move",
+            "request": "launch",
+            "mainClass": "Move",
+            "projectName": "src_80999afd"
+        },
+        {
+            "type": "java",
+            "name": "CodeLens (Launch) - Solver",
+            "request": "launch",
+            "mainClass": "Solver",
+            "projectName": "src_80999afd"
+        }
+    ]
+}

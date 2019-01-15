@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "CodeLens (Launch) - Solver",
+            "request": "launch",
+            "mainClass": "src.Solver",
+            "projectName": "rubiksCube_3c962180"
+        },
+        {
+            "type": "java",
             "name": "CodeLens (Launch) - Cubenxn",
             "request": "launch",
             "mainClass": "Cubenxn"

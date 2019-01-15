@@ -214,6 +214,9 @@ public class Cube {
     }
 
     for (int i = 0; i < temp1.length; i++) {
+
+
+  // transposes and flips horizontally an n x n matrix being represented by a 1 x n^2 vector
       // sexy sexy piece of code right here
       temp2[(i % dimension) * dimension + (dimension - 1 - (i / (dimension)))] = temp1[i];
     }
@@ -367,7 +370,7 @@ public class Cube {
       // translation move
       algorithm.remove(algorithm.size() - 1);
     }
-    algorithm.add(new Move("XX", 1));
+    algorithm.add(new Move("XX", 1, true));
   }
 
   public void rotateCubeCounterClockwise() {
@@ -375,7 +378,7 @@ public class Cube {
       rotateLayer(-1, i);
       algorithm.remove(algorithm.size() - 1);
     }
-    algorithm.add(new Move("XX", -1));
+    algorithm.add(new Move("XX", -1, true));
   }
 
   public void rotateCubeDown() {
@@ -383,7 +386,7 @@ public class Cube {
       rotateSide(-1, i);
       algorithm.remove(algorithm.size() - 1);
     }
-    algorithm.add(new Move("YY", -1));
+    algorithm.add(new Move("YY", -1, true));
   }
 
   public void rotateCubeUp() {
@@ -391,7 +394,7 @@ public class Cube {
       rotateSide(1, i);
       algorithm.remove(algorithm.size() - 1);
     }
-    algorithm.add(new Move("YY", 1));
+    algorithm.add(new Move("YY", 1, true));
   }
 
   /**
@@ -844,7 +847,9 @@ public class Cube {
 
   public Cube solveCube(Cubenxn cube) {
     // TODO, SPECIAL CASES 2X2 1X1
-    cube.reduceCubeto3x3();
+    if(cube.dimension != 3){
+      cube.reduceCubeto3x3();
+    }
     Cube3x3 cube3x3 = new Cube3x3(cube);
     cube3x3.solve();
     Cube solvedCube = new Cube(cube3x3);
@@ -921,8 +926,9 @@ public class Cube {
 
 
 
-    testSolve(10);
-
+    //testSolve(10);
+    Cube myCube = new Cube(10);
+    myCube.printCube();
 }
 
 }

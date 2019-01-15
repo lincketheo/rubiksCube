@@ -1416,7 +1416,8 @@ public class Cube3x3 extends Cube {
 
     public static void main(String[] args) {
         //scrambles like a 3x3
-        testnxn(13);
+        //testnxn(4);
+        
     }
 
 }
