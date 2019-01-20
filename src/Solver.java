@@ -96,10 +96,9 @@ public class Solver {
         return moveSet;
     }
 
-
-    public static void runJSObject(int dimension, int id) {
+    public static void runJSObject(int dimension, int id, int scrambleNo) {
         System.out.println();
-        ArrayList<Move> scramble = generateScramble(dimension, 100);
+        ArrayList<Move> scramble = generateScramble(dimension, scrambleNo);
         ArrayList<Move> solver = solveCubeFromScramble(dimension, scramble);
         scramble = filterMoveSetBasic(scramble);
         solver = filterMoveSetBasic(solver);
@@ -138,11 +137,29 @@ public class Solver {
 
     public static void main(String[] args) {
 
-    int maxDimension = 100;
-    runJSObject(maxDimension, 01);
-        System.out.println();
+        int maxDimension = 30;
+        for (int i = 3; i < maxDimension + 1; i++) {
+            runJSObject(i, 1, i*10);
 
+        }
+
+        runJSObject(40, 1, 300);
+        runJSObject(50, 1, 300);
+        runJSObject(60, 1, 300);
+        runJSObject(70, 1, 400);
+        runJSObject(80, 1, 400);
+        runJSObject(90, 1, 500);
+        runJSObject(100, 1, 1000);
+
+        System.out.println();
+        System.out.print("var cubeArray = [");
+        for(int i = 3; i < maxDimension + 1; i++){
+            System.out.print("cube" + i + "" + 1 + ", ");
+        }
+
+        System.out.print("cube401, cube501, cube601, cube701, cube801, cube901, cube1001];");
         
 
+        System.out.println();
     }
 }

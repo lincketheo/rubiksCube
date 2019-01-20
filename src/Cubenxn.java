@@ -1555,6 +1555,7 @@ public class Cubenxn extends Cube {
         if (reduced) {
             return;
         }
+        algorithm.clear();
         solveCenters();
         solveFirstTenEdges();
         solveLastTwoEdges();
@@ -1567,6 +1568,7 @@ public class Cubenxn extends Cube {
         // and it hasn't not solved, so if this is called, it is rediculously rare)
         if (!cubeGood) {
             scrambleNxN(10);
+            //also clears the algorithm
             reduceCubeto3x3();
             return;
         }
