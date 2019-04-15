@@ -3,6 +3,12 @@ package cube;
 public class Main{
     
     public static void main(String [] args){
+        if(args.length != 2){
+            System.out.println("USAGE:  \nrun java -jar {jar file} <DIMENSION> <SCRAMBLE>");
+            System.out.println("Dimension = cube dimension\nScramble = number of scramble moves");
+            return; 
+        }        
+
         int dim = Integer.parseInt(args[0]);
         int scramble = Integer.parseInt(args[1]);        
 
