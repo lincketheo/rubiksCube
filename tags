@@ -1,0 +1,164 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+COLORFACES	src/main/java/cube/Cube.java	/^  private final char[] COLORFACES = { '0', '1', '2', '3', '4', '5' };$/;"	f	class:Cube	file:
+CornerCubie	src/main/java/cube/CornerCubie.java	/^    public CornerCubie(int _index1, int _index2, int _index3){$/;"	m	class:CornerCubie
+CornerCubie	src/main/java/cube/CornerCubie.java	/^public class CornerCubie{$/;"	c
+Cube	src/main/java/cube/Cube.java	/^  public Cube(Cube3x3 cube) {$/;"	m	class:Cube
+Cube	src/main/java/cube/Cube.java	/^  public Cube(Cubenxn cube) {$/;"	m	class:Cube
+Cube	src/main/java/cube/Cube.java	/^  public Cube(int _dimension) {$/;"	m	class:Cube
+Cube	src/main/java/cube/Cube.java	/^public class Cube {$/;"	c
+Cube3x3	src/main/java/cube/Cube3x3.java	/^    public Cube3x3(Cubenxn cube) {$/;"	m	class:Cube3x3
+Cube3x3	src/main/java/cube/Cube3x3.java	/^    public Cube3x3(int dimension) {$/;"	m	class:Cube3x3
+Cube3x3	src/main/java/cube/Cube3x3.java	/^public class Cube3x3 extends Cube {$/;"	c
+CubePiece	src/main/java/cube/CubePiece.java	/^    public CubePiece(int _index, boolean _inPlace){$/;"	m	class:CubePiece
+CubePiece	src/main/java/cube/CubePiece.java	/^public class CubePiece{$/;"	c
+Cubenxn	src/main/java/cube/Cubenxn.java	/^    public Cubenxn(int dimension) {$/;"	m	class:Cubenxn
+Cubenxn	src/main/java/cube/Cubenxn.java	/^public class Cubenxn extends Cube {$/;"	c
+EdgeCubie	src/main/java/cube/EdgeCubie.java	/^    public EdgeCubie(int _index1, int _index2){$/;"	m	class:EdgeCubie
+EdgeCubie	src/main/java/cube/EdgeCubie.java	/^public class EdgeCubie{$/;"	c
+Main	src/main/java/cube/Main.java	/^public class Main{$/;"	c
+Move	src/main/java/cube/Move.java	/^    public Move(String _main, int _layerNo){$/;"	m	class:Move
+Move	src/main/java/cube/Move.java	/^    public Move(String _main, int _layerNo, boolean _translation){$/;"	m	class:Move
+Move	src/main/java/cube/Move.java	/^public class Move{$/;"	c
+Solver	src/main/java/cube/Solver.java	/^public class Solver {$/;"	c
+algorithm	src/main/java/cube/Cube.java	/^  public ArrayList<Move> algorithm = new ArrayList<>();$/;"	f	class:Cube
+algorithmMatchEdgePiecesThirdLayer	src/main/java/cube/Cube3x3.java	/^    private void algorithmMatchEdgePiecesThirdLayer() {$/;"	m	class:Cube3x3	file:
+alignCubies	src/main/java/cube/Cubenxn.java	/^    public void alignCubies(int desiredCubie, int desiredRow, int desiredCol) {$/;"	m	class:Cubenxn
+alignEdgeCubie	src/main/java/cube/Cubenxn.java	/^    public void alignEdgeCubie(int row) {$/;"	m	class:Cubenxn
+alignThirdLayerCross	src/main/java/cube/Cube3x3.java	/^    private void alignThirdLayerCross() {$/;"	m	class:Cube3x3	file:
+alignTopCubieWithFrontCubie	src/main/java/cube/Cubenxn.java	/^    public void alignTopCubieWithFrontCubie(int desiredRow, int desiredCol) {$/;"	m	class:Cubenxn
+alogirthmThirdLayerCross	src/main/java/cube/Cube3x3.java	/^    private void alogirthmThirdLayerCross() {$/;"	m	class:Cube3x3	file:
+backBottomLeftCornertoTopBackRightCorner	src/main/java/cube/Cube3x3.java	/^    private void backBottomLeftCornertoTopBackRightCorner() {$/;"	m	class:Cube3x3	file:
+backBottomRightCornertoTopBackRightCorner	src/main/java/cube/Cube3x3.java	/^    private void backBottomRightCornertoTopBackRightCorner() {$/;"	m	class:Cube3x3	file:
+checkCenters	src/main/java/cube/Cubenxn.java	/^    public boolean checkCenters() {$/;"	m	class:Cubenxn
+checkTopFrontRightCornerPiece	src/main/java/cube/Cube3x3.java	/^    private boolean checkTopFrontRightCornerPiece() {$/;"	m	class:Cube3x3	file:
+cornerCubies	src/main/java/cube/Cube.java	/^  private ArrayList<CornerCubie> cornerCubies;$/;"	f	class:Cube	file:
+cube	src/main/java/cube/CornerCubie.java	/^package cube;$/;"	p
+cube	src/main/java/cube/Cube.java	/^package cube;$/;"	p
+cube	src/main/java/cube/Cube3x3.java	/^package cube;$/;"	p
+cube	src/main/java/cube/CubePiece.java	/^package cube;$/;"	p
+cube	src/main/java/cube/Cubenxn.java	/^package cube;$/;"	p
+cube	src/main/java/cube/EdgeCubie.java	/^package cube;$/;"	p
+cube	src/main/java/cube/Main.java	/^package cube;$/;"	p
+cube	src/main/java/cube/Move.java	/^package cube;$/;"	p
+cube	src/main/java/cube/Solver.java	/^package cube;$/;"	p
+cubePieces	src/main/java/cube/Cubenxn.java	/^    private ArrayList<CubePiece> cubePieces = new ArrayList<>();$/;"	f	class:Cubenxn	file:
+cubeVal	src/main/java/cube/CubePiece.java	/^    int cubeVal;$/;"	f	class:CubePiece
+dimension	src/main/java/cube/Cube.java	/^  public int dimension;$/;"	f	class:Cube
+edgeCubieChecker	src/main/java/cube/Cubenxn.java	/^    public boolean edgeCubieChecker(EdgeCubie cubie, int row, int colorBack, int colorFront) {$/;"	m	class:Cubenxn
+edgeCubies	src/main/java/cube/Cube.java	/^  private ArrayList<EdgeCubie> edgeCubies;$/;"	f	class:Cube	file:
+edgeMatches	src/main/java/cube/Cubenxn.java	/^    public boolean edgeMatches() {$/;"	m	class:Cubenxn
+equals	src/main/java/cube/Move.java	/^    public boolean equals(Move move){$/;"	m	class:Move
+faces	src/main/java/cube/Cube.java	/^  public ArrayList<Integer> faces;$/;"	f	class:Cube
+fillCornerCubies	src/main/java/cube/Cube.java	/^  private void fillCornerCubies() {$/;"	m	class:Cube	file:
+fillEdgeCubies	src/main/java/cube/Cube.java	/^  private void fillEdgeCubies() {$/;"	m	class:Cube	file:
+filterMoveSetBasic	src/main/java/cube/Solver.java	/^    public static ArrayList<Move> filterMoveSetBasic(ArrayList<Move> moveSet) {$/;"	m	class:Solver
+findAvailableEdgeCubiePositions	src/main/java/cube/Cubenxn.java	/^    public EdgeCubie findAvailableEdgeCubiePositions(int colorFront, int colorBack, int row) {$/;"	m	class:Cubenxn
+findAvaliableCenterPieces	src/main/java/cube/Cubenxn.java	/^    private ArrayList<Integer> findAvaliableCenterPieces(int row, int col, int color) {$/;"	m	class:Cubenxn	file:
+findUnsolvedEdgePieces	src/main/java/cube/Cubenxn.java	/^    public ArrayList<EdgeCubie> findUnsolvedEdgePieces() {$/;"	m	class:Cubenxn
+flipEdges	src/main/java/cube/Cubenxn.java	/^    public void flipEdges(int index) {$/;"	m	class:Cubenxn
+flipFrontTopEdge	src/main/java/cube/Cubenxn.java	/^    public void flipFrontTopEdge() {$/;"	m	class:Cubenxn
+generateScramble	src/main/java/cube/Cube.java	/^  private void generateScramble(int moves) {$/;"	m	class:Cube	file:
+generateScramble	src/main/java/cube/Solver.java	/^    public static ArrayList<Move> generateScramble(int dimension, int noMoves) {$/;"	m	class:Solver
+generateScrambleAlgorithm	src/main/java/cube/Cube.java	/^  public static ArrayList<Move> generateScrambleAlgorithm(int moves, int _dimension) {$/;"	m	class:Cube
+getCenterCubie	src/main/java/cube/Cube.java	/^  public int getCenterCubie(int color) {$/;"	m	class:Cube
+getCol	src/main/java/cube/Cube.java	/^  public int getCol(int cubie) {$/;"	m	class:Cube
+getColor	src/main/java/cube/Cube.java	/^  public int getColor(int face) {$/;"	m	class:Cube
+getCoorespondingCorners	src/main/java/cube/Cube.java	/^  public int[] getCoorespondingCorners(int color) {$/;"	m	class:Cube
+getCoorespondingEdgePiece	src/main/java/cube/Cube.java	/^  public int getCoorespondingEdgePiece(int color) {$/;"	m	class:Cube
+getCornerCubie	src/main/java/cube/Cube.java	/^  public CornerCubie getCornerCubie(int color1, int color2, int color3) {$/;"	m	class:Cube
+getCornerCubies	src/main/java/cube/Cube.java	/^  public ArrayList<CornerCubie> getCornerCubies() {$/;"	m	class:Cube
+getDimension	src/main/java/cube/Cube.java	/^  public int getDimension() {$/;"	m	class:Cube
+getEdgeCubie	src/main/java/cube/Cube.java	/^  public ArrayList<EdgeCubie> getEdgeCubie(int color1, int color2) {$/;"	m	class:Cube
+getEdgeCubies	src/main/java/cube/Cube.java	/^  public ArrayList<EdgeCubie> getEdgeCubies() {$/;"	m	class:Cube
+getFaceOrientation	src/main/java/cube/Cube.java	/^  public int getFaceOrientation(int color) {$/;"	m	class:Cube
+getFaces	src/main/java/cube/Cube.java	/^  public ArrayList<Integer> getFaces() {$/;"	m	class:Cube
+getPosition	src/main/java/cube/Cube.java	/^  public int getPosition(int face, int row, int index) {$/;"	m	class:Cube
+getRow	src/main/java/cube/Cube.java	/^  public int getRow(int cubie) {$/;"	m	class:Cube
+inPlace	src/main/java/cube/CubePiece.java	/^    boolean inPlace;$/;"	f	class:CubePiece
+index1	src/main/java/cube/CornerCubie.java	/^    public int index1;$/;"	f	class:CornerCubie
+index1	src/main/java/cube/EdgeCubie.java	/^    public int index1;$/;"	f	class:EdgeCubie
+index2	src/main/java/cube/CornerCubie.java	/^    public int index2;$/;"	f	class:CornerCubie
+index2	src/main/java/cube/EdgeCubie.java	/^    public int index2;$/;"	f	class:EdgeCubie
+index3	src/main/java/cube/CornerCubie.java	/^    public int index3;$/;"	f	class:CornerCubie
+insertColFrontFace	src/main/java/cube/Cubenxn.java	/^    public void insertColFrontFace(int col, int desiredFace) {$/;"	m	class:Cubenxn
+insertCubie	src/main/java/cube/Cubenxn.java	/^    public void insertCubie(int desiredCubie) {$/;"	m	class:Cubenxn
+insertEdgeCubie	src/main/java/cube/Cubenxn.java	/^    public void insertEdgeCubie(int row) {$/;"	m	class:Cubenxn
+lastCornerAlignmentAlgorithm	src/main/java/cube/Cube3x3.java	/^    private void lastCornerAlignmentAlgorithm() {$/;"	m	class:Cube3x3	file:
+layerNo	src/main/java/cube/Move.java	/^    public int layerNo;$/;"	f	class:Move
+leftEdgePieceLayerTwo	src/main/java/cube/Cube3x3.java	/^    private void leftEdgePieceLayerTwo() {$/;"	m	class:Cube3x3	file:
+main	src/main/java/cube/Main.java	/^    public static void main(String [] args){$/;"	m	class:Main
+main	src/main/java/cube/Move.java	/^    public String main;$/;"	f	class:Move
+main	src/main/java/cube/Move.java	/^    public static void main (String [] args){$/;"	m	class:Move
+moveSequence3x3	src/main/java/cube/Cube3x3.java	/^    private void moveSequence3x3(String move) {$/;"	m	class:Cube3x3	file:
+moveSequenceNxN	src/main/java/cube/Cube.java	/^  public void moveSequenceNxN(ArrayList<Move> moves) {$/;"	m	class:Cube
+moveSequenceNxN	src/main/java/cube/Cube.java	/^  public void moveSequenceNxN(Move move) {$/;"	m	class:Cube
+moveTopFrontEdgePiecetoRight	src/main/java/cube/Cube3x3.java	/^    private void moveTopFrontEdgePiecetoRight() {$/;"	m	class:Cube3x3	file:
+moveUnsolvedEdgePieceToLeftFrontEdge	src/main/java/cube/Cubenxn.java	/^    public void moveUnsolvedEdgePieceToLeftFrontEdge() {$/;"	m	class:Cubenxn
+moveUnsolvedEdgePiecetoTopLeftEdge	src/main/java/cube/Cubenxn.java	/^    public void moveUnsolvedEdgePiecetoTopLeftEdge() {$/;"	m	class:Cubenxn
+orientCube	src/main/java/cube/Cube.java	/^  public void orientCube(int colorFaceFront, int colorFaceTop) {$/;"	m	class:Cube
+orientCubeForLastStep	src/main/java/cube/Cubenxn.java	/^    public void orientCubeForLastStep() {$/;"	m	class:Cubenxn
+orientCubeFrontLeft	src/main/java/cube/Cube.java	/^  public void orientCubeFrontLeft(int faceLeft, int faceFront) {$/;"	m	class:Cube
+orientThirdLayerCorners	src/main/java/cube/Cube3x3.java	/^    private void orientThirdLayerCorners() {$/;"	m	class:Cube3x3	file:
+parityOLL	src/main/java/cube/Cube3x3.java	/^    public void parityOLL() {$/;"	m	class:Cube3x3
+parityPLL	src/main/java/cube/Cube3x3.java	/^    public void parityPLL() {$/;"	m	class:Cube3x3
+printCube	src/main/java/cube/Cube.java	/^  public void printCube() {$/;"	m	class:Cube
+printCubeNums	src/main/java/cube/Cube.java	/^  public void printCubeNums() {$/;"	m	class:Cube
+reduceCubeto3x3	src/main/java/cube/Cubenxn.java	/^    public void reduceCubeto3x3() {$/;"	m	class:Cubenxn
+reduced	src/main/java/cube/Cubenxn.java	/^    public boolean reduced;$/;"	f	class:Cubenxn
+rightEdgePieceLayerTwo	src/main/java/cube/Cube3x3.java	/^    private void rightEdgePieceLayerTwo() {$/;"	m	class:Cube3x3	file:
+rightFaceCenterPieceToFront	src/main/java/cube/Cubenxn.java	/^    public void rightFaceCenterPieceToFront(int row, int col, int row2, int col2) {$/;"	m	class:Cubenxn
+rotateCubeClockwise	src/main/java/cube/Cube.java	/^  public void rotateCubeClockwise() {$/;"	m	class:Cube
+rotateCubeCounterClockwise	src/main/java/cube/Cube.java	/^  public void rotateCubeCounterClockwise() {$/;"	m	class:Cube
+rotateCubeDown	src/main/java/cube/Cube.java	/^  public void rotateCubeDown() {$/;"	m	class:Cube
+rotateCubeUp	src/main/java/cube/Cube.java	/^  public void rotateCubeUp() {$/;"	m	class:Cube
+rotateFrontFace	src/main/java/cube/Cube.java	/^  public void rotateFrontFace(int direction, int faceNum) {$/;"	m	class:Cube
+rotateFullFace	src/main/java/cube/Cube.java	/^  public void rotateFullFace(int direction, int face) {$/;"	m	class:Cube
+rotateLayer	src/main/java/cube/Cube.java	/^  public void rotateLayer(int direction, int layerNum) {$/;"	m	class:Cube
+rotateSide	src/main/java/cube/Cube.java	/^  public void rotateSide(int direction, int colNum) {$/;"	m	class:Cube
+runJSObject	src/main/java/cube/Solver.java	/^    public static void runJSObject(int dimension, int id, int scrambleNo) {$/;"	m	class:Solver
+scrambleAlgorithm	src/main/java/cube/Cube.java	/^  public ArrayList<Move> scrambleAlgorithm = new ArrayList<>();$/;"	f	class:Cube
+scrambleCube3x3	src/main/java/cube/Cube3x3.java	/^    private void scrambleCube3x3(int moves) {$/;"	m	class:Cube3x3	file:
+scrambleNxN	src/main/java/cube/Cubenxn.java	/^    public void scrambleNxN(int moves) {$/;"	m	class:Cubenxn
+solve	src/main/java/cube/Cube3x3.java	/^    public void solve() {$/;"	m	class:Cube3x3
+solveCenters	src/main/java/cube/Cubenxn.java	/^    public void solveCenters() {$/;"	m	class:Cubenxn
+solveColFrontFace	src/main/java/cube/Cubenxn.java	/^    public void solveColFrontFace(int col, int color) {$/;"	m	class:Cubenxn
+solveCorners	src/main/java/cube/Cube3x3.java	/^    private void solveCorners() {$/;"	m	class:Cube3x3	file:
+solveCross	src/main/java/cube/Cube3x3.java	/^    private void solveCross() {$/;"	m	class:Cube3x3	file:
+solveCube	src/main/java/cube/Cube.java	/^  public Cube solveCube(Cubenxn cube) {$/;"	m	class:Cube
+solveCubeFromScramble	src/main/java/cube/Solver.java	/^    public static ArrayList<Move> solveCubeFromScramble(int dimension, ArrayList<Move> scramble) {$/;"	m	class:Solver
+solveCubenxn	src/main/java/cube/Cube3x3.java	/^    public void solveCubenxn(Cubenxn cube) {$/;"	m	class:Cube3x3
+solveCubieFrontFaceRowCol	src/main/java/cube/Cubenxn.java	/^    public void solveCubieFrontFaceRowCol(int row, int col, int color) {$/;"	m	class:Cubenxn
+solveEvenViaOLL	src/main/java/cube/Cube3x3.java	/^    public void solveEvenViaOLL(){$/;"	m	class:Cube3x3
+solveFirstFourFronts	src/main/java/cube/Cubenxn.java	/^    public void solveFirstFourFronts() {$/;"	m	class:Cubenxn
+solveFirstLayer	src/main/java/cube/Cube3x3.java	/^    private void solveFirstLayer() {$/;"	m	class:Cube3x3	file:
+solveFirstTenEdges	src/main/java/cube/Cubenxn.java	/^    public void solveFirstTenEdges() {$/;"	m	class:Cubenxn
+solveLastCenterCol	src/main/java/cube/Cubenxn.java	/^    public void solveLastCenterCol() {$/;"	m	class:Cubenxn
+solveLastCenterColPos	src/main/java/cube/Cubenxn.java	/^    public void solveLastCenterColPos(int row) {$/;"	m	class:Cubenxn
+solveLastTwoEdges	src/main/java/cube/Cubenxn.java	/^    public void solveLastTwoEdges() {$/;"	m	class:Cubenxn
+solveLastTwoFaces	src/main/java/cube/Cubenxn.java	/^    public void solveLastTwoFaces(int colorFront, int colorTop) {$/;"	m	class:Cubenxn
+solveLeftEdge	src/main/java/cube/Cubenxn.java	/^    public void solveLeftEdge() {$/;"	m	class:Cubenxn
+solveLeftFaceCenter	src/main/java/cube/Cubenxn.java	/^    public void solveLeftFaceCenter(int color) {$/;"	m	class:Cubenxn
+solveSecondLayer	src/main/java/cube/Cube3x3.java	/^    private void solveSecondLayer() {$/;"	m	class:Cube3x3	file:
+solveThirdLayer	src/main/java/cube/Cube3x3.java	/^    private void solveThirdLayer() {$/;"	m	class:Cube3x3	file:
+solveThirdLayerCorners	src/main/java/cube/Cube3x3.java	/^    private void solveThirdLayerCorners() {$/;"	m	class:Cube3x3	file:
+solveThirdLayerCross	src/main/java/cube/Cube3x3.java	/^    private void solveThirdLayerCross() {$/;"	m	class:Cube3x3	file:
+solveTopBackEdgePiece	src/main/java/cube/Cube3x3.java	/^    private void solveTopBackEdgePiece() {$/;"	m	class:Cube3x3	file:
+solveTopBackRightCornerPiece	src/main/java/cube/Cube3x3.java	/^    private void solveTopBackRightCornerPiece() {$/;"	m	class:Cube3x3	file:
+solveTopFaceCenter	src/main/java/cube/Cubenxn.java	/^    public void solveTopFaceCenter(int color) {$/;"	m	class:Cubenxn
+solveTopMiddleCol	src/main/java/cube/Cubenxn.java	/^    public void solveTopMiddleCol() {$/;"	m	class:Cubenxn
+solveTopMiddleColPos	src/main/java/cube/Cubenxn.java	/^    public void solveTopMiddleColPos(int row) {$/;"	m	class:Cubenxn
+swapCubiesTopFace	src/main/java/cube/Cubenxn.java	/^    public void swapCubiesTopFace(int i) {$/;"	m	class:Cubenxn
+switchTopCubieWithFrontCubie	src/main/java/cube/Cubenxn.java	/^    public void switchTopCubieWithFrontCubie(int row, int col) {$/;"	m	class:Cubenxn
+testOLLParity	src/main/java/cube/Cube3x3.java	/^    public void testOLLParity() {$/;"	m	class:Cube3x3
+testRotations	src/main/java/cube/Cube.java	/^  public static void testRotations() {$/;"	m	class:Cube
+testSolve	src/main/java/cube/Cube.java	/^  public static void testSolve(int dimension) {$/;"	m	class:Cube
+testnxn	src/main/java/cube/Cube3x3.java	/^    public static void testnxn(int n) {$/;"	m	class:Cube3x3
+testnxn	src/main/java/cube/Cubenxn.java	/^    private static void testnxn(int dimension){$/;"	m	class:Cubenxn	file:
+thirdLayerColorAlignmentTest	src/main/java/cube/Cube3x3.java	/^    private boolean thirdLayerColorAlignmentTest() {$/;"	m	class:Cube3x3	file:
+thirdLayerCornerAlgorithm	src/main/java/cube/Cube3x3.java	/^    private void thirdLayerCornerAlgorithm() {$/;"	m	class:Cube3x3	file:
+translation	src/main/java/cube/Move.java	/^    boolean translation;$/;"	f	class:Move
